@@ -1061,14 +1061,14 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
             <div className="flex justify-between items-start mb-8">
               <div>
                 <h1 className="text-4xl font-bold text-slate-700 tracking-tight">Official Receipt</h1>
-                <p className="text-slate-500 mt-1 font-medium italic">ThriftersFind Analytics Engine</p>
+                <p className="text-slate-500 mt-1 font-medium italic">CalcuPOS Analytics Engine</p>
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-2 justify-end mb-1">
                   <div className="h-8 w-8 bg-slate-800 rounded flex items-center justify-center">
                     <span className="text-white font-bold text-sm">TF</span>
                   </div>
-                  <span className="text-xl font-bold text-slate-700">ThriftersFind</span>
+                  <span className="text-xl font-bold text-slate-700">CalcuPOS</span>
                 </div>
                 <p className="text-xs text-slate-400">Generated: {format(new Date(), "MMM dd, yyyy h:mm:ss a")}</p>
               </div>
@@ -1138,7 +1138,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
 
             {/* Footer */}
             <div className="mt-auto pt-10 border-t border-slate-100 text-[10px] text-slate-300 flex justify-between items-center break-inside-avoid">
-              <p>© {new Date().getFullYear()} ThriftersFind Official Receipt</p>
+              <p>© {new Date().getFullYear()} CalcuPOS Official Receipt</p>
               <p className="flex items-center gap-2">
                 <span className="h-1 w-1 bg-slate-200 rounded-full"></span>
                 Thank you for your purchase!

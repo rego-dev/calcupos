@@ -383,7 +383,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">{user.name}</h3>
-                                    <p className="text-xs text-muted-foreground mt-1">Connected on ThriftersFind</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Connected on CalcuPOS</p>
                                 </div>
                             </div>
 

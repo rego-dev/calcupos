@@ -8,7 +8,7 @@ echo.
 cd /d "%~dp0"
 
 echo [1/5] Stopping PM2...
-call pm2 stop thriftersfind 2>nul
+call pm2 stop calcupos 2>nul
 call pm2 kill 2>nul
 timeout /t 2 /nobreak >nul
 echo Done.
@@ -36,6 +36,6 @@ call pm2 save
 echo.
 echo ================================================
 echo  Deploy complete! App running on port 3000.
-echo  Run "pm2 logs thriftersfind" to view logs.
+echo  Run "pm2 logs calcupos" to view logs.
 echo ================================================
 pause

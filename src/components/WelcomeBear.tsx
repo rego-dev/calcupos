@@ -54,7 +54,7 @@ export default function WelcomeBear() {
           border-color: white transparent transparent;
         }
       `}</style>
-      <div className="speech-bubble text-lg font-vintage">Hello ThriftersFind!</div>
+      <div className="speech-bubble text-lg font-vintage">Hello CalcuPOS!</div>
       <div className="panda-sprite">
         <img
           src="/images/panda.png"

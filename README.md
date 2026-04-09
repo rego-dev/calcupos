@@ -1,6 +1,6 @@
-# ThriftersFind Order Management System (OMS)
+# CalcuPOS Order Management System (OMS)
 
-This document outlines the core processes and functionality of the ThriftersFind Order Management System. The system is designed for internal administrative use and revolves around a batch-based delivery schedule.
+This document outlines the core processes and functionality of the CalcuPOS Order Management System. The system is designed for internal administrative use and revolves around a batch-based delivery schedule.
 
 ## 1. Authentication and User Roles
 
@@ -48,7 +48,7 @@ The Dashboard serves as the system’s home page, giving real-time insights into
 
 ## 3. Batch & Delivery Scheduling Management
 
-This is the core enhancement designed specifically for ThriftersFind’s weekly delivery process.
+This is the core enhancement designed specifically for CalcuPOS’s weekly delivery process.
 
 ### Batch Overview
 
@@ -172,7 +172,7 @@ The system uses **Tailscale** for secure internal networking. This ensures that 
 
 ### Requirements
 - Tailscale must be installed and running on the host machine.
-- The machine must be authenticated to the ThriftersFind Tailnet.
+- The machine must be authenticated to the CalcuPOS Tailnet.
 
 ### Connection Utility
 You can verify the network status and connectivity to the database server using the following command:

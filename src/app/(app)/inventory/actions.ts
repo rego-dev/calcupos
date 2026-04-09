@@ -98,7 +98,7 @@ export async function getProducts(): Promise<Product[]> {
       `Prisma error: ${JSON.stringify(error, null, 2)}\n`;
     
     try {
-      fs.appendFileSync("c:\\Users\\Carlo Beulah\\Desktop\\thriftersfind\\error_debug.log", errorLog);
+      fs.appendFileSync("c:\\Users\\Carlo Beulah\\Desktop\\calcupos\\error_debug.log", errorLog);
     } catch (e) {
       console.error("Failed to write to debug log:", e);
     }

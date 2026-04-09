@@ -12,12 +12,12 @@ call npm run build
 if %errorlevel% neq 0 ( echo ERROR: Build failed & pause & exit /b 1 )
 
 echo [2/2] Restarting PM2...
-call pm2 restart thriftersfind
+call pm2 restart calcupos
 call pm2 save
 
 echo.
 echo ================================================
 echo  Redeploy complete! App restarted on port 3000.
-echo  Run "pm2 logs thriftersfind" to view logs.
+echo  Run "pm2 logs calcupos" to view logs.
 echo ================================================
 pause

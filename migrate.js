@@ -7,7 +7,7 @@ async function runMigration() {
         port: 3306,
         user: 'root',
         password: '',
-        database: 'thriftersfind'
+        database: 'calcupos'
     });
 
     try {

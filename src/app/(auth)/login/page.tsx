@@ -40,12 +40,12 @@ export default function LoginPage() {
           <div className="w-36 h-36 rounded-full bg-white shadow-2xl overflow-hidden">
             <img
               src="/images/logo.png"
-              alt="ThriftersFind Logo"
+              alt="CalcuPOS Logo"
               className="w-full h-full object-cover"
             />
           </div>
           <h2 className="text-5xl font-vintage bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-lg tracking-wide">
-            ThriftersFind
+            CalcuPOS
           </h2>
         </div>
 
@@ -55,7 +55,7 @@ export default function LoginPage() {
           <div className="relative px-8 pt-8 pb-6 text-center">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400" />
             <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-lg mb-2">
-              WELCOME THRIFTERSFIND
+              WELCOME CALCUPOS
             </h1>
             <p className="text-white/90 text-sm drop-shadow">
               Welcome! Manage Your Inventory with Ease

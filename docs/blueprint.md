@@ -1,4 +1,4 @@
-# **App Name**: ThriftersFind OMS
+# **App Name**: CalcuPOS OMS
 
 ## Core Features:
 

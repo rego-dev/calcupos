@@ -16,12 +16,12 @@ export function Logo({ className }: { className?: string }) {
       {isMounted && (
         <img
           src="/images/logo.png"
-          alt="ThriftersFind Logo"
+          alt="CalcuPOS Logo"
           className="h-10 w-10 rounded-full object-cover shadow-sm"
         />
       )}
       <span className="group-data-[collapsible=icon]:hidden text-[23px] font-vintage bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-md tracking-wide">
-        ThriftersFind OMS
+        CalcuPOS OMS
       </span>
     </div>
   )

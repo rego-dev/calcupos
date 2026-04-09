@@ -1,10 +1,10 @@
 module.exports = {
     apps: [
         {
-            name: 'thriftersfind',
+            name: 'calcupos',
             script: 'C:\\Program Files\\nodejs\\node.exe',
             args: 'node_modules/next/dist/bin/next start',
-            cwd: 'c:\\Users\\Carlo Beulah\\Desktop\\thriftersfind',
+            cwd: 'c:\\Users\\Carlo Beulah\\Desktop\\calcupos',
             exec_mode: 'fork',
             instances: 1,
             autorestart: true,

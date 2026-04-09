@@ -132,7 +132,7 @@ export function ViewCustomerDialog({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-2xl p-0 overflow-hidden bg-white">
-          {/* Enhanced Header - ThriftersFind Blue */}
+          {/* Enhanced Header - CalcuPOS Blue */}
           <div className="relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-[#4A90E2] via-[#5B9FED] to-[#4A90E2]" />
             <div className="relative p-6">
@@ -278,7 +278,7 @@ export function ViewCustomerDialog({
       {/* Order History Modal */}
       <Dialog open={isOrderHistoryModalOpen} onOpenChange={setIsOrderHistoryModalOpen}>
         <DialogContent className="sm:max-w-6xl h-[85vh] flex flex-col p-0 overflow-hidden bg-white">
-          {/* Enhanced Header - ThriftersFind Blue */}
+          {/* Enhanced Header - CalcuPOS Blue */}
           <div className="relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-[#4A90E2] via-[#5B9FED] to-[#4A90E2]" />
             <div className="relative p-6">

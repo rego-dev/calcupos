@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 const lobster = Lobster({ subsets: ['latin'], weight: '400', variable: '--font-vintage' })
 
 export const metadata: Metadata = {
-  title: 'ThriftersFind OMS',
-  description: 'Order Management System for ThriftersFind',
+  title: 'CalcuPOS OMS',
+  description: 'Order Management System for CalcuPOS',
   icons: {
     icon: '/images/logo.png',
   },

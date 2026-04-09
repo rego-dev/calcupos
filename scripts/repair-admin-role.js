@@ -38,7 +38,7 @@ async function main() {
 
     // 2. Find and Update Super Admin User
     // Try to find by multiple potential identifiers as we preserved users
-    const potentialEmails = ['chelsea_superadmin@gmail.com', 'superadmin@gmail.com', 'admin@thriftersfind.com'];
+    const potentialEmails = ['chelsea_superadmin@gmail.com', 'superadmin@gmail.com', 'admin@calcupos.com'];
 
     // Also try to find a user who WAS a super admin based on role string if possible, or just the first user if we can't find by email?
     // Safer to stick to known emails or find *any* user and ask.
