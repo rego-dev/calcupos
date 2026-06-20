@@ -74,7 +74,6 @@
         "paymentMethod": { "type": "string", "enum": ["COD", "GCash", "Bank Transfer"]},
         "paymentStatus": { "type": "string", "enum": ["Paid", "Unpaid", "Hold"] },
         "shippingStatus": { "type": "string", "enum": ["Pending", "Ready", "Shipped", "Delivered", "Cancelled"] },
-        "batchId": { "type": ["string", "null"] },
         "createdAt": {
           "type": "string",
           "format": "date-time",
@@ -99,20 +98,6 @@
         "createdAt",
         "customerId"
       ]
-    },
-    "Batch": {
-      "title": "Batch",
-      "type": "object",
-      "description": "Represents a delivery cycle.",
-      "properties": {
-        "batchName": { "type": "string" },
-        "deliveryDate": { "type": "string", "format": "date" },
-        "cutoffDate": { "type": "string", "format": "date" },
-        "status": { "type": "string", "enum": ["Open", "Closed", "Delivered", "Cancelled"] },
-        "totalOrders": { "type": "number" },
-        "totalSales": { "type": "number" }
-      },
-      "required": ["batchName", "deliveryDate", "cutoffDate", "status"]
     },
     "Product": {
       "title": "Product",
@@ -150,12 +135,6 @@
             "$ref": "#/entities/Order"
         },
         "description": "Stores all orders."
-    },
-    "/batches/{batchId}": {
-        "schema": {
-            "$ref": "#/entities/Batch"
-        },
-        "description": "Stores all delivery batches."
     },
     "/products/{productId}": {
         "schema": {

@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Product, Batch, ProductCategory } from "@/lib/types";
+import type { Product, ProductCategory } from "@/lib/types";
 
 interface EditProductDialogProps {
   isOpen: boolean;

@@ -195,12 +195,12 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-hidden p-0 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950">
+            <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-hidden p-0 bg-gradient-to-br from-zinc-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-amber-950">
                 {/* Enhanced Gradient Header */}
-                <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 px-8 py-6 overflow-hidden">
+                <div className="relative bg-gradient-to-r from-zinc-800 via-zinc-900 to-amber-600 px-8 py-6 overflow-hidden">
                     {/* Decorative elements */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-zinc-500/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
 
                     <div className="relative flex items-center gap-4 text-white">
                         <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg">
@@ -208,7 +208,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                         </div>
                         <div>
                             <DialogTitle className="text-white text-2xl font-bold tracking-tight">Add Warehouse Product</DialogTitle>
-                            <DialogDescription className="text-blue-100 text-sm mt-1 font-medium">
+                            <DialogDescription className="text-amber-100 text-sm mt-1 font-medium">
                                 Fill in the details below to add a new product to your warehouse inventory
                             </DialogDescription>
                         </div>
@@ -218,16 +218,16 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                 {/* Scrollable Content */}
                 <div className="overflow-y-auto max-h-[calc(95vh-200px)] px-8 py-6">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 mb-6 p-1.5 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-950/50 dark:to-purple-950/50 h-12 rounded-xl shadow-sm">
+                        <TabsList className="grid w-full grid-cols-2 mb-6 p-1.5 bg-gradient-to-r from-amber-100 to-zinc-200 dark:from-amber-950/50 dark:to-zinc-800/50 h-12 rounded-xl shadow-sm">
                             <TabsTrigger
                                 value="new"
-                                className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-blue-600 font-semibold transition-all duration-200"
+                                className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-amber-600 font-semibold transition-all duration-200"
                             >
                                 New Product
                             </TabsTrigger>
                             <TabsTrigger
                                 value="existing"
-                                className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-purple-600 font-semibold transition-all duration-200"
+                                className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-zinc-700 font-semibold transition-all duration-200"
                             >
                                 Existing Product
                             </TabsTrigger>
@@ -235,9 +235,9 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
 
                         <TabsContent value="new" className="space-y-6">
                             {/* Basic Information Section */}
-                            <div className="relative bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl p-6 space-y-5 border border-blue-200/50 dark:border-blue-800/50 shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div className="relative bg-gradient-to-br from-amber-50 to-zinc-100 dark:from-amber-950/30 dark:to-zinc-900/30 rounded-2xl p-6 space-y-5 border border-amber-200/50 dark:border-amber-800/50 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-sm">
+                                    <div className="p-2 bg-gradient-to-br from-amber-500 to-zinc-700 rounded-lg shadow-sm">
                                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
@@ -247,7 +247,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="space-y-2.5">
                                         <Label htmlFor="productName" className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                            <Package className="w-4 h-4 text-blue-600" />
+                                            <Package className="w-4 h-4 text-amber-600" />
                                             Product Name <span className="text-red-500">*</span>
                                         </Label>
                                         <Input
@@ -255,35 +255,35 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                             value={productName}
                                             onChange={(e) => setProductName(e.target.value)}
                                             placeholder="e.g. Vintage Shirt"
-                                            className="w-full bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-500 rounded-lg shadow-sm transition-all duration-200 h-11"
+                                            className="w-full bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-700 focus:border-amber-500 dark:focus:border-amber-500 rounded-lg shadow-sm transition-all duration-200 h-11"
                                         />
                                     </div>
 
 
                                     <div className="space-y-2.5">
                                         <Label htmlFor="sku" className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                            <Hash className="w-4 h-4 text-blue-600" />
+                                            <Hash className="w-4 h-4 text-amber-600" />
                                             SKU <span className="text-red-500">*</span>
                                         </Label>
                                         <div className="grid grid-cols-2 gap-2">
                                             <Input
                                                 value={baseSku}
                                                 readOnly
-                                                className="bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 border-gray-200 dark:border-gray-700 font-mono font-semibold text-center rounded-lg h-11"
+                                                className="bg-gradient-to-br from-zinc-100 to-zinc-50 dark:from-zinc-800 dark:to-zinc-900 border-2 border-gray-200 dark:border-gray-700 font-mono font-semibold text-center rounded-lg h-11"
                                             />
                                             <div className="flex gap-2">
                                                 <Input
                                                     placeholder="Variant Color"
                                                     value={variantColor}
                                                     onChange={(e) => setVariantColor(e.target.value)}
-                                                    className="bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-500 rounded-lg shadow-sm transition-all duration-200 h-11"
+                                                    className="bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-700 focus:border-amber-500 dark:focus:border-amber-500 rounded-lg shadow-sm transition-all duration-200 h-11"
                                                 />
                                                 <Button
                                                     type="button"
                                                     onClick={regenerateSku}
                                                     size="icon"
                                                     variant="outline"
-                                                    className="w-11 h-11 shrink-0 border-2 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-500 transition-all duration-200 rounded-lg"
+                                                    className="w-11 h-11 shrink-0 border-2 hover:bg-amber-50 dark:hover:bg-amber-950 hover:border-amber-500 transition-all duration-200 rounded-lg"
                                                 >
                                                     <RefreshCw className="h-4 w-4" />
                                                 </Button>
@@ -294,14 +294,14 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
 
                                 <div className="space-y-2.5">
                                     <Label htmlFor="image" className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                        <ImageIcon className="w-4 h-4 text-blue-600" />
+                                        <ImageIcon className="w-4 h-4 text-amber-600" />
                                         Product Image
                                     </Label>
 
                                     {!imagePreview ? (
-                                        <div className="relative border-3 border-dashed border-blue-300 dark:border-blue-700 rounded-2xl p-8 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-950/30 dark:hover:to-indigo-950/30 transition-all duration-300 text-center cursor-pointer group overflow-hidden">
+                                        <div className="relative border-3 border-dashed border-amber-300 dark:border-amber-700 rounded-2xl p-8 hover:bg-gradient-to-br hover:from-amber-50 hover:to-zinc-100 dark:hover:from-amber-950/30 dark:hover:to-zinc-900/30 transition-all duration-300 text-center cursor-pointer group overflow-hidden">
                                             {/* Animated background gradient */}
-                                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-zinc-500/5 to-zinc-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                                             <Input
                                                 id="image"
@@ -311,11 +311,11 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             />
                                             <div className="relative flex flex-col items-center gap-3">
-                                                <div className="p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                                                <div className="p-4 bg-gradient-to-br from-amber-500 to-zinc-700 rounded-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                                                     <ImageIcon className="w-8 h-8 text-white" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-base font-semibold text-blue-600 dark:text-blue-400 mb-1">
+                                                    <p className="text-base font-semibold text-amber-600 dark:text-amber-400 mb-1">
                                                         Click to upload image
                                                     </p>
                                                     <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -325,7 +325,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="relative w-full h-56 bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl overflow-hidden border-2 border-blue-300 dark:border-blue-700 shadow-md hover:shadow-lg transition-shadow duration-200">
+                                        <div className="relative w-full h-56 bg-gradient-to-br from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 rounded-2xl overflow-hidden border-2 border-amber-300 dark:border-amber-700 shadow-md hover:shadow-lg transition-shadow duration-200">
                                             <img
                                                 src={imagePreview}
                                                 alt="Preview"
@@ -341,7 +341,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                             </Button>
                                             <div className="absolute bottom-3 right-3 flex gap-2">
                                                 <label htmlFor="change-image" className="cursor-pointer">
-                                                    <div className="inline-flex items-center justify-center rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 h-9 px-4 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                    <div className="inline-flex items-center justify-center rounded-xl text-sm font-semibold bg-gradient-to-r from-zinc-800 to-amber-600 text-white hover:from-zinc-900 hover:to-amber-700 h-9 px-4 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
                                                         Change Image
                                                     </div>
                                                     <Input
@@ -360,9 +360,9 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                         </TabsContent>
 
                         <TabsContent value="existing" className="space-y-6">
-                            <div className="relative bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-2xl p-6 space-y-5 border border-purple-200/50 dark:border-purple-800/50 shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div className="relative bg-gradient-to-br from-zinc-100 to-zinc-50 dark:from-zinc-900/30 dark:to-zinc-950/30 rounded-2xl p-6 space-y-5 border border-zinc-300/50 dark:border-zinc-700/50 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg shadow-sm">
+                                    <div className="p-2 bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-lg shadow-sm">
                                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                         </svg>
@@ -375,7 +375,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                     <div className="space-y-4">
                                         <div className="space-y-2.5">
                                             <Label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                                <Package className="w-4 h-4 text-purple-600" />
+                                                <Package className="w-4 h-4 text-zinc-600 dark:text-zinc-300" />
                                                 Search Product <span className="text-red-500">*</span>
                                             </Label>
                                             <div className="relative">
@@ -384,15 +384,15 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                                     placeholder="Search product by name or SKU..."
                                                     value={searchQuery}
                                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                                    className="pl-10 w-full bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-500 rounded-lg shadow-sm transition-all duration-200 h-11"
+                                                    className="pl-10 w-full bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-700 focus:border-zinc-500 dark:focus:border-zinc-500 rounded-lg shadow-sm transition-all duration-200 h-11"
                                                 />
                                             </div>
                                         </div>
 
                                         {selectedProduct && (
-                                            <div className="space-y-4 p-4 border-2 border-purple-300 dark:border-purple-700 rounded-xl bg-white/50 dark:bg-gray-900/50 shadow-sm animate-in fade-in zoom-in duration-300">
+                                            <div className="space-y-4 p-4 border-2 border-zinc-300 dark:border-zinc-700 rounded-xl bg-white/50 dark:bg-gray-900/50 shadow-sm animate-in fade-in zoom-in duration-300">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="h-16 w-16 shrink-0 rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-purple-200 dark:border-purple-800 shadow-sm">
+                                                    <div className="h-16 w-16 shrink-0 rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                                                         {selectedProduct.images?.[0] ? (
                                                             <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="h-full w-full object-contain p-1" />
                                                         ) : (
@@ -403,7 +403,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                                     </div>
                                                     <div className="min-w-0">
                                                         <h4 className="font-bold text-gray-900 dark:text-gray-100 truncate">{selectedProduct.name}</h4>
-                                                        <p className="text-sm text-purple-600 dark:text-purple-400 font-mono">{selectedProduct.sku}</p>
+                                                        <p className="text-sm text-amber-600 dark:text-amber-400 font-mono">{selectedProduct.sku}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-end">
@@ -418,7 +418,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                     {/* Right Column: Results List */}
                                     <div className="space-y-2.5 flex flex-col h-full min-h-[300px]">
                                         <Label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                            <Check className="w-4 h-4 text-purple-600" />
+                                            <Check className="w-4 h-4 text-zinc-600 dark:text-zinc-300" />
                                             Existing Available Products
                                         </Label>
                                         <div className="flex-1 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-inner flex flex-col">
@@ -431,7 +431,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                                             className={cn(
                                                                 "flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200 border",
                                                                 selectedProduct?.id === product.id
-                                                                    ? "bg-purple-50 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700 ring-1 ring-purple-300 dark:ring-purple-700"
+                                                                    ? "bg-amber-50 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700 ring-1 ring-amber-300 dark:ring-amber-700"
                                                                     : "hover:bg-gray-50 dark:hover:bg-gray-900 border-transparent hover:border-gray-200 dark:hover:border-gray-800"
                                                             )}
                                                         >
@@ -449,7 +449,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                                                 <p className="text-xs text-gray-500 dark:text-gray-400 font-mono">{product.sku}</p>
                                                             </div>
                                                             {selectedProduct?.id === product.id && (
-                                                                <div className="h-5 w-5 bg-purple-600 rounded-full flex items-center justify-center">
+                                                                <div className="h-5 w-5 bg-amber-600 rounded-full flex items-center justify-center">
                                                                     <Check className="h-3 w-3 text-white" />
                                                                 </div>
                                                             )}
@@ -586,7 +586,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                     </div>
                 </div>
 
-                <DialogFooter className="gap-3 sm:gap-3 px-8 py-5 border-t-2 border-gray-200 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+                <DialogFooter className="gap-3 sm:gap-3 px-8 py-5 border-t-2 border-gray-200 dark:border-gray-800 bg-gradient-to-r from-zinc-50 to-white dark:from-zinc-950 dark:to-zinc-900">
                     <Button
                         variant="outline"
                         onClick={onClose}
@@ -598,7 +598,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                     <Button
                         onClick={handleSave}
                         disabled={isSubmitting}
-                        className="h-11 px-8 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+                        className="h-11 px-8 bg-gradient-to-r from-zinc-800 via-zinc-900 to-amber-600 hover:from-zinc-900 hover:via-black hover:to-amber-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
                     >
                         {isSubmitting ? (
                             <span className="flex items-center gap-2">

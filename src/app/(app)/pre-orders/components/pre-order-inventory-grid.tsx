@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Image as ImageIcon, ShoppingCart } from "lucide-react";
@@ -19,13 +18,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 
 interface PreOrderItem {
     id: string;
@@ -36,9 +28,6 @@ interface PreOrderItem {
     createdAt: Date;
     preOrder: {
         customerName: string;
-        batch?: {
-            batchName: string;
-        } | null;
     };
     images?: any;
 }
@@ -51,23 +40,12 @@ interface PreOrderInventoryGridProps {
 export default function PreOrderInventoryGrid({ products, onRefresh }: PreOrderInventoryGridProps) {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = React.useState("");
-    const [selectedBatch, setSelectedBatch] = React.useState<string>("all");
     const [currentPage, setCurrentPage] = React.useState(1);
     const itemsPerPage = 10;
 
     React.useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm, selectedBatch]);
-
-    const uniqueBatches = React.useMemo(() => {
-        const batches = new Set<string>();
-        products.forEach(item => {
-            if (item.preOrder.batch?.batchName) {
-                batches.add(item.preOrder.batch.batchName);
-            }
-        });
-        return Array.from(batches).sort();
-    }, [products]);
+    }, [searchTerm]);
 
     const filteredItems = React.useMemo(() => {
         return products.filter((item) => {
@@ -75,11 +53,9 @@ export default function PreOrderInventoryGrid({ products, onRefresh }: PreOrderI
                 item.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 item.preOrder.customerName.toLowerCase().includes(searchTerm.toLowerCase());
 
-            const matchesBatch = selectedBatch === "all" || item.preOrder.batch?.batchName === selectedBatch;
-
-            return matchesSearch && matchesBatch;
+            return matchesSearch;
         });
-    }, [products, searchTerm, selectedBatch]);
+    }, [products, searchTerm]);
 
     const paginatedItems = React.useMemo(() => {
         const start = (currentPage - 1) * itemsPerPage;
@@ -102,19 +78,6 @@ export default function PreOrderInventoryGrid({ products, onRefresh }: PreOrderI
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <Select value={selectedBatch} onValueChange={setSelectedBatch}>
-                        <SelectTrigger className="w-full sm:w-[180px] bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-foreground">
-                            <SelectValue placeholder="All Batches" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Batches</SelectItem>
-                            {uniqueBatches.map((batch) => (
-                                <SelectItem key={batch} value={batch}>
-                                    {batch}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
                 </div>
                 <div className="text-sm text-muted-foreground w-full sm:w-auto text-left sm:text-right">
                     Total Items: <span className="font-medium text-foreground">{filteredItems.length}</span>
@@ -130,7 +93,6 @@ export default function PreOrderInventoryGrid({ products, onRefresh }: PreOrderI
                                 <TableHead className="w-[50px]"></TableHead>
                                 <TableHead className="w-[200px] font-semibold">Item Name</TableHead>
                                 <TableHead className="font-semibold">Customer</TableHead>
-                                <TableHead className="font-semibold">Batch</TableHead>
                                 <TableHead className="text-center font-semibold">Qty</TableHead>
                                 <TableHead className="text-right font-semibold">Price</TableHead>
                                 <TableHead className="text-right font-semibold">Total</TableHead>
@@ -168,15 +130,6 @@ export default function PreOrderInventoryGrid({ products, onRefresh }: PreOrderI
                                                 <TableCell className="text-muted-foreground">
                                                     {item.preOrder.customerName}
                                                 </TableCell>
-                                                <TableCell>
-                                                    {item.preOrder.batch ? (
-                                                        <Badge variant="outline" className="font-normal">
-                                                            {item.preOrder.batch.batchName}
-                                                        </Badge>
-                                                    ) : (
-                                                        <span className="text-muted-foreground text-sm">-</span>
-                                                    )}
-                                                </TableCell>
                                                 <TableCell className="text-center">
                                                     <span className="font-bold tabular-nums">{item.quantity}</span>
                                                 </TableCell>
@@ -194,7 +147,7 @@ export default function PreOrderInventoryGrid({ products, onRefresh }: PreOrderI
                                     })
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
+                                        <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                                             No items found.
                                         </TableCell>
                                     </TableRow>

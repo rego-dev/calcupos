@@ -14,7 +14,6 @@ export async function createWarehouseProduct(data: {
     image?: string | null;
     location?: string | null;
     retailPrice?: number | null;
-    batchId?: string | null;
     productId?: string | null;
     categoryId?: number | null;
 }): Promise<{ success: boolean; error?: string }> {
@@ -34,7 +33,6 @@ export async function createWarehouseProduct(data: {
                 image: data.image,
                 location: data.location,
                 retailPrice: data.retailPrice,
-                batchId: data.batchId ? Number(data.batchId) : null,
                 productId: data.productId ? Number(data.productId) : null,
                 categoryId: data.categoryId,
             },

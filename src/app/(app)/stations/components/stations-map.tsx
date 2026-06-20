@@ -74,7 +74,7 @@ export function StationsMap({ stations }: StationsMapProps) {
 
             // Add markers for each station
             stationsWithCoords.forEach((station) => {
-                const markerColor = station.type === "courier" ? "#3b82f6" : "#8b5cf6";
+                const markerColor = station.type === "courier" ? "#f59e0b" : "#71717a";
 
                 // Create custom icon
                 const icon = L.divIcon({
@@ -110,7 +110,7 @@ export function StationsMap({ stations }: StationsMapProps) {
             <h3 style="font-weight: 600; margin: 0 0 8px 0; font-size: 14px;">${station.name}</h3>
             <p style="margin: 4px 0; font-size: 12px; color: #666;">${station.location}</p>
             <p style="margin: 4px 0; font-size: 12px;">
-              <span style="display: inline-block; padding: 2px 8px; background: ${station.type === "courier" ? "#dbeafe" : "#ede9fe"
+              <span style="display: inline-block; padding: 2px 8px; background: ${station.type === "courier" ? "#fef3c7" : "#f4f4f5"
                     }; border-radius: 4px; font-weight: 500;">
                 ${station.type.charAt(0).toUpperCase() + station.type.slice(1)}
               </span>
@@ -161,11 +161,11 @@ export function StationsMap({ stations }: StationsMapProps) {
             <div className="p-4 border-t bg-muted/50">
                 <div className="flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-amber-500"></div>
                         <span>Courier Station</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-zinc-500"></div>
                         <span>Pickup Station</span>
                     </div>
                     <div className="ml-auto text-muted-foreground">

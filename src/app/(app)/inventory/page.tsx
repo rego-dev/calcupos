@@ -48,7 +48,7 @@ export default function InventoryPage() {
     return (
       <div className="flex flex-col gap-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit">Product Inventory</h1>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit">Product Inventory</h1>
         </div>
         <div className="flex items-center justify-center p-8">
           <p className="text-muted-foreground">Loading...</p>
@@ -74,7 +74,7 @@ export default function InventoryPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit">Product Inventory</h1>
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit">Product Inventory</h1>
       </div>
       <Tabs defaultValue="products" className="w-full">
         <TabsList>

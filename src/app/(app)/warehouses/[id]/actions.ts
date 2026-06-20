@@ -225,11 +225,6 @@ export async function transferToInventory(
                 updateData.images = warehouseProduct.images;
             }
 
-            // Update batchId if provided from warehouse
-            if (warehouseProduct.batchId) {
-                updateData.batchId = warehouseProduct.batchId;
-            }
-
             // Update alertStock to match warehouse product
             updateData.alertStock = warehouseProduct.alertStock || 0;
 
@@ -247,7 +242,6 @@ export async function transferToInventory(
                 images: warehouseProduct.images,
                 quantity: quantity, // Fixed: use quantity directly
                 alertStock: warehouseProduct.alertStock || 0,
-                batchId: warehouseProduct.batchId || null,
                 categoryId: (warehouseProduct as any).categoryId || null,
             };
 

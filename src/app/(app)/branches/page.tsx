@@ -55,7 +55,7 @@ export default function BranchesPage() {
             <div className="flex flex-col gap-8 p-2">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+                        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
                             Branch Management
                         </h1>
                         <p className="text-muted-foreground mt-1">
@@ -63,9 +63,9 @@ export default function BranchesPage() {
                         </p>
                     </div>
                 </div>
-                <div className="flex flex-col items-center justify-center p-12 gap-4 bg-white/50 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50">
+                <div className="flex flex-col items-center justify-center p-12 gap-4 bg-white/50 backdrop-blur-sm rounded-2xl shadow-xl shadow-zinc-300/50">
                     <Loader2 className="w-12 h-12 text-primary animate-spin" />
-                    <p className="text-slate-500 font-medium">Loading branches...</p>
+                    <p className="text-zinc-500 font-medium">Loading branches...</p>
                 </div>
             </div>
         );
@@ -93,10 +93,10 @@ export default function BranchesPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-200">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-200">
                             <MapPin className="w-5 h-5 text-white" />
                         </div>
-                        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+                        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
                             Branch Management
                         </h1>
                     </div>
@@ -110,7 +110,7 @@ export default function BranchesPage() {
             <div className="relative">
                 {/* Decorative background element */}
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10" />
-                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl -z-10" />
+                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl -z-10" />
                 
                 <BranchesTable branches={branches} onRefresh={refreshBranches} />
             </div>

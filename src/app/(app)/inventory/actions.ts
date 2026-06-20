@@ -445,7 +445,7 @@ export async function updateProduct(id: string, productData: Partial<Omit<Produc
       throw new Error('Product not found');
     }
 
-    // Use raw query for update to handle potential batchId validation issues
+    // Use raw query for update to support partial field updates
     const updates = [];
     const values = [];
 

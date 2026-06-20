@@ -146,7 +146,7 @@ export function EditWarehouseDialog({ isOpen, onClose, onSuccess, product }: Edi
                 <div className="space-y-6 py-4">
                     {/* Basic Information Section */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                        <h3 className="text-sm font-semibold text-zinc-700 uppercase tracking-wide">
                             Basic Information
                         </h3>
                         <div className="grid gap-4 sm:grid-cols-2">
@@ -185,7 +185,7 @@ export function EditWarehouseDialog({ isOpen, onClose, onSuccess, product }: Edi
                             </Label>
 
                             {!imagePreview ? (
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:bg-gray-50 transition-colors text-center cursor-pointer relative group">
+                                <div className="border-2 border-dashed border-zinc-300 rounded-lg p-6 hover:bg-zinc-50 transition-colors text-center cursor-pointer relative group">
                                     <Input
                                         id="edit-image"
                                         type="file"
@@ -194,19 +194,19 @@ export function EditWarehouseDialog({ isOpen, onClose, onSuccess, product }: Edi
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                     />
                                     <div className="flex flex-col items-center gap-2">
-                                        <div className="p-3 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
-                                            <ImageIcon className="w-6 h-6 text-gray-500" />
+                                        <div className="p-3 bg-zinc-100 rounded-full group-hover:bg-zinc-200 transition-colors">
+                                            <ImageIcon className="w-6 h-6 text-zinc-500" />
                                         </div>
-                                        <p className="text-sm font-medium text-gray-600">
+                                        <p className="text-sm font-medium text-zinc-600">
                                             Click to upload image
                                         </p>
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-xs text-zinc-400">
                                             PNG, JPG up to 10MB
                                         </p>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                                <div className="relative w-full h-48 bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200">
                                     <img
                                         src={imagePreview}
                                         alt="Preview"
@@ -241,7 +241,7 @@ export function EditWarehouseDialog({ isOpen, onClose, onSuccess, product }: Edi
 
                     {/* Inventory Details Section */}
                     <div className="space-y-4 pt-4 border-t">
-                        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                        <h3 className="text-sm font-semibold text-zinc-700 uppercase tracking-wide">
                             Inventory Details
                         </h3>
                         <div className="grid gap-4 sm:grid-cols-2">
@@ -309,7 +309,7 @@ export function EditWarehouseDialog({ isOpen, onClose, onSuccess, product }: Edi
 
                     {/* Pricing Section */}
                     <div className="space-y-4 pt-4 border-t">
-                        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                        <h3 className="text-sm font-semibold text-zinc-700 uppercase tracking-wide">
                             Pricing
                         </h3>
                         <div className="grid gap-4 sm:grid-cols-2">
@@ -319,7 +319,7 @@ export function EditWarehouseDialog({ isOpen, onClose, onSuccess, product }: Edi
                                     Cost
                                 </Label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
                                         ₱
                                     </span>
                                     <Input
@@ -338,10 +338,10 @@ export function EditWarehouseDialog({ isOpen, onClose, onSuccess, product }: Edi
                                 <Label htmlFor="edit-retailPrice" className="flex items-center gap-2">
                                     <PhilippinePeso className="w-4 h-4" />
                                     Retail Price
-                                    <span className="text-xs text-gray-500 font-normal">(Optional)</span>
+                                    <span className="text-xs text-zinc-500 font-normal">(Optional)</span>
                                 </Label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
                                         ₱
                                     </span>
                                     <Input

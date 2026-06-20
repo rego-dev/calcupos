@@ -162,14 +162,14 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-3xl">
         {/* Gradient Header */}
-        <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-t-lg flex items-center px-6">
+        <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-r from-amber-500 to-amber-600 rounded-t-lg flex items-center px-6">
           <div className="flex items-center gap-3 text-white">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
             <div>
               <DialogTitle className="text-white text-lg font-semibold">Add New Product</DialogTitle>
-              <DialogDescription className="text-teal-100 text-sm">
+              <DialogDescription className="text-amber-100 text-sm">
                 Enter the details for the new product to add it to your inventory.
               </DialogDescription>
             </div>
@@ -179,9 +179,9 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
         {/* Content with top padding for header */}
         <div className="pt-12 max-h-[75vh] overflow-y-auto pr-2">
           {/* Product Information Section */}
-          <div className="bg-teal-50/50 dark:bg-teal-950/20 rounded-lg p-6 mb-4">
+          <div className="bg-amber-50/50 dark:bg-amber-950/20 rounded-lg p-6 mb-4">
             <div className="flex items-center gap-2 mb-4">
-              <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <h3 className="font-semibold text-sm">Product Information</h3>
@@ -191,7 +191,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="name" className="flex items-center gap-2 text-sm">
-                    <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
                     Product Name
@@ -205,7 +205,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="sku" className="flex items-center gap-2 text-sm">
-                    <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                     </svg>
                     SKU
@@ -227,7 +227,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
 
               <div className="grid gap-2">
                 <Label htmlFor="description" className="flex items-center gap-2 text-sm">
-                  <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
                   </svg>
                   Description
@@ -242,7 +242,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
 
               <div className="grid gap-2">
                 <Label className="flex items-center gap-2 text-sm">
-                  <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                   Category
@@ -263,7 +263,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="quantity" className="flex items-center gap-2 text-sm">
-                    <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                     Quantity
@@ -279,7 +279,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="alertStock" className="flex items-center gap-2 text-sm">
-                    <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     Alert Stock
@@ -298,16 +298,16 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
           </div>
 
           {/* Pricing Section */}
-          <div className="bg-teal-50/50 dark:bg-teal-950/20 rounded-lg p-6 mb-4">
+          <div className="bg-amber-50/50 dark:bg-amber-950/20 rounded-lg p-6 mb-4">
             <div className="flex items-center gap-2 mb-4">
-              <PhilippinePeso className="w-5 h-5 text-teal-600" />
+              <PhilippinePeso className="w-5 h-5 text-amber-600" />
               <h3 className="font-semibold text-sm">Pricing</h3>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="cost" className="flex items-center gap-2 text-sm">
-                  <PhilippinePeso className="w-4 h-4 text-teal-600" />
+                  <PhilippinePeso className="w-4 h-4 text-amber-600" />
                   Cost
                 </Label>
                 <div className="relative">
@@ -326,7 +326,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="retailPrice" className="flex items-center gap-2 text-sm">
-                  <PhilippinePeso className="w-4 h-4 text-teal-600" />
+                  <PhilippinePeso className="w-4 h-4 text-amber-600" />
                   Retail Price
                 </Label>
                 <div className="relative">
@@ -347,14 +347,14 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
           </div>
 
           {/* Product Images Section */}
-          <div className="bg-teal-50/50 dark:bg-teal-950/20 rounded-lg p-6 mb-4">
+          <div className="bg-amber-50/50 dark:bg-amber-950/20 rounded-lg p-6 mb-4">
             <div className="flex items-center gap-2 mb-4">
-              <ImageIcon className="w-5 h-5 text-teal-600" />
+              <ImageIcon className="w-5 h-5 text-amber-600" />
               <h3 className="font-semibold text-sm">Product Images</h3>
             </div>
 
             <div className="grid gap-2">
-              <div className="border-2 border-dashed border-teal-300 dark:border-teal-700 rounded-md p-6 text-center bg-white dark:bg-gray-950">
+              <div className="border-2 border-dashed border-amber-300 dark:border-amber-700 rounded-md p-6 text-center bg-white dark:bg-gray-950">
                 <Input
                   id="images"
                   type="file"
@@ -363,15 +363,15 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
                   className="hidden"
                 />
                 <Label htmlFor="images" className="cursor-pointer">
-                  <ImageIcon className="mx-auto h-12 w-12 text-teal-500" />
-                  <span className="mt-2 block text-sm font-medium text-teal-600 dark:text-teal-400">Click to upload images</span>
+                  <ImageIcon className="mx-auto h-12 w-12 text-amber-500" />
+                  <span className="mt-2 block text-sm font-medium text-amber-600 dark:text-amber-400">Click to upload images</span>
                 </Label>
               </div>
               {imagePreviews.length > 0 && (
                 <div className="grid grid-cols-3 gap-2 mt-2">
                   {imagePreviews.map((preview, index) => (
                     <div key={index} className="relative">
-                      <img src={preview} alt={`Preview ${index}`} className="w-full h-24 object-cover rounded-md border-2 border-teal-200 dark:border-teal-800" />
+                      <img src={preview} alt={`Preview ${index}`} className="w-full h-24 object-cover rounded-md border-2 border-amber-200 dark:border-amber-800" />
                       <Button
                         variant="destructive"
                         size="icon"
@@ -401,7 +401,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
             <Button
               onClick={handleSave}
               disabled={isLoading}
-              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600"
+              className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700"
             >
               {isLoading ? "Adding..." : "Add Product"}
             </Button>

@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { Order } from '@/lib/types';
-import { format, eachDayOfInterval, startOfWeek, endOfWeek, eachWeekOfInterval, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
+import { format, eachDayOfInterval, startOfWeek, endOfWeek, eachWeekOfInterval, startOfMonth, endOfMonth, isWithinInterval, isValid } from 'date-fns';
 import { ApexOptions } from 'apexcharts';
 
 // Dynamically import Chart to avoid SSR issues with ApexCharts
@@ -34,7 +34,9 @@ export default function SalesChart({ orders, timeframe }: SalesChartProps) {
       });
 
       orders.forEach(order => {
-        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate);
+        if (!order.orderDate && !order.createdAt) return;
+        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate || order.createdAt);
+        if (!isValid(orderDate)) return;
         if (isWithinInterval(orderDate, { start: weekStart, end: weekEnd })) {
           const dayOfWeek = format(orderDate, "E");
           if (salesByDay.hasOwnProperty(dayOfWeek)) {
@@ -68,7 +70,9 @@ export default function SalesChart({ orders, timeframe }: SalesChartProps) {
       });
 
       orders.forEach(order => {
-        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate);
+        if (!order.orderDate && !order.createdAt) return;
+        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate || order.createdAt);
+        if (!isValid(orderDate)) return;
         if (isWithinInterval(orderDate, { start: monthStart, end: monthEnd })) {
           // Calculate week index
           const weekNumber = Math.ceil((orderDate.getDate() - (orderDate.getDay() || 7) + 1) / 7);
@@ -93,7 +97,9 @@ export default function SalesChart({ orders, timeframe }: SalesChartProps) {
       });
 
       orders.forEach(order => {
-        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate);
+        if (!order.orderDate && !order.createdAt) return;
+        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate || order.createdAt);
+        if (!isValid(orderDate)) return;
         const month = format(orderDate, "MMM");
         if (monthlySales.hasOwnProperty(month)) {
           monthlySales[month] += order.totalAmount;
@@ -111,7 +117,9 @@ export default function SalesChart({ orders, timeframe }: SalesChartProps) {
       const labels: string[] = [];
 
       orders.forEach(order => {
-        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate);
+        if (!order.orderDate && !order.createdAt) return;
+        const orderDate = (order.createdAt as any)?.seconds ? new Date((order.createdAt as any).seconds * 1000) : new Date(order.orderDate || order.createdAt);
+        if (!isValid(orderDate)) return;
         const label = format(orderDate, "MMM yyyy");
 
         if (!salesByMonthYear.hasOwnProperty(label)) {

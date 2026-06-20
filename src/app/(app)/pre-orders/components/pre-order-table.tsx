@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Order, PaymentStatus, ShippingStatus, Customer, Product, Station, Batch, PreOrderProduct, PreOrder } from "@/lib/types";
+import { Order, PaymentStatus, ShippingStatus, Customer, Product, Station, PreOrderProduct, PreOrder } from "@/lib/types";
 import {
     Table,
     TableBody,
@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ShoppingBag, Truck, Calendar, Filter, Archive, User, Package, PlusCircle, PhilippinePeso, Banknote } from "lucide-react";
+import { Search, ShoppingBag, Truck, Filter, Archive, User, Package, PlusCircle, PhilippinePeso, Banknote } from "lucide-react";
 import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,24 +26,23 @@ interface PreOrderTableProps {
     orders: PreOrder[];
     customers: Customer[];
     stations: Station[];
-    batches?: Batch[];
     onRefresh: () => void;
 }
 
 const statusBadgeStyles: Record<ShippingStatus, string> = {
     Pending: "bg-zinc-100 text-zinc-800 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300",
-    Ready: "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300",
-    Shipped: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300",
-    Delivered: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300",
+    Ready: "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300",
+    Shipped: "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300",
+    Delivered: "bg-zinc-200 text-zinc-800 border-zinc-300 dark:bg-zinc-900/30 dark:text-zinc-300",
     Claimed: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300",
     Cancelled: "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300",
-    "Rush Ship": "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300",
+    "Rush Ship": "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300",
 };
 
 // Mock payment statuses for the filter UI - in real app this would likely be on the Order object
 const PAYMENT_STATUSES = ["TO PAY", "DOWNPAYMENT", "PAID"];
 
-export default function PreOrderTable({ orders, customers, stations, batches, onRefresh }: PreOrderTableProps) {
+export default function PreOrderTable({ orders, customers, stations, onRefresh }: PreOrderTableProps) {
     const [searchTerm, setSearchTerm] = React.useState("");
     const [statusFilter, setStatusFilter] = React.useState<string>("all");
     const [paymentStatusFilter, setPaymentStatusFilter] = React.useState<string>("all");
@@ -137,7 +136,7 @@ export default function PreOrderTable({ orders, customers, stations, batches, on
                         </SelectContent>
                     </Select>
 
-                    <Button className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white" onClick={() => setCreateDialogOpen(true)}>
+                    <Button className="w-full sm:w-auto bg-zinc-800 hover:bg-zinc-900 text-white" onClick={() => setCreateDialogOpen(true)}>
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Pre order
                     </Button>
@@ -180,7 +179,7 @@ export default function PreOrderTable({ orders, customers, stations, batches, on
                                                 <div className="space-y-1">
                                                     {order.items.map((item) => (
                                                         <div key={item.id} className="font-medium flex items-center gap-2 text-foreground">
-                                                            <ShoppingBag className="h-3.5 w-3.5 text-pink-500 shrink-0" />
+                                                            <ShoppingBag className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
                                                             <span className="line-clamp-1" title={item.productName}>
                                                                 {item.productName} (x{item.quantity})
                                                             </span>
@@ -204,12 +203,6 @@ export default function PreOrderTable({ orders, customers, stations, batches, on
                                                         <span className="font-medium text-sm leading-none">{order.customerName}</span>
                                                         <div className="flex items-center gap-2">
                                                             <span className="text-xs text-muted-foreground font-mono">{order.paymentMethod}</span>
-                                                            {order.batch && (
-                                                                <div className="text-[10px] text-zinc-500 flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 px-1.5 rounded">
-                                                                    <Calendar className="h-2.5 w-2.5" />
-                                                                    {order.batch.batchName} ({format(new Date(order.batch.manufactureDate), 'MMM d')})
-                                                                </div>
-                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -251,7 +244,7 @@ export default function PreOrderTable({ orders, customers, stations, batches, on
                                                                         className={`transition-all duration-500 ${percentage === 100
                                                                             ? 'text-green-500'
                                                                             : percentage > 0
-                                                                                ? 'text-blue-500'
+                                                                                ? 'text-amber-500'
                                                                                 : 'text-zinc-400'
                                                                             }`}
                                                                     />
@@ -261,7 +254,7 @@ export default function PreOrderTable({ orders, customers, stations, batches, on
                                                                     <span className={`text-[10px] font-bold ${percentage === 100
                                                                         ? 'text-green-600'
                                                                         : percentage > 0
-                                                                            ? 'text-blue-600'
+                                                                            ? 'text-amber-600'
                                                                             : 'text-zinc-500'
                                                                         }`}>
                                                                         {percentage}%
@@ -357,7 +350,6 @@ export default function PreOrderTable({ orders, customers, stations, batches, on
                 onClose={() => setCreateDialogOpen(false)}
                 customers={customers}
                 stations={stations}
-                batches={batches}
                 onSuccess={() => {
                     onRefresh();
                     setCreateDialogOpen(false);

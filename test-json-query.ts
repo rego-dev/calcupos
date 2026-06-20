@@ -12,7 +12,7 @@ async function main() {
     const withNum = await prisma.preOrder.findMany({
         where: {
             createdBy: {
-                path: "$.uid",
+                path: ["uid"],
                 equals: idNum,
             }
         }
@@ -24,7 +24,7 @@ async function main() {
         const withStr = await prisma.preOrder.findMany({
             where: {
                 createdBy: {
-                    path: "$.uid",
+                    path: ["uid"],
                     equals: String(idNum),
                 }
             }

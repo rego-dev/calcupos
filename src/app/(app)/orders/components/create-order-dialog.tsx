@@ -19,11 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Customer, Order, PaymentStatus, ShippingStatus, PaymentMethod, Batch, OrderRemark, Product } from "@/lib/types";
+import { Customer, Order, PaymentStatus, ShippingStatus, PaymentMethod, OrderRemark, Product } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { ChevronsUpDown, Check, Copy, Package, Trash2, Plus, PhilippinePeso, User, MapPin, Phone, CreditCard, Truck, Calendar, FileText, Printer, CheckCircle2, ShoppingCart, Zap, Layers, Search } from "lucide-react";
+import { ChevronsUpDown, Check, Copy, Package, Trash2, Plus, PhilippinePeso, User, MapPin, Phone, CreditCard, Truck, FileText, Printer, CheckCircle2, ShoppingCart, Zap, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SelectProductDialog } from "./select-product-dialog";
@@ -41,7 +41,6 @@ interface CreateOrderDialogProps {
   customers: Customer[];
   products: Product[];
   stations: Station[];
-  batches: Batch[];
   onSuccess?: () => Promise<void>;
 }
 
@@ -56,7 +55,6 @@ export function CreateOrderDialog({
   customers,
   products,
   stations,
-  batches,
   onSuccess,
 }: CreateOrderDialogProps) {
   const { toast } = useToast();
@@ -65,13 +63,12 @@ export function CreateOrderDialog({
   const [contactNumber, setContactNumber] = useState("");
   const [address, setAddress] = useState("");
 
-  const [selectedItems, setSelectedItems] = useState<{ product: Product; quantity: number | string; batchName?: string }[]>([]);
+  const [selectedItems, setSelectedItems] = useState<{ product: Product; quantity: number | string }[]>([]);
 
   const [shippingFee, setShippingFee] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("COD");
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("Unpaid");
   const [shippingStatus, setShippingStatus] = useState<ShippingStatus>("Pending");
-  const [batchId, setBatchId] = useState<string | null>(null);
   const [courierName, setCourierName] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
   const [remarks, setRemarks] = useState<OrderRemark>('');
@@ -122,7 +119,6 @@ export function CreateOrderDialog({
     setPaymentMethod("COD");
     setPaymentStatus("Unpaid");
     setShippingStatus("Pending");
-    setBatchId(String(null));
     setTotalAmount(0);
     setCourierName("");
     setTrackingNumber("");
@@ -316,9 +312,8 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
         shippingFee: parseFloat(shippingFee) || 0,
         totalAmount: totalAmount || 0,
         paymentMethod,
-        paymentStatus: batchId === 'hold' ? 'Hold' : paymentStatus,
+        paymentStatus,
         shippingStatus,
-        batchId: (batchId === 'hold' || batchId === 'none' || !batchId) ? null : batchId,
         courierName,
         trackingNumber,
         remarks,
@@ -360,7 +355,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
     setComboboxOpen(false);
   }
 
-  const handleProductSelect = (newSelectedItems: { product: Product; quantity: number | string }[], selectedBatchId?: string | null) => {
+  const handleProductSelect = (newSelectedItems: { product: Product; quantity: number | string }[]) => {
     setSelectedItems(prev => {
       const updated = [...prev];
       newSelectedItems.forEach(newItem => {
@@ -375,10 +370,6 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
       });
       return updated;
     });
-
-    if (selectedBatchId) {
-      setBatchId(String(selectedBatchId));
-    }
 
     setProductSelectOpen(false);
   };
@@ -399,13 +390,13 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent
-          className="sm:max-w-4xl max-h-[95vh] flex flex-col p-0 overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50/30"
+          className="sm:max-w-4xl max-h-[95vh] flex flex-col p-0 overflow-hidden bg-gradient-to-br from-zinc-50 to-amber-50/30"
           onPointerDownOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
           {/* Header with gradient */}
           <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 opacity-90" />
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-zinc-800 to-amber-600 opacity-90" />
             <div className="relative p-6 pb-8">
               <DialogHeader>
                 <div className="flex items-center gap-3 mb-2">
@@ -421,7 +412,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                   </DialogTitle>
                 </div>
                 {!lastCreatedOrder && (
-                  <DialogDescription className="text-blue-100 text-base">
+                  <DialogDescription className="text-amber-100 text-base">
                     Fill in the details below to create a new order for your customer.
                   </DialogDescription>
                 )}
@@ -443,11 +434,11 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                   Order Confirmed!
                 </h3>
                 <p className="text-lg text-slate-600">
-                  Order for <span className="font-semibold text-blue-600">{lastCreatedOrder.customerName}</span> has been created successfully.
+                  Order for <span className="font-semibold text-amber-600">{lastCreatedOrder.customerName}</span> has been created successfully.
                 </p>
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mt-4">
+                <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 mt-4">
                   <p className="text-sm text-slate-600 mb-1">Order ID</p>
-                  <p className="text-xl font-bold text-blue-600">{String(lastCreatedOrder.id).substring(0, 8).toUpperCase()}</p>
+                  <p className="text-xl font-bold text-amber-600">{String(lastCreatedOrder.id).substring(0, 8).toUpperCase()}</p>
                 </div>
               </div>
 
@@ -455,7 +446,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                 <Button
                   onClick={handlePrintReceipt}
                   size="lg"
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg h-12"
+                  className="flex-1 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg h-12"
                 >
                   <Printer className="mr-2 h-5 w-5" />
                   Print Receipt
@@ -476,10 +467,10 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
               <div className="space-y-6 max-w-3xl mx-auto">
                 {/* Customer Information Card */}
                 <div className="bg-white rounded-xl shadow-sm border-2 border-slate-200">
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-4 border-b-2 border-blue-200 rounded-t-xl">
+                  <div className="bg-gradient-to-r from-amber-50 to-zinc-100 px-6 py-4 border-b-2 border-amber-200 rounded-t-xl">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                        <User className="w-4 h-4 text-blue-600" />
+                      <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                        <User className="w-4 h-4 text-amber-600" />
                       </div>
                       <h3 className="text-lg font-semibold text-slate-900">Customer Information</h3>
                     </div>
@@ -488,7 +479,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="customerName" className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                          <User className="w-4 h-4 text-blue-500" />
+                          <User className="w-4 h-4 text-amber-500" />
                           Customer Name
                         </Label>
                         <div className="relative">
@@ -501,7 +492,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                             }}
                             onFocus={() => setComboboxOpen(true)}
                             placeholder="Type customer name..."
-                            className="h-11 border-2 focus:border-blue-400 pr-10"
+                            className="h-11 border-2 focus:border-amber-400 pr-10"
                             autoComplete="off"
                           />
                           <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
@@ -519,7 +510,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                                   <div
                                     className={cn(
                                       "flex items-center px-3 py-2 text-sm rounded-lg cursor-pointer transition-colors",
-                                      customerName.toLowerCase() === "walk in customer" ? "bg-blue-50 text-blue-700 font-semibold" : "hover:bg-slate-100 text-slate-900 dark:text-slate-900"
+                                      customerName.toLowerCase() === "walk in customer" ? "bg-amber-50 text-amber-700 font-semibold" : "hover:bg-slate-100 text-slate-900 dark:text-slate-900"
                                     )}
                                     onClick={() => {
                                       setCustomerName("Walk In Customer");
@@ -530,7 +521,6 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                                       setShippingFee("0");
                                       setRushShip(false);
                                       setIsPickup(false);
-                                      setBatchId(String(null));
                                       setCourierName("");
                                       setTrackingNumber("");
                                       setComboboxOpen(false);
@@ -552,7 +542,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                                         key={customer.id}
                                         className={cn(
                                           "flex items-center px-3 py-2 text-sm rounded-lg cursor-pointer transition-colors",
-                                          customerName.toLowerCase() === customer.name.toLowerCase() ? "bg-blue-50 text-blue-700 font-semibold" : "hover:bg-slate-100 text-slate-900 dark:text-slate-900"
+                                          customerName.toLowerCase() === customer.name.toLowerCase() ? "bg-amber-50 text-amber-700 font-semibold" : "hover:bg-slate-100 text-slate-900 dark:text-slate-900"
                                         )}
                                         onClick={() => {
                                           handleCustomerSelect(customer);
@@ -572,7 +562,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                                     c.name.toLowerCase().includes(customerName.toLowerCase())
                                   ).length === 0 && customerName !== "" && (
                                       <div className="px-3 py-4 text-center">
-                                        <p className="text-sm text-slate-500">Creating new customer: <span className="font-semibold text-blue-600">"{customerName}"</span></p>
+                                        <p className="text-sm text-slate-500">Creating new customer: <span className="font-semibold text-amber-600">"{customerName}"</span></p>
                                       </div>
                                     )}
                                 </div>
@@ -615,10 +605,10 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
 
                 {/* Item Purchases Card */}
                 <div className="bg-white rounded-xl shadow-sm border-2 border-slate-200">
-                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-4 border-b-2 border-purple-200 flex items-center justify-between rounded-t-xl">
+                  <div className="bg-gradient-to-r from-zinc-100 to-zinc-200 px-6 py-4 border-b-2 border-zinc-300 flex items-center justify-between rounded-t-xl">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
-                        <Package className="w-4 h-4 text-purple-600" />
+                      <div className="w-8 h-8 rounded-lg bg-zinc-200 flex items-center justify-center">
+                        <Package className="w-4 h-4 text-zinc-700" />
                       </div>
                       <h3 className="text-lg font-semibold text-slate-900">Item Purchases</h3>
                     </div>
@@ -626,7 +616,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                       variant="outline"
                       size="sm"
                       onClick={() => setProductSelectOpen(true)}
-                      className="border-2 hover:border-purple-400 hover:bg-purple-50"
+                      className="border-2 hover:border-zinc-400 hover:bg-zinc-100"
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       Add Item
@@ -645,7 +635,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                           variant="outline"
                           size="sm"
                           onClick={() => setProductSelectOpen(true)}
-                          className="border-2 hover:border-purple-400"
+                          className="border-2 hover:border-zinc-400"
                         >
                           <Plus className="mr-2 h-4 w-4" />
                           Choose Products
@@ -656,26 +646,21 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                         {selectedItems.map((item) => (
                           <div
                             key={item.product.id}
-                            className="flex items-center gap-4 p-4 bg-gradient-to-r from-slate-50 to-purple-50/30 border-2 border-slate-200 rounded-xl hover:border-purple-300 transition-all group"
+                            className="flex items-center gap-4 p-4 bg-gradient-to-r from-slate-50 to-zinc-100/30 border-2 border-slate-200 rounded-xl hover:border-zinc-300 transition-all group"
                           >
                             <Avatar className="h-14 w-14 rounded-xl border-2 border-white shadow-sm">
                               <AvatarImage src={item.product.images?.[0] as string} alt={item.product.name} />
-                              <AvatarFallback className="rounded-xl bg-gradient-to-br from-purple-100 to-pink-100">
-                                <ImageIcon className="h-6 w-6 text-purple-600" />
+                              <AvatarFallback className="rounded-xl bg-gradient-to-br from-zinc-100 to-zinc-200">
+                                <ImageIcon className="h-6 w-6 text-zinc-700" />
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-base truncate text-slate-900">{item.product.name}</p>
                               <div className="flex items-center gap-3 mt-1">
                                 <span className="text-xs text-muted-foreground">SKU: {item.product.sku}</span>
-                                <Badge variant="secondary" className="text-xs font-semibold bg-purple-100 text-purple-700">
+                                <Badge variant="secondary" className="text-xs font-semibold bg-zinc-200 text-zinc-700">
                                   ₱{item.product.retailPrice.toFixed(2)}
                                 </Badge>
-                                {item.batchName && (
-                                  <Badge variant="outline" className="text-[10px] px-2 h-5">
-                                    {item.batchName}
-                                  </Badge>
-                                )}
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
@@ -700,7 +685,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                         ))}
 
                         {/* Order Summary */}
-                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-4 mt-4">
+                        <div className="bg-gradient-to-r from-amber-50 to-zinc-100 border-2 border-amber-200 rounded-xl p-4 mt-4">
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
                               <span className="text-slate-600">Subtotal ({selectedItems.reduce((sum, item) => sum + (typeof item.quantity === 'string' ? 0 : item.quantity), 0)} items)</span>
@@ -712,10 +697,10 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                                 <span className="font-semibold text-slate-900">₱{parseFloat(shippingFee || "0").toFixed(2)}</span>
                               </div>
                             )}
-                            <div className="border-t-2 border-blue-300 pt-2 mt-2">
+                            <div className="border-t-2 border-amber-300 pt-2 mt-2">
                               <div className="flex justify-between">
                                 <span className="text-base font-semibold text-slate-900">Total Amount</span>
-                                <span className="text-2xl font-bold text-blue-600">₱{totalAmount.toFixed(2)}</span>
+                                <span className="text-2xl font-bold text-amber-600">₱{totalAmount.toFixed(2)}</span>
                               </div>
                             </div>
                           </div>
@@ -781,32 +766,10 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                     )}
 
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-blue-500" />
-                          Assign Batch
-                        </Label>
-                        <Select
-                          value={batchId && batchId !== 'hold' ? batchId : 'none'}
-                          onValueChange={(value: string) => setBatchId(String(value))}
-                        >
-                          <SelectTrigger className="h-11 border-2">
-                            <SelectValue placeholder="Select batch" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">No batch (Optional)</SelectItem>
-                            {batches && batches.filter(b => b.status === "Open").map(b => (
-                              <SelectItem key={b.id} value={String(b.id)}>
-                                {b.batchName} ({format(new Date(b.manufactureDate), 'MMM d')})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
                       {customerName !== "Walk In Customer" && (
                         <div className="space-y-2">
                           <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                            <MapPin className="w-4 h-4 text-purple-500" />
+                            <MapPin className="w-4 h-4 text-zinc-500" />
                             Pickup Station
                           </Label>
                           <Select
@@ -843,7 +806,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="courierName" className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                            <Truck className="w-4 h-4 text-indigo-500" />
+                            <Truck className="w-4 h-4 text-amber-500" />
                             Courier Name
                           </Label>
                           <Input
@@ -851,12 +814,12 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                             value={courierName}
                             onChange={(e) => setCourierName(e.target.value)}
                             placeholder="Lalamove, J&T, etc."
-                            className="h-11 border-2 focus:border-indigo-400"
+                            className="h-11 border-2 focus:border-amber-400"
                           />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="trackingNumber" className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                            <FileText className="w-4 h-4 text-cyan-500" />
+                            <FileText className="w-4 h-4 text-amber-500" />
                             Tracking Number
                           </Label>
                           <Input
@@ -864,7 +827,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                             value={trackingNumber}
                             onChange={(e) => setTrackingNumber(e.target.value)}
                             placeholder="TRACKING-123"
-                            className="h-11 border-2 focus:border-cyan-400"
+                            className="h-11 border-2 focus:border-amber-400"
                           />
                         </div>
                       </div>
@@ -889,30 +852,10 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                       </Select>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-violet-500" />
-                        Delivery Batch
-                      </Label>
-                      <Select
-                        onValueChange={(value: string) => setBatchId(String(value))}
-                        value={batchId && batchId !== 'hold' ? 'none' : (batchId || '')}
-                        disabled={customerName === "Walk In Customer"}
-                      >
-                        <SelectTrigger className="h-11 border-2">
-                          <SelectValue placeholder="Select batch" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="hold">Hold for Next Batch</SelectItem>
-                          <SelectItem value="none">Normal Delivery</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
                     <div className="grid md:grid-cols-3 gap-4">
                       <div className="space-y-2">
                         <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                          <CreditCard className="w-4 h-4 text-yellow-500" />
+                          <CreditCard className="w-4 h-4 text-amber-500" />
                           Payment Method
                         </Label>
                         <Select
@@ -937,7 +880,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                         <Select
                           onValueChange={(value: PaymentStatus) => setPaymentStatus(value)}
                           value={paymentStatus}
-                          disabled={batchId === 'hold' || customerName === "Walk In Customer"}
+                          disabled={customerName === "Walk In Customer"}
                         >
                           <SelectTrigger className="h-11 border-2">
                             <SelectValue />
@@ -984,7 +927,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                         accept="image/*,application/pdf"
                         onChange={handlePaymentProofChange}
                         disabled={isSubmitting || isReadingPaymentProof}
-                        className="h-11 border-2 focus:border-blue-400"
+                        className="h-11 border-2 focus:border-amber-400"
                       />
 
                       {paymentProofPreviewUrl && paymentProof && paymentProof.mimeType.startsWith("image/") && (
@@ -1004,7 +947,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                               href={paymentProofPreviewUrl || "#"}
                               target="_blank"
                               rel="noreferrer"
-                              className="ml-2 text-blue-600 hover:underline"
+                              className="ml-2 text-amber-600 hover:underline"
                             >
                               View
                             </a>
@@ -1035,7 +978,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
               {!lastCreatedOrder && (
                 <Button
                   onClick={handleSave}
-                  className="flex-1 h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg font-semibold"
+                  className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg font-semibold"
                   disabled={isSubmitting || isReadingPaymentProof || selectedItems.length === 0}
                 >
                   {isSubmitting ? "Creating..." : "Create Order"}
@@ -1061,14 +1004,14 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
             <div className="flex justify-between items-start mb-8">
               <div>
                 <h1 className="text-4xl font-bold text-slate-700 tracking-tight">Official Receipt</h1>
-                <p className="text-slate-500 mt-1 font-medium italic">CalcuPOS Analytics Engine</p>
+                <p className="text-slate-500 mt-1 font-medium italic">FlowCart Sync Analytics Engine</p>
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-2 justify-end mb-1">
                   <div className="h-8 w-8 bg-slate-800 rounded flex items-center justify-center">
                     <span className="text-white font-bold text-sm">TF</span>
                   </div>
-                  <span className="text-xl font-bold text-slate-700">CalcuPOS</span>
+                  <span className="text-xl font-bold text-slate-700">FlowCart Sync</span>
                 </div>
                 <p className="text-xs text-slate-400">Generated: {format(new Date(), "MMM dd, yyyy h:mm:ss a")}</p>
               </div>
@@ -1138,7 +1081,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
 
             {/* Footer */}
             <div className="mt-auto pt-10 border-t border-slate-100 text-[10px] text-slate-300 flex justify-between items-center break-inside-avoid">
-              <p>© {new Date().getFullYear()} CalcuPOS Official Receipt</p>
+              <p>© {new Date().getFullYear()} FlowCart Sync Official Receipt</p>
               <p className="flex items-center gap-2">
                 <span className="h-1 w-1 bg-slate-200 rounded-full"></span>
                 Thank you for your purchase!

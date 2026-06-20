@@ -13,7 +13,7 @@ export function AccessDenied() {
             <div className="mb-6 p-4 rounded-full bg-red-100 dark:bg-red-900/20">
                 <ShieldAlert className="h-12 w-12 text-red-600 dark:text-red-400" />
             </div>
-            <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent mb-4">
+            <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent mb-4">
                 Access Denied
             </h1>
             <p className="text-muted-foreground max-w-md mb-8">
@@ -29,7 +29,7 @@ export function AccessDenied() {
                 </Button>
                 <Button
                     onClick={() => window.location.href = "/profile"}
-                    className="rounded-full px-8 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 border-none text-white shadow-lg shadow-blue-500/20"
+                    className="rounded-full px-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 border-none text-white shadow-lg shadow-amber-500/20"
                 >
                     Go to Profile
                 </Button>

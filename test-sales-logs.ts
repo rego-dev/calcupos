@@ -17,7 +17,7 @@ async function main() {
             const filtered1 = await prisma.salesLog.findMany({
                 where: {
                     orders: {
-                        path: '$.createdBy.uid',
+                        path: ['createdBy', 'uid'],
                         equals: testUserId
                     }
                 }

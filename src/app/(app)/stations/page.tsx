@@ -46,7 +46,7 @@ export default function StationsPage() {
             <div className="flex flex-col gap-8 p-2">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+                        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
                             Courier & Pickup Stations
                         </h1>
                         <p className="text-muted-foreground mt-1">
@@ -79,7 +79,7 @@ export default function StationsPage() {
         <div className="flex flex-col gap-8 p-2">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+                    <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
                         Courier & Pickup Stations
                     </h1>
                     <p className="text-muted-foreground mt-1">

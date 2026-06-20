@@ -4,6 +4,79 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth-server";
 import bcrypt from "bcryptjs";
+import type { CompanyProfile } from "@/lib/types";
+
+const DEFAULT_COMPANY_PROFILE: CompanyProfile = {
+    id: 1,
+    companyName: "FlowCart Sync",
+    address: null,
+    phone: null,
+    email: null,
+    taxId: null,
+    logoUrl: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+};
+
+export async function getCompanyProfile(): Promise<CompanyProfile> {
+    try {
+        const profile = await prisma.companyProfile.findUnique({ where: { id: 1 } });
+        if (!profile) {
+            return DEFAULT_COMPANY_PROFILE;
+        }
+        return {
+            ...profile,
+            createdAt: profile.createdAt.toISOString(),
+            updatedAt: profile.updatedAt.toISOString(),
+        };
+    } catch (error) {
+        console.error("Failed to fetch company profile:", error);
+        return DEFAULT_COMPANY_PROFILE;
+    }
+}
+
+export async function updateCompanyProfile(formData: FormData) {
+    try {
+        const companyName = formData.get("companyName") as string;
+        const address = (formData.get("address") as string) || null;
+        const phone = (formData.get("phone") as string) || null;
+        const email = (formData.get("email") as string) || null;
+        const taxId = (formData.get("taxId") as string) || null;
+        const logoUrl = (formData.get("logoUrl") as string) || null;
+
+        if (!companyName?.trim()) {
+            return { success: false, error: "Company name is required" };
+        }
+
+        await prisma.companyProfile.upsert({
+            where: { id: 1 },
+            create: { id: 1, companyName, address, phone, email, taxId, logoUrl },
+            update: { companyName, address, phone, email, taxId, logoUrl },
+        });
+
+        revalidatePath("/settings");
+        revalidatePath("/pos");
+        revalidatePath("/print/dashboard");
+
+        return { success: true, message: "Company profile updated successfully" };
+    } catch (error) {
+        console.error("Failed to update company profile:", error);
+        return { success: false, error: "Failed to update company profile" };
+    }
+}
+
+export async function getUsersForLogs() {
+    try {
+        const users = await prisma.user.findMany({
+            orderBy: { name: "asc" },
+            select: { id: true, name: true },
+        });
+        return users.map((u) => ({ ...u, id: String(u.id) }));
+    } catch (error) {
+        console.error("Failed to fetch users:", error);
+        return [];
+    }
+}
 
 export async function updatePassword(formData: FormData) {
     try {
@@ -99,9 +172,6 @@ export async function exportDatabase(options: {
         }
         if (options.tables.includes("products") || options.tables.length === 0) {
             exportData.products = await prisma.product.findMany();
-        }
-        if (options.tables.includes("batches") || options.tables.length === 0) {
-            exportData.batches = await prisma.batch.findMany();
         }
         if (options.tables.includes("users") || options.tables.length === 0) {
             exportData.users = await prisma.user.findMany();

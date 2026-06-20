@@ -91,10 +91,10 @@ export function RecentSalesTable({ orders }: RecentSalesTableProps) {
     };
 
     return (
-        <Card className="border-t-4 border-t-purple-500/50 shadow-lg overflow-hidden">
+        <Card className="border-t-4 border-t-zinc-500/50 shadow-lg overflow-hidden">
             <CardHeader className="border-b bg-muted/30 flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-purple-500" />
+                    <FileText className="h-5 w-5 text-zinc-500" />
                     Recent Sales Transactions
                 </CardTitle>
             </CardHeader>
@@ -147,9 +147,9 @@ export function RecentSalesTable({ orders }: RecentSalesTableProps) {
                                             disabled={printingOrderId === order.id}
                                         >
                                             {printingOrderId === order.id ? (
-                                                <Loader2 className="h-4 w-4 animate-spin text-purple-500" />
+                                                <Loader2 className="h-4 w-4 animate-spin text-zinc-500" />
                                             ) : (
-                                                <Printer className="h-4 w-4 text-purple-500" />
+                                                <Printer className="h-4 w-4 text-zinc-500" />
                                             )}
                                         </Button>
                                     </TableCell>
@@ -157,7 +157,7 @@ export function RecentSalesTable({ orders }: RecentSalesTableProps) {
                             ))}
                             {orders.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center text-muted-foreground h-32">
+                                    <TableCell colSpan={6} className="text-center text-muted-foreground h-32">
                                         No transactions found for this period
                                     </TableCell>
                                 </TableRow>
@@ -202,14 +202,14 @@ export function RecentSalesTable({ orders }: RecentSalesTableProps) {
                         <div className="flex justify-between items-start mb-8">
                             <div>
                                 <h1 className="text-4xl font-bold text-slate-700 tracking-tight">Official Receipt</h1>
-                                <p className="text-slate-500 mt-1 font-medium italic">CalcuPOS Analytics Engine</p>
+                                <p className="text-slate-500 mt-1 font-medium italic">FlowCart Sync Analytics Engine</p>
                             </div>
                             <div className="text-right">
                                 <div className="flex items-center gap-2 justify-end mb-1">
                                     <div className="h-8 w-8 bg-slate-800 rounded flex items-center justify-center">
                                         <span className="text-white font-bold text-sm">TF</span>
                                     </div>
-                                    <span className="text-xl font-bold text-slate-700">CalcuPOS</span>
+                                    <span className="text-xl font-bold text-slate-700">FlowCart Sync</span>
                                 </div>
                                 <p className="text-xs text-slate-400">Generated: {format(new Date(), "MMM dd, yyyy h:mm:ss a")}</p>
                             </div>
@@ -288,7 +288,7 @@ export function RecentSalesTable({ orders }: RecentSalesTableProps) {
 
                         {/* Footer */}
                         <div className="mt-auto pt-10 border-t border-slate-100 text-[10px] text-slate-300 flex justify-between items-center break-inside-avoid">
-                            <p>© {new Date().getFullYear()} CalcuPOS Official Receipt</p>
+                            <p>© {new Date().getFullYear()} FlowCart Sync Official Receipt</p>
                             <p className="flex items-center gap-2">
                                 <span className="h-1 w-1 bg-slate-200 rounded-full"></span>
                                 Thank you for your purchase!

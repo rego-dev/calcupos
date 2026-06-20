@@ -91,7 +91,7 @@ export default function BranchesTable({ branches, onRefresh }: BranchesTableProp
                 <CardContent className="p-0">
                     <Table>
                         <TableHeader>
-                            <TableRow className="bg-slate-50/50">
+                            <TableRow className="bg-zinc-100/50">
                                 <TableHead className="font-bold py-4">Name</TableHead>
                                 <TableHead className="font-bold">Created At</TableHead>
                                 <TableHead className="font-bold text-right">Actions</TableHead>
@@ -109,7 +109,7 @@ export default function BranchesTable({ branches, onRefresh }: BranchesTableProp
                                 </TableRow>
                             ) : (
                                 branches.map((branch) => (
-                                    <TableRow key={branch.id} className="hover:bg-slate-50/50 transition-colors">
+                                    <TableRow key={branch.id} className="hover:bg-zinc-100/50 transition-colors">
                                         <TableCell className="font-medium py-3">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">

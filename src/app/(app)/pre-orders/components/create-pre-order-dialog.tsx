@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Customer, PaymentMethod, Batch } from "@/lib/types";
+import { Customer, PaymentMethod } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -38,7 +38,6 @@ import { useRouter } from "next/navigation";
 import { createCustomer } from "../../customers/actions";
 import type { Station } from "../../stations/actions";
 import { format } from "date-fns";
-import { CreateBatchDialog } from "../../batches/components/create-batch-dialog";
 // import { getProductNames } from "../../inventory/actions";
 // import { AddProductDialog } from "../../inventory/components/add-product-dialog";
 import { CreatePreOrderProductDialog } from "./create-pre-order-product-dialog";
@@ -50,7 +49,6 @@ interface CreatePreOrderDialogProps {
     onClose: () => void;
     customers: Customer[];
     stations: Station[];
-    batches?: Batch[];
     onSuccess?: () => void;
 }
 
@@ -70,7 +68,6 @@ export function CreatePreOrderDialog({
     onClose,
     customers,
     stations,
-    batches,
     onSuccess,
 }: CreatePreOrderDialogProps) {
     const { toast } = useToast();
@@ -85,14 +82,6 @@ export function CreatePreOrderDialog({
     const [selectedItems, setSelectedItems] = useState<OrderItem[]>([]);
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("COD");
     const [orderDate, setOrderDate] = useState<string>(new Date().toISOString().split('T')[0]);
-    const [batchId, setBatchId] = useState<string>("none");
-    const [availableBatches, setAvailableBatches] = useState<Batch[]>(batches || []);
-
-    useEffect(() => {
-        if (batches) {
-            setAvailableBatches(batches);
-        }
-    }, [batches]);
 
     // Multi-select state
     const [selectedProductNames, setSelectedProductNames] = useState<string[]>([]);
@@ -105,7 +94,6 @@ export function CreatePreOrderDialog({
     const [searchQuery, setSearchQuery] = useState("");
     // const [itemComboboxOpen, setItemComboboxOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
-    const [isCreateBatchOpen, setCreateBatchOpen] = useState(false);
     const [addProductOpen, setAddProductOpen] = useState(false);
     const [isSelectProductsOpen, setIsSelectProductsOpen] = useState(false);
 
@@ -125,12 +113,6 @@ export function CreatePreOrderDialog({
         toast({ title: "Product Created", description: `${product.name} added to order.` });
         setAddProductOpen(false);
         router.refresh();
-    };
-
-    const handleBatchCreated = (batch: Batch) => {
-        setAvailableBatches(prev => [batch, ...prev]);
-        setBatchId(String(batch.id));
-        setCreateBatchOpen(false);
     };
 
     const handleProductsSelected = (products: Product[]) => {
@@ -174,7 +156,6 @@ export function CreatePreOrderDialog({
         setOrderDate(new Date().toISOString().split('T')[0]);
         setPaymentTerms("full");
         setDepositAmount(0);
-        setBatchId("none");
         setIsSubmitting(false);
         setSelectedProductNames([]);
         setSearchQuery("");
@@ -291,7 +272,6 @@ export function CreatePreOrderDialog({
                 customerEmail: finalCustomerEmail,
                 remarks: '',
                 items: itemsPayload,
-                batchId: batchId,
                 productId: selectedItems[0]?.productId ? String(selectedItems[0].productId) : undefined,
             });
 
@@ -340,11 +320,11 @@ export function CreatePreOrderDialog({
             <Dialog open={isOpen} onOpenChange={handleClose}>
                 <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden">
                     {/* Gradient Header */}
-                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-4 flex items-center gap-3 text-white">
+                    <div className="bg-gradient-to-r from-amber-500 to-zinc-800 px-6 py-4 flex items-center gap-3 text-white">
                         <ShoppingCart className="h-6 w-6" />
                         <div>
                             <DialogTitle className="text-white text-lg font-semibold">Create New Order</DialogTitle>
-                            <DialogDescription className="text-blue-100 text-sm">
+                            <DialogDescription className="text-amber-100 text-sm">
                                 Add a new pre-order to the system
                             </DialogDescription>
                         </div>
@@ -378,7 +358,7 @@ export function CreatePreOrderDialog({
                                                 }}
                                                 onFocus={() => setComboboxOpen(true)}
                                                 placeholder="Type customer name..."
-                                                className="h-11 border-2 focus:border-blue-400 pr-10 bg-background text-foreground"
+                                                className="h-11 border-2 focus:border-amber-400 pr-10 bg-background text-foreground"
                                                 autoComplete="off"
                                             />
                                             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
@@ -423,7 +403,7 @@ export function CreatePreOrderDialog({
                                                                 c.name.toLowerCase().includes(customerName.toLowerCase())
                                                             ).length === 0 && customerName !== "" && (
                                                                     <div className="px-3 py-4 text-center">
-                                                                        <p className="text-sm text-slate-500">Creating new customer: <span className="font-semibold text-blue-600">"{customerName}"</span></p>
+                                                                        <p className="text-sm text-slate-500">Creating new customer: <span className="font-semibold text-amber-600">"{customerName}"</span></p>
                                                                     </div>
                                                                 )}
                                                         </div>
@@ -626,60 +606,6 @@ export function CreatePreOrderDialog({
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <div className="flex items-end gap-2">
-                                    <div className="grid gap-2 flex-1">
-                                        <Label>Assign Batch</Label>
-                                        <Select
-                                            value={batchId}
-                                            onValueChange={(v: string) => {
-                                                if (v === "none") {
-                                                    setBatchId(v);
-                                                    return;
-                                                }
-
-                                                const selectedBatch = availableBatches.find(b => b.id === v);
-                                                const status = selectedBatch?.status?.trim().toLowerCase();
-                                                if (selectedBatch && status !== 'open') {
-                                                    toast({
-                                                        variant: "destructive",
-                                                        title: `Batch is ${selectedBatch.status}`,
-                                                        description: "This batch is closed and cannot be selected.",
-                                                    });
-                                                    return;
-                                                }
-                                                setBatchId(v);
-                                            }}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select batch" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {availableBatches.length === 0 ? (
-                                                    <SelectItem value="none" disabled>No batches available</SelectItem>
-                                                ) : (
-                                                    <>
-                                                        <SelectItem value="none">No Batch</SelectItem>
-                                                        {availableBatches.map((batch) => (
-                                                            <SelectItem key={batch.id} value={String(batch.id)}>
-                                                                {batch.batchName} ({batch.status})
-                                                            </SelectItem>
-                                                        ))}
-                                                    </>
-                                                )}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="icon"
-                                        onClick={() => setCreateBatchOpen(true)}
-                                        title="Create New Batch"
-                                        className="h-10 w-10 shrink-0"
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                    </Button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -692,12 +618,6 @@ export function CreatePreOrderDialog({
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-
-            <CreateBatchDialog
-                isOpen={isCreateBatchOpen}
-                onClose={() => setCreateBatchOpen(false)}
-                onSuccess={handleBatchCreated}
-            />
 
             <CreatePreOrderProductDialog
                 isOpen={addProductOpen}

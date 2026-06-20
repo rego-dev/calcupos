@@ -138,7 +138,7 @@ export default function UsersTable({ users: initialUsers, currentUser, onUserAdd
 
   return (
     <>
-      <Card className="border-t-4 border-t-pink-500/50 shadow-sm">
+      <Card className="border-t-4 border-t-zinc-500/50 shadow-sm">
         <div className="flex items-center justify-between gap-2 p-4 flex-wrap">
           <div className="flex items-center gap-2">
             <div className="relative">
@@ -158,7 +158,7 @@ export default function UsersTable({ users: initialUsers, currentUser, onUserAdd
               </Button>
             )}
           </div>
-          <Button className="bg-pink-600 hover:bg-pink-700 text-white" onClick={() => setCreateDialogOpen(true)}>
+          <Button className="bg-zinc-800 hover:bg-zinc-900 text-white" onClick={() => setCreateDialogOpen(true)}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add User
           </Button>

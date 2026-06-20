@@ -134,13 +134,13 @@ export function ViewCustomerDialog({
         <DialogContent className="sm:max-w-2xl p-0 overflow-hidden bg-white">
           {/* Enhanced Header - CalcuPOS Blue */}
           <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#4A90E2] via-[#5B9FED] to-[#4A90E2]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800" />
             <div className="relative p-6">
               <DialogHeader>
                 <div className="flex items-start gap-4">
                   <Avatar className="h-16 w-16 ring-4 ring-white shadow-xl">
                     <AvatarImage src={customer.avatar || `https://ui-avatars.com/api/?name=${customer.name}&background=random`} />
-                    <AvatarFallback className="text-2xl bg-white text-[#4A90E2]">
+                    <AvatarFallback className="text-2xl bg-white text-amber-600">
                       {customer.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
@@ -148,7 +148,7 @@ export function ViewCustomerDialog({
                     <DialogTitle className="text-2xl font-bold text-white mb-1">
                       {customer.name}
                     </DialogTitle>
-                    <DialogDescription className="text-blue-100 text-base">
+                    <DialogDescription className="text-amber-100 text-base">
                       Customer Profile & Information
                     </DialogDescription>
                   </div>
@@ -178,25 +178,25 @@ export function ViewCustomerDialog({
 
           {/* Stats Cards */}
           <div className="grid grid-cols-2 gap-3 px-6 -mt-4">
-            <div className="bg-gradient-to-br from-blue-50 to-[#E3F2FD] rounded-xl p-4 border-2 border-[#4A90E2]/30 shadow-sm">
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 border-2 border-amber-500/30 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#4A90E2] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
                   <DollarSign className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-xs text-[#4A90E2] font-medium">Total Spent</p>
-                  <p className="text-xl font-bold text-[#2C5F8D]">₱{customer.totalSpent?.toFixed(2) || '0.00'}</p>
+                  <p className="text-xs text-amber-600 font-medium">Total Spent</p>
+                  <p className="text-xl font-bold text-zinc-800">₱{customer.totalSpent?.toFixed(2) || '0.00'}</p>
                 </div>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-[#E3F2FD] rounded-xl p-4 border-2 border-[#4A90E2]/30 shadow-sm">
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 border-2 border-amber-500/30 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#5B9FED] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-amber-600 flex items-center justify-center">
                   <ShoppingBag className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-xs text-[#4A90E2] font-medium">Total Orders</p>
-                  <p className="text-xl font-bold text-[#2C5F8D]">{totalOrders}</p>
+                  <p className="text-xs text-amber-600 font-medium">Total Orders</p>
+                  <p className="text-xl font-bold text-zinc-800">{totalOrders}</p>
                 </div>
               </div>
             </div>
@@ -204,38 +204,38 @@ export function ViewCustomerDialog({
 
           {/* Contact Information */}
           <div className="px-6 py-4 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-zinc-700 uppercase tracking-wider mb-4">
               Contact Information
             </h3>
 
             <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <div className="w-9 h-9 rounded-lg bg-[#4A90E2]/10 flex items-center justify-center shrink-0">
-                  <Mail className="w-4 h-4 text-[#4A90E2]" />
+              <div className="flex items-center gap-3 p-3 bg-zinc-50 rounded-lg border border-zinc-200">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4 text-amber-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-slate-600 font-medium">Email Address</p>
-                  <p className="text-sm text-slate-900 truncate">{customer.email}</p>
+                  <p className="text-xs text-zinc-600 font-medium">Email Address</p>
+                  <p className="text-sm text-zinc-900 truncate">{customer.email}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="flex items-center gap-3 p-3 bg-zinc-50 rounded-lg border border-zinc-200">
                 <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4 text-green-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-slate-600 font-medium">Phone Number</p>
-                  <p className="text-sm text-slate-900">{customer.phone || 'N/A'}</p>
+                  <p className="text-xs text-zinc-600 font-medium">Phone Number</p>
+                  <p className="text-sm text-zinc-900">{customer.phone || 'N/A'}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="flex items-start gap-3 p-3 bg-zinc-50 rounded-lg border border-zinc-200">
                 <div className="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4 text-red-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-slate-600 font-medium">Address</p>
-                  <p className="text-sm text-slate-900">{fullAddress}</p>
+                  <p className="text-xs text-zinc-600 font-medium">Address</p>
+                  <p className="text-sm text-zinc-900">{fullAddress}</p>
                 </div>
               </div>
             </div>
@@ -247,10 +247,10 @@ export function ViewCustomerDialog({
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-zinc-700 uppercase tracking-wider">
                   Purchase History
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">View all orders and transactions</p>
+                <p className="text-xs text-zinc-500 mt-1">View all orders and transactions</p>
               </div>
               <Button
                 onClick={() => {
@@ -259,7 +259,7 @@ export function ViewCustomerDialog({
                   }
                   setIsOrderHistoryModalOpen(true);
                 }}
-                className="bg-gradient-to-r from-[#4A90E2] to-[#5B9FED] hover:from-[#3A7FC2] hover:to-[#4A90E2] text-white shadow-lg"
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg"
               >
                 <Package className="w-4 h-4 mr-2" />
                 View History
@@ -280,7 +280,7 @@ export function ViewCustomerDialog({
         <DialogContent className="sm:max-w-6xl h-[85vh] flex flex-col p-0 overflow-hidden bg-white">
           {/* Enhanced Header - CalcuPOS Blue */}
           <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#4A90E2] via-[#5B9FED] to-[#4A90E2]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800" />
             <div className="relative p-6">
               <DialogHeader>
                 <div className="flex items-center gap-3 mb-3">
@@ -291,7 +291,7 @@ export function ViewCustomerDialog({
                     <DialogTitle className="text-2xl font-bold text-white">
                       Order History - {customer.name}
                     </DialogTitle>
-                    <DialogDescription className="text-blue-100 text-base mt-1">
+                    <DialogDescription className="text-amber-100 text-base mt-1">
                       Complete purchase history grouped by year
                     </DialogDescription>
                   </div>
@@ -326,42 +326,42 @@ export function ViewCustomerDialog({
             <div className="space-y-6 pb-4">
               {isLoadingOrders ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                  <div className="w-16 h-16 rounded-full bg-[#E3F2FD] flex items-center justify-center mb-4 animate-pulse">
-                    <Package className="w-8 h-8 text-[#4A90E2]" />
+                  <div className="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mb-4 animate-pulse">
+                    <Package className="w-8 h-8 text-amber-600" />
                   </div>
-                  <p className="text-base text-slate-600 font-medium">Loading orders...</p>
+                  <p className="text-base text-zinc-600 font-medium">Loading orders...</p>
                 </div>
               ) : yearlyOrders.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                  <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-                    <ShoppingBag className="w-10 h-10 text-slate-400" />
+                  <div className="w-20 h-20 rounded-full bg-zinc-100 flex items-center justify-center mb-4">
+                    <ShoppingBag className="w-10 h-10 text-zinc-400" />
                   </div>
-                  <p className="text-lg font-medium text-slate-700 mb-1">No orders found</p>
-                  <p className="text-sm text-slate-500">This customer hasn't placed any orders yet</p>
+                  <p className="text-lg font-medium text-zinc-700 mb-1">No orders found</p>
+                  <p className="text-sm text-zinc-500">This customer hasn't placed any orders yet</p>
                 </div>
               ) : (
                 yearlyOrders.map((yearData) => (
-                  <Card key={yearData.year} className="border-2 border-slate-200 shadow-sm overflow-hidden">
+                  <Card key={yearData.year} className="border-2 border-zinc-200 shadow-sm overflow-hidden">
                     {/* Year Summary Header */}
-                    <CardHeader className="bg-gradient-to-r from-[#E3F2FD] to-blue-50 border-b-2 border-[#4A90E2]/30 pb-4">
+                    <CardHeader className="bg-gradient-to-r from-amber-50 to-amber-100 border-b-2 border-amber-500/30 pb-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-[#4A90E2] flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
                             <Calendar className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <CardTitle className="text-xl font-bold text-slate-900">{yearData.year}</CardTitle>
-                            <p className="text-sm text-slate-600 mt-0.5">Annual Summary</p>
+                            <CardTitle className="text-xl font-bold text-zinc-900">{yearData.year}</CardTitle>
+                            <p className="text-sm text-zinc-600 mt-0.5">Annual Summary</p>
                           </div>
                         </div>
                         <div className="flex gap-4">
                           <div className="text-right">
-                            <p className="text-xs text-slate-600 font-medium">Total Orders</p>
-                            <p className="text-lg font-bold text-[#4A90E2]">{yearData.totalOrders}</p>
+                            <p className="text-xs text-zinc-600 font-medium">Total Orders</p>
+                            <p className="text-lg font-bold text-amber-600">{yearData.totalOrders}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-xs text-slate-600 font-medium">Total Revenue</p>
-                            <p className="text-lg font-bold text-[#5B9FED]">₱{yearData.totalSpent.toFixed(2)}</p>
+                            <p className="text-xs text-zinc-600 font-medium">Total Revenue</p>
+                            <p className="text-lg font-bold text-amber-700">₱{yearData.totalSpent.toFixed(2)}</p>
                           </div>
                         </div>
                       </div>
@@ -372,18 +372,18 @@ export function ViewCustomerDialog({
                       <div className="overflow-x-auto">
                         <Table>
                           <TableHeader>
-                            <TableRow className="bg-slate-50 hover:bg-slate-50">
-                              <TableHead className="font-semibold text-slate-700">Order ID</TableHead>
-                              <TableHead className="font-semibold text-slate-700">Items</TableHead>
-                              <TableHead className="font-semibold text-slate-700">Payment</TableHead>
-                              <TableHead className="font-semibold text-slate-700">Status</TableHead>
-                              <TableHead className="font-semibold text-slate-700">Amount</TableHead>
-                              <TableHead className="font-semibold text-slate-700">Date</TableHead>
+                            <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+                              <TableHead className="font-semibold text-zinc-700">Order ID</TableHead>
+                              <TableHead className="font-semibold text-zinc-700">Items</TableHead>
+                              <TableHead className="font-semibold text-zinc-700">Payment</TableHead>
+                              <TableHead className="font-semibold text-zinc-700">Status</TableHead>
+                              <TableHead className="font-semibold text-zinc-700">Amount</TableHead>
+                              <TableHead className="font-semibold text-zinc-700">Date</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {yearData.orders.map((order) => (
-                              <TableRow key={order.orderId} className="hover:bg-slate-50">
+                              <TableRow key={order.orderId} className="hover:bg-zinc-50">
                                 <TableCell>
                                   <Badge variant="outline" className="font-mono text-xs">
                                     {String(order.orderId).substring(0, 8)}
@@ -396,7 +396,7 @@ export function ViewCustomerDialog({
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-2">
-                                    <CreditCard className="w-4 h-4 text-slate-400" />
+                                    <CreditCard className="w-4 h-4 text-zinc-400" />
                                     <span className="text-sm">{order.paymentMethod}</span>
                                   </div>
                                 </TableCell>
@@ -406,7 +406,7 @@ export function ViewCustomerDialog({
                                     className={cn(
                                       "text-xs",
                                       order.shippingStatus === 'Delivered' && "bg-green-50 text-green-700 border-green-200",
-                                      order.shippingStatus === 'Shipped' && "bg-blue-50 text-blue-700 border-blue-200",
+                                      order.shippingStatus === 'Shipped' && "bg-amber-50 text-amber-700 border-amber-200",
                                       order.shippingStatus === 'Pending' && "bg-yellow-50 text-yellow-700 border-yellow-200",
                                       order.shippingStatus === 'Cancelled' && "bg-red-50 text-red-700 border-red-200"
                                     )}
@@ -415,10 +415,10 @@ export function ViewCustomerDialog({
                                     {order.shippingStatus}
                                   </Badge>
                                 </TableCell>
-                                <TableCell className="font-semibold text-slate-900">
+                                <TableCell className="font-semibold text-zinc-900">
                                   ₱{order.amount.toFixed(2)}
                                 </TableCell>
-                                <TableCell className="text-sm text-slate-600">
+                                <TableCell className="text-sm text-zinc-600">
                                   {new Date(order.date).toLocaleDateString('en-US', {
                                     month: 'short',
                                     day: 'numeric',
@@ -437,10 +437,10 @@ export function ViewCustomerDialog({
             </div>
           </ScrollArea>
 
-          <DialogFooter className="px-6 pb-6 border-t bg-slate-50">
+          <DialogFooter className="px-6 pb-6 border-t bg-zinc-50">
             <Button
               onClick={() => setIsOrderHistoryModalOpen(false)}
-              className="w-full h-11 bg-gradient-to-r from-[#4A90E2] to-[#5B9FED] hover:from-[#3A7FC2] hover:to-[#4A90E2] text-white shadow-lg font-semibold"
+              className="w-full h-11 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg font-semibold"
             >
               Close History
             </Button>

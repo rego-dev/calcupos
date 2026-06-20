@@ -22,15 +22,6 @@ const SalesChart = dynamic(() => import("../reports/components/sales-chart"), {
   ),
 });
 
-const BatchesChart = dynamic(() => import("./components/batches-chart"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-[200px] text-muted-foreground">
-      <Loader2 className="h-5 w-5 animate-spin" />
-    </div>
-  ),
-});
-
 import {
   Table,
   TableBody,
@@ -42,24 +33,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PrintButton } from "./components/print-button";
-import { ShippingStatus, Order, Customer, Batch } from "@/lib/types";
-import { startOfWeek, startOfMonth, startOfYear, endOfToday, isWithinInterval, format } from "date-fns";
-import { getBatches } from "../batches/actions";
+import { ShippingStatus, Order, Customer } from "@/lib/types";
+import { startOfWeek, startOfMonth, startOfYear, endOfToday, isWithinInterval, format, isValid } from "date-fns";
 import { getAllOrders } from "../orders/actions";
 import { getLowStockProducts } from "../inventory/actions";
 import { ViewOrderDialog } from "../orders/components/view-order-dialog";
-import { ViewBatchItemsDialog } from "./components/view-batch-items-dialog";
 import { ViewHeldOrdersDialog } from "./components/view-held-orders-dialog";
 import { ViewNewCustomersDialog } from "./components/view-new-customers-dialog";
 
 const shippingStatusStyles: Record<ShippingStatus, string> = {
-  Pending: "bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300",
-  Ready: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-300",
-  Shipped: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300",
-  Delivered: "bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300",
+  Pending: "bg-zinc-100 text-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-300",
+  Ready: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
+  Shipped: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
+  Delivered: "bg-zinc-100 text-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-300",
   Cancelled: "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300",
   Claimed: "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300",
-  "Rush Ship": "bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300",
+  "Rush Ship": "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
 };
 
 type Timeframe = "week" | "month" | "year" | "all";
@@ -71,12 +60,10 @@ export default function DashboardPage() {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [allCustomers, setAllCustomers] = useState<Customer[]>([]);
-  const [allBatches, setAllBatches] = useState<Batch[]>([]);
   const [lowStockProducts, setLowStockProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [viewOrder, setViewOrder] = useState<Order | null>(null);
-  const [viewBatch, setViewBatch] = useState<Batch | null>(null);
   const [isHeldOrdersDialogOpen, setIsHeldOrdersDialogOpen] = useState(false);
   const [isNewCustomersDialogOpen, setIsNewCustomersDialogOpen] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
@@ -105,29 +92,9 @@ export default function DashboardPage() {
         const customersData = await customersResponse.json();
         setAllCustomers(customersData.success ? customersData.data : []);
 
-        const { batches, isAuthorized: batchesAuthorized } = await getBatches();
-
-        // Extra check: even if APIs return authorized (because they check orders/batches),
-        // we must check the specific dashboard permission if available.
-        // We'll trust the isAuthorized flag from the APIs for now, but also check the dashboard flag
-        // if we can get it. For now, the existing isAuthorized logic is okay IF we ensure 
-        // the APIs are strictly checking what they should.
-
-        // Actually, let's just make sure isAuthorized reflects correctly.
-        // In getBatches, it checks: !user.permissions?.batches && !user.permissions?.dashboard
-        // In getAllOrders, it checks: !hasOrdersPermission && !hasDashboardPermission
-
-        // To be safe, if either is unauthorized, we block.
-        if (!ordersAuthorized || !batchesAuthorized) {
-          setIsAuthorized(false);
-          setLoading(false);
-          return;
-        }
-
         const lsProducts = await getLowStockProducts();
         setLowStockProducts(lsProducts || []);
 
-        setAllBatches(batches);
         setIsAuthorized(true);
 
       } catch (err) {
@@ -159,55 +126,56 @@ export default function DashboardPage() {
     const endDate = endOfToday();
 
     const filteredOrders = allOrders.filter(order => {
-      const orderDate = new Date(order.orderDate);
+      if (!order.orderDate && !order.createdAt) return false;
+      const orderDate = new Date(order.orderDate || order.createdAt);
+      if (!isValid(orderDate)) return false;
       return isWithinInterval(orderDate, { start: startDate, end: endDate });
     });
 
     const filteredCustomers = allCustomers.filter(customer => {
-      const firstOrder = (customer.orderHistory || []).reduce((earliest, current) => {
+      const orderHistoryArray = Array.isArray(customer.orderHistory) ? customer.orderHistory : [];
+      if (orderHistoryArray.length === 0) return false;
+      const firstOrder = orderHistoryArray.reduce((earliest: any, current: any) => {
         if (!earliest) return current;
-        return new Date(current.date) < new Date(earliest.date) ? current : earliest;
+        const currentDate = new Date(current.date);
+        const earliestDate = new Date(earliest.date);
+        if (!isValid(currentDate) || !isValid(earliestDate)) return earliest;
+        return currentDate < earliestDate ? current : earliest;
       }, null as { date: string } | null);
 
-      if (!firstOrder) return false;
+      if (!firstOrder || !firstOrder.date) return false;
 
       const creationDate = new Date(firstOrder.date);
+      if (!isValid(creationDate)) return false;
       return isWithinInterval(creationDate, { start: startDate, end: endDate });
     });
 
-    const filteredBatches = allBatches.filter(batch => {
-      if (!batch.manufactureDate) return false;
-      const batchDate = new Date(batch.manufactureDate);
-      return isWithinInterval(batchDate, { start: startDate, end: endDate });
-    });
+    return { orders: filteredOrders, customers: filteredCustomers };
 
-    return { orders: filteredOrders, customers: filteredCustomers, batches: filteredBatches };
-
-  }, [timeframe, allOrders, allCustomers, allBatches]);
+  }, [timeframe, allOrders, allCustomers]);
 
   useEffect(() => {
     setTopSalesPage(1);
     setRecentSalesPage(1);
   }, [timeframe]);
 
-  const batchSummary = useMemo(() => {
-    return allBatches.reduce((acc, batch) => {
-      if (batch.status === 'Open') acc.open++;
-      if (batch.status === 'Closed') acc.closed++;
-      if (batch.status === 'Delivered') acc.completed++;
-      return acc;
-    }, { open: 0, closed: 0, completed: 0 });
-  }, [allBatches]);
-
-  const { orders: filteredOrders, customers: filteredCustomers, batches: filteredBatches } = filteredData;
+  const { orders: filteredOrders, customers: filteredCustomers } = filteredData;
   const deliveredOrders = filteredOrders.filter((order: any) => order.shippingStatus === 'Delivered');
 
   const topSales = useMemo(() => {
     const salesByProduct: Record<string, { id: string, itemName: string, quantity: number, totalAmount: number }> = {};
 
     deliveredOrders.forEach(order => {
-      if (order.items && order.items.length > 0) {
-        order.items.forEach((item: any) => {
+      let itemsArray: any[] = [];
+      if (order.items) {
+        if (Array.isArray(order.items)) itemsArray = order.items;
+        else if (typeof order.items === 'string') {
+          try { itemsArray = JSON.parse(order.items); } catch(e) {}
+        }
+      }
+
+      if (itemsArray.length > 0) {
+        itemsArray.forEach((item: any) => {
           const name = item.product?.name || item.productName || "Unknown Item";
           const price = item.product?.retailPrice || item.product?.cost || 0;
           const amount = item.quantity * price;
@@ -237,10 +205,6 @@ export default function DashboardPage() {
   }, [topSales, topSalesPage]);
 
   const topSalesTotalPages = Math.ceil(topSales.length / ITEMS_PER_PAGE);
-
-  const topBatches = useMemo(() => {
-    return [...filteredBatches].sort((a, b) => (b.totalSales || 0) - (a.totalSales || 0)).slice(0, 5);
-  }, [filteredBatches]);
 
   const recentSalesList = useMemo(() => {
     return allOrders
@@ -277,11 +241,6 @@ export default function DashboardPage() {
 
   const recentSalesTotalPages = Math.ceil(recentSalesList.length / ITEMS_PER_PAGE);
 
-  const batchOrders = useMemo(() => {
-    if (!viewBatch) return [];
-    return allOrders.filter(o => o.batchId === viewBatch.id);
-  }, [viewBatch, allOrders]);
-
   const totalSales = deliveredOrders.reduce((sum: number, order: any) => sum + (order.totalAmount || 0), 0);
   const totalShippingFee = deliveredOrders.reduce((sum: number, order: any) => sum + (Number(order.shippingFee) || 0), 0);
   const totalOrders = deliveredOrders.length;
@@ -292,7 +251,7 @@ export default function DashboardPage() {
     return (
       <div className="flex flex-col gap-8 p-4 lg:p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent w-fit">Dashboard</h1>
         </div>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center gap-3">
@@ -308,7 +267,7 @@ export default function DashboardPage() {
     return (
       <div className="flex flex-col gap-8 p-4 lg:p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent w-fit">Dashboard</h1>
         </div>
         <div className="flex items-center justify-center h-64">
           <div className="text-center space-y-2">
@@ -335,7 +294,7 @@ export default function DashboardPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent pb-1">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent pb-1">
             Dashboard
           </h1>
           <p className="text-base text-muted-foreground">
@@ -357,16 +316,16 @@ export default function DashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-        <Card className="relative overflow-hidden border-l-4 border-l-cyan-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/50 to-transparent dark:from-cyan-950/20 dark:to-transparent" />
+        <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Total Sales</CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <PhilippinePeso className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+            <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <PhilippinePeso className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
           </CardHeader>
           <CardContent className="relative">
-            <div className="text-3xl font-bold text-cyan-700 dark:text-cyan-300">
+            <div className="text-3xl font-bold text-amber-700 dark:text-amber-300">
               ₱{totalSales.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
@@ -376,16 +335,16 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-l-4 border-l-indigo-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-950/20 dark:to-transparent" />
+        <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Total Shipping Fees</CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Truck className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+            <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Truck className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
           </CardHeader>
           <CardContent className="relative">
-            <div className="text-3xl font-bold text-indigo-700 dark:text-indigo-300">
+            <div className="text-3xl font-bold text-amber-700 dark:text-amber-300">
               ₱{totalShippingFee.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
@@ -395,16 +354,16 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-l-4 border-l-pink-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-          <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-transparent dark:from-pink-950/20 dark:to-transparent" />
+        <Card className="relative overflow-hidden border-l-4 border-l-zinc-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-50/50 to-transparent dark:from-zinc-950/20 dark:to-transparent" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Total Orders</CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-pink-100 dark:bg-pink-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <ShoppingCart className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+            <div className="h-10 w-10 rounded-xl bg-zinc-100 dark:bg-zinc-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <ShoppingCart className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
             </div>
           </CardHeader>
           <CardContent className="relative">
-            <div className="text-3xl font-bold text-pink-700 dark:text-pink-300">{totalOrders}</div>
+            <div className="text-3xl font-bold text-zinc-700 dark:text-zinc-300">{totalOrders}</div>
             <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
               <TrendingUp className="h-3 w-3" />
               For {timeframe === 'all' ? 'all time' : `this ${timeframe}`}
@@ -413,18 +372,18 @@ export default function DashboardPage() {
         </Card>
 
         <Card
-          className="relative overflow-hidden border-l-4 border-l-purple-400 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
+          className="relative overflow-hidden border-l-4 border-l-zinc-400 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
           onClick={() => setIsNewCustomersDialogOpen(true)}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-transparent dark:from-purple-950/20 dark:to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-50/50 to-transparent dark:from-zinc-950/20 dark:to-transparent" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">New Customers</CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Users className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            <div className="h-10 w-10 rounded-xl bg-zinc-100 dark:bg-zinc-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Users className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
             </div>
           </CardHeader>
           <CardContent className="relative">
-            <div className="text-3xl font-bold text-purple-700 dark:text-purple-300">{newCustomers}</div>
+            <div className="text-3xl font-bold text-zinc-700 dark:text-zinc-300">{newCustomers}</div>
             <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
               <TrendingUp className="h-3 w-3" />
               For this {timeframe}
@@ -433,60 +392,42 @@ export default function DashboardPage() {
         </Card>
 
         <Card
-          className="relative overflow-hidden border-l-4 border-l-orange-400 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
+          className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
           onClick={() => setIsHeldOrdersDialogOpen(true)}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-50/50 to-transparent dark:from-orange-950/20 dark:to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Held Orders</CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Archive className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+            <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Archive className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
           </CardHeader>
           <CardContent className="relative">
-            <div className="text-3xl font-bold text-orange-700 dark:text-orange-300">{heldOrdersCount}</div>
+            <div className="text-3xl font-bold text-amber-700 dark:text-amber-300">{heldOrdersCount}</div>
             <p className="text-xs text-muted-foreground mt-2">Total orders on hold</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Charts Section */}
-      <div className="grid gap-6 lg:grid-cols-7">
-        <Card className="lg:col-span-4 border-t-4 border-t-cyan-500/50 shadow-lg overflow-hidden">
-          <CardHeader className="border-b bg-muted/30">
-            <CardTitle className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-cyan-500" />
-              Sales Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <SalesChart orders={deliveredOrders || []} timeframe={timeframe} />
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-3 border-t-4 border-t-pink-500/50 shadow-lg overflow-hidden">
-          <CardHeader className="border-b bg-muted/30">
-            <CardTitle className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-pink-500" />
-              Top Batches
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <BatchesChart
-              batches={topBatches}
-              height={350}
-              onBatchClick={(batch) => setViewBatch(batch)}
-            />
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="border-t-4 border-t-amber-500/50 shadow-lg overflow-hidden">
+        <CardHeader className="border-b bg-muted/30">
+          <CardTitle className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-amber-500" />
+            Sales Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <SalesChart orders={deliveredOrders || []} timeframe={timeframe} />
+        </CardContent>
+      </Card>
 
       {/* Tables Section */}
       <div className="grid gap-6 lg:grid-cols-7">
-        <Card className="lg:col-span-4 shadow-lg border-t-4 border-t-purple-500/50 overflow-hidden">
+        <Card className="lg:col-span-4 shadow-lg border-t-4 border-t-zinc-500/50 overflow-hidden">
           <CardHeader className="border-b bg-muted/30">
             <CardTitle className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-purple-500" />
+              <span className="h-2 w-2 rounded-full bg-zinc-500" />
               Top Sales (By Item)
             </CardTitle>
           </CardHeader>
@@ -505,10 +446,10 @@ export default function DashboardPage() {
                     <TableRow key={item.id} className="hover:bg-muted/50 transition-colors">
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 font-bold text-sm">
+                          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-bold text-sm">
                             {(topSalesPage - 1) * ITEMS_PER_PAGE + index + 1}
                           </div>
-                          <span className="text-cyan-700 dark:text-cyan-400">{item.itemName}</span>
+                          <span className="text-amber-700 dark:text-amber-400">{item.itemName}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-right font-medium">{item.quantity}</TableCell>
@@ -580,7 +521,7 @@ export default function DashboardPage() {
                     return paginatedRecentSales.map((item) => (
                       <TableRow key={item.id} className="hover:bg-muted/50 transition-colors">
                         <TableCell>
-                          <div className="font-medium text-pink-600 dark:text-pink-400 text-sm">{item.itemName}</div>
+                          <div className="font-medium text-zinc-600 dark:text-zinc-400 text-sm">{item.itemName}</div>
                           <div className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
                             <div className="font-medium">{item.customerName}</div>
                             <div className="opacity-70">{item.orderDate ? format(new Date(item.orderDate), "MMM dd, yyyy") : "N/A"}</div>
@@ -696,69 +637,10 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Batch Summary Section */}
-      <div className="space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="h-1 w-12 bg-gradient-to-r from-cyan-400 via-pink-400 to-purple-400 rounded-full" />
-          <h2 className="text-2xl font-bold tracking-tight">Batch Summary</h2>
-        </div>
-
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <Card className="relative overflow-hidden border-l-4 border-l-blue-500 bg-gradient-to-br from-white via-blue-50/30 to-blue-100/20 dark:from-gray-900 dark:via-blue-950/20 dark:to-blue-900/10 shadow-lg hover:shadow-xl transition-all duration-300 group">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">Open Batches</p>
-                  <p className="text-4xl font-bold text-blue-700 dark:text-blue-300">{batchSummary.open}</p>
-                </div>
-                <div className="bg-blue-100 dark:bg-blue-900/50 p-4 rounded-2xl group-hover:scale-110 transition-transform">
-                  <Package className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-l-4 border-l-yellow-500 bg-gradient-to-br from-white via-yellow-50/30 to-yellow-100/20 dark:from-gray-900 dark:via-yellow-950/20 dark:to-yellow-900/10 shadow-lg hover:shadow-xl transition-all duration-300 group">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">Closed Batches</p>
-                  <p className="text-4xl font-bold text-yellow-700 dark:text-yellow-300">{batchSummary.closed}</p>
-                </div>
-                <div className="bg-yellow-100 dark:bg-yellow-900/50 p-4 rounded-2xl group-hover:scale-110 transition-transform">
-                  <Package className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-l-4 border-l-green-500 bg-gradient-to-br from-white via-green-50/30 to-green-100/20 dark:from-gray-900 dark:via-green-950/20 dark:to-green-900/10 shadow-lg hover:shadow-xl transition-all duration-300 group">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">Completed Batches</p>
-                  <p className="text-4xl font-bold text-green-700 dark:text-green-300">{batchSummary.completed}</p>
-                </div>
-                <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-2xl group-hover:scale-110 transition-transform">
-                  <Package className="h-8 w-8 text-green-600 dark:text-green-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
       <ViewOrderDialog
         isOpen={!!viewOrder}
         onClose={() => setViewOrder(null)}
         order={viewOrder}
-      />
-
-      <ViewBatchItemsDialog
-        isOpen={!!viewBatch}
-        onClose={() => setViewBatch(null)}
-        batch={viewBatch}
-        batchOrders={batchOrders}
       />
 
       <ViewHeldOrdersDialog

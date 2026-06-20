@@ -116,7 +116,7 @@ export default function WarehouseProductsTable({ products: initialProducts, onRe
 
     return (
         <>
-            <Card className="border-t-4 border-t-pink-500/50 shadow-sm">
+            <Card className="border-t-4 border-t-amber-500/50 shadow-sm">
                 <div className="flex items-center justify-between gap-2 p-4 flex-wrap">
                     <div className="flex items-center gap-2 flex-wrap">
                         <div className="relative">
@@ -145,7 +145,7 @@ export default function WarehouseProductsTable({ products: initialProducts, onRe
                             <Package className="mr-2 h-4 w-4" />
                             Bulk Add Stock
                         </Button>
-                        <Button onClick={() => setAddDialogOpen(true)} className="bg-pink-600 hover:bg-pink-700 text-white">
+                        <Button onClick={() => setAddDialogOpen(true)} className="bg-zinc-800 hover:bg-zinc-900 text-white">
                             <PlusCircle className="mr-2 h-4 w-4" />
                             Add Product
                         </Button>
@@ -172,7 +172,7 @@ export default function WarehouseProductsTable({ products: initialProducts, onRe
                             {paginatedProducts.map((product) => (
                                 <TableRow key={product.id} className="hover:bg-muted/50 transition-colors">
                                     <TableCell>
-                                        <div className="h-12 w-12 overflow-hidden rounded-xl border-2 border-white/10 bg-muted/50 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:border-pink-500/50 cursor-pointer group">
+                                        <div className="h-12 w-12 overflow-hidden rounded-xl border-2 border-white/10 bg-muted/50 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:border-amber-500/50 cursor-pointer group">
                                             {product.image ? (
                                                 <img
                                                     src={product.image}

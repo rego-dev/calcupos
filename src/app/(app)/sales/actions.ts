@@ -64,7 +64,6 @@ export async function getSalesData(timeframe: "week" | "month" | "year" | "all")
             paymentMethod: order.paymentMethod as any,
             paymentStatus: order.paymentStatus as any,
             shippingStatus: order.shippingStatus as any,
-            batchId: order.batchId,
             customerId: order.customerId,
             rushShip: order.rushShip,
             customerEmail: order.customerEmail || "",
@@ -79,152 +78,6 @@ export async function getSalesData(timeframe: "week" | "month" | "year" | "all")
     } catch (error) {
         console.error("Error fetching sales data:", error);
         return { orders: [], isAuthorized: false };
-    }
-}
-
-export type BatchAnalytics = {
-    id: string;
-    batchName: string;
-    status: string;
-    manufactureDate: Date;
-    totalOrders: number;
-    totalSales: number;
-    totalCapital: number;
-    netProfit: number;
-    totalPreOrders: number;
-    preOrderSales: number;
-    preOrderCapital: number;
-    preOrderProfit: number;
-    bestSellingProduct: {
-        name: string;
-        quantitySold: number;
-    } | null;
-    topProducts?: {
-        name: string;
-        quantity: number;
-        sales: number;
-    }[];
-};
-
-export async function getBatchAnalytics(startDate?: Date, endDate?: Date): Promise<{ batchAnalytics: BatchAnalytics[], isAuthorized: boolean }> {
-    try {
-        const user = await getCurrentUser();
-        if (!user) return { batchAnalytics: [], isAuthorized: false };
-
-        const isAuthorized = !!user.permissions?.sales;
-        if (!isAuthorized) {
-            return { batchAnalytics: [], isAuthorized: false };
-        }
-
-        const dateFilter: any = {};
-        if (startDate && endDate) {
-            dateFilter.manufactureDate = {
-                gte: startDate,
-                lte: endDate,
-            };
-        }
-
-        const batches = await prisma.batch.findMany({
-            where: dateFilter,
-            include: {
-                orders: {
-                    where: {
-                        shippingStatus: 'Delivered'
-                    }
-                },
-                preOrders: {
-                    where: {
-                        paymentStatus: 'Paid'
-                    },
-                    include: {
-                        items: true,
-                        product: true
-                    }
-                }
-            },
-            orderBy: {
-                manufactureDate: 'desc'
-            }
-        });
-
-        const analytics = batches.map(batch => {
-            let batchTotalSales = 0;
-            let batchTotalCapital = 0;
-            let batchPreOrderSales = 0;
-            let batchPreOrderCapital = 0;
-            const productSalesMap = new Map<string, { name: string; quantity: number; sales: number }>();
-
-            batch.orders.forEach((order: any) => {
-                batchTotalSales += order.totalAmount;
-
-                if (order.items) {
-                    const items = Array.isArray(order.items) ? order.items : (order.items as any).items || [];
-
-                    (items as any[]).forEach((item: any) => {
-                        const qty = typeof item.quantity === 'string' ? parseInt(item.quantity) : (item.quantity || 0);
-                        const cost = item.product?.cost || 0;
-                        const productName = item.product?.name || "Unknown Product";
-
-                        batchTotalCapital += qty * cost;
-
-                        const current = productSalesMap.get(productName) || { name: productName, quantity: 0, sales: 0 };
-                        current.quantity += qty;
-                        productSalesMap.set(productName, current);
-                    });
-                }
-            });
-
-            if (batch.preOrders) {
-                batch.preOrders.forEach((preOrder: any) => {
-                    batchPreOrderSales += preOrder.totalAmount;
-
-                    if (preOrder.items && Array.isArray(preOrder.items)) {
-                        preOrder.items.forEach((item: any) => {
-                            const qty = typeof item.quantity === 'string' ? parseInt(item.quantity) : (item.quantity || 0);
-                            const cost = preOrder.product?.cost || 0;
-                            batchPreOrderCapital += qty * cost;
-
-                            const productName = item.productName || preOrder.product?.name || "Unknown Product";
-                            const current = productSalesMap.get(productName) || { name: productName, quantity: 0, sales: 0 };
-                            current.quantity += qty;
-                            productSalesMap.set(productName, current);
-                        });
-                    }
-                });
-            }
-
-            // Convert map to array and sort
-            const allProducts = Array.from(productSalesMap.values());
-            allProducts.sort((a, b) => b.quantity - a.quantity);
-
-            const bestSellingProduct = allProducts.length > 0 ? {
-                name: allProducts[0].name,
-                quantitySold: allProducts[0].quantity
-            } : null;
-
-            return {
-                id: String(batch.id),
-                batchName: batch.batchName,
-                status: batch.status,
-                manufactureDate: batch.manufactureDate,
-                totalOrders: batch.orders.length,
-                totalSales: batchTotalSales,
-                totalCapital: batchTotalCapital,
-                netProfit: batchTotalSales - batchTotalCapital,
-                totalPreOrders: batch.preOrders?.length || 0,
-                preOrderSales: batchPreOrderSales,
-                preOrderCapital: batchPreOrderCapital,
-                preOrderProfit: batchPreOrderSales - batchPreOrderCapital,
-                bestSellingProduct,
-                topProducts: allProducts.slice(0, 10)
-            };
-        });
-
-        return { batchAnalytics: analytics, isAuthorized: true };
-
-    } catch (error) {
-        console.error("Error fetching batch analytics:", error);
-        return { batchAnalytics: [], isAuthorized: false };
     }
 }
 
@@ -267,7 +120,6 @@ export async function getPreOrderSalesData(timeframe: "week" | "month" | "year" 
             include: {
                 customer: true,
                 items: true,
-                batch: true,
             },
         });
 
@@ -294,8 +146,6 @@ export async function getPreOrderSalesData(timeframe: "week" | "month" | "year" 
             createdAt: preOrder.createdAt.toISOString(),
             updatedAt: preOrder.updatedAt.toISOString(),
             items: preOrder.items,
-            batchId: preOrder.batchId,
-            batch: preOrder.batch,
             customer: preOrder.customer ? {
                 id: preOrder.customer.id,
                 name: preOrder.customer.name,

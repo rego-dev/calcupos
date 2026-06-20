@@ -19,7 +19,6 @@ export async function getOrders(): Promise<Order[]> {
   const orders = await prisma.order.findMany({
     include: {
       customer: true,
-      batch: true,
     }
   });
 
@@ -50,7 +49,6 @@ export async function getOrders(): Promise<Order[]> {
     paymentMethod: (order.paymentMethod as PaymentMethod) || "COD",
     paymentStatus: (order.paymentStatus as PaymentStatus) || "Unpaid",
     shippingStatus: (order.shippingStatus as ShippingStatus) || "Pending",
-    batchId: order.batchId,
     createdAt: order.createdAt,
     createdBy: (order.createdBy as any) || { uid: "system", name: "System" },
     customerId: order.customerId,
@@ -62,13 +60,6 @@ export async function getOrders(): Promise<Order[]> {
     paymentProofFileName: order.paymentProofFileName,
     paymentProofMimeType: order.paymentProofMimeType,
     paymentProofDataUrl: order.paymentProofDataUrl,
-    batch: order.batch ? {
-      ...order.batch,
-      manufactureDate: (order.batch as any).manufactureDate.toISOString(),
-      status: order.batch.status as any,
-      totalOrders: order.batch.totalOrders || 0,
-      totalSales: order.batch.totalSales || 0,
-    } : undefined,
   }));
 }
 
@@ -93,7 +84,6 @@ export async function getAllOrders(): Promise<{ orders: Order[], isAuthorized: b
   const orders = await prisma.order.findMany({
     include: {
       customer: true,
-      batch: true,
     }
   });
 
@@ -115,7 +105,6 @@ export async function getAllOrders(): Promise<{ orders: Order[], isAuthorized: b
     paymentMethod: (order.paymentMethod as PaymentMethod) || "COD",
     paymentStatus: (order.paymentStatus as PaymentStatus) || "Unpaid",
     shippingStatus: (order.shippingStatus as ShippingStatus) || "Pending",
-    batchId: order.batchId,
     createdAt: order.createdAt,
     createdBy: (order.createdBy as any) || { uid: "system", name: "System" },
     customerId: order.customerId,
@@ -127,13 +116,6 @@ export async function getAllOrders(): Promise<{ orders: Order[], isAuthorized: b
     paymentProofFileName: order.paymentProofFileName,
     paymentProofMimeType: order.paymentProofMimeType,
     paymentProofDataUrl: order.paymentProofDataUrl,
-    batch: order.batch ? {
-      ...order.batch,
-      manufactureDate: (order.batch as any).manufactureDate.toISOString(),
-      status: order.batch.status as any,
-      totalOrders: order.batch.totalOrders || 0,
-      totalSales: order.batch.totalSales || 0,
-    } : undefined,
   }));
 
   return { orders: mapOrders, isAuthorized: true };
@@ -174,7 +156,6 @@ export async function createOrder(orderData: Omit<Order, 'id' | 'createdAt'> & {
           paymentMethod: orderData.paymentMethod,
           paymentStatus: orderData.paymentStatus,
           shippingStatus: orderData.shippingStatus,
-          batchId: orderData.batchId ? Number(orderData.batchId) : null,
           customerId: Number(orderData.customerId),
           customerEmail: orderData.customerEmail || null,
           courierName: orderData.courierName || null,
@@ -238,27 +219,7 @@ export async function createOrder(orderData: Omit<Order, 'id' | 'createdAt'> & {
         }
       }
 
-      // Update Batch Totals for Delivered orders
-      const isValidBatchId = (bid: string | number | null | undefined) => bid && bid !== 'none' && bid !== 'hold';
       if (orderData.shippingStatus === 'Delivered') {
-        // Update Batch stats if valid batch
-        if (isValidBatchId(orderData.batchId)) {
-          const targetBatchId = orderData.batchId!;
-          const batch = await tx.batch.findUnique({ where: { id: Number(targetBatchId) } });
-          if (batch) {
-            await tx.batch.update({
-              where: { id: Number(targetBatchId) },
-              data: {
-                totalOrders: (batch.totalOrders || 0) + 1,
-                totalSales: (batch.totalSales || 0) + orderData.totalAmount
-              }
-            });
-            console.log(`[BatchUpdate] Updated Batch ${targetBatchId}: Orders +1, Sales +${orderData.totalAmount}`);
-          } else {
-            console.warn(`[BatchUpdate] Batch ${targetBatchId} not found!`);
-          }
-        }
-
         // Update Customer totalSpent
         await tx.customer.update({
           where: { id: Number(orderData.customerId) },
@@ -305,7 +266,6 @@ export async function createOrder(orderData: Omit<Order, 'id' | 'createdAt'> & {
     revalidatePath("/orders");
     revalidatePath("/inventory");
     revalidatePath("/customers");
-    revalidatePath("/batches");
     return {
       ...orderData,
       id: newOrder.id,
@@ -323,67 +283,33 @@ export async function createOrder(orderData: Omit<Order, 'id' | 'createdAt'> & {
 export async function updateOrder(id: string | number, data: Partial<Order>): Promise<Order> {
   try {
     const updatedOrderResult = await prisma.$transaction(async (tx) => {
-      // 1. Fetch existing order to revert its effects on batches if needed
+      // 1. Fetch existing order to revert its effects on totals if needed
       const existingOrder = await tx.order.findUnique({ where: { id: Number(id) } });
       if (!existingOrder) throw new Error("Order not found");
 
-      // 2. Manage Batch Totals based on shippingStatus (Delivered only)
+      // 2. Manage Customer totalSpent based on shippingStatus (Delivered only)
       const wasCountable = existingOrder.shippingStatus === 'Delivered';
       const isNowCountable = data.shippingStatus === 'Delivered';
-
-      const oldBatchId = existingOrder.batchId;
-      const newBatchId = data.batchId !== undefined ? data.batchId : oldBatchId;
 
       const oldAmount = existingOrder.totalAmount;
       const newAmount = data.totalAmount !== undefined ? data.totalAmount : oldAmount;
 
-      const batchChanged = oldBatchId !== newBatchId;
       const amountChanged = oldAmount !== newAmount;
-      const statusChanged = (data.shippingStatus !== undefined && existingOrder.shippingStatus !== data.shippingStatus);
-
-      // Helper to check if batch is valid for stats
-      const isValidBatch = (bid: string | number | null | undefined) => bid && bid !== 'none' && bid !== 'hold';
 
       if (wasCountable && !isNowCountable) {
-        // Condition 1: Transition FROM Countable TO non-Countable (Cancelled) -> Revert stats
-        if (isValidBatch(oldBatchId)) {
-          const batch = await tx.batch.findUnique({ where: { id: Number(oldBatchId!) } });
-          if (batch) {
-            await tx.batch.update({
-              where: { id: Number(oldBatchId!) },
-              data: {
-                totalOrders: Math.max(0, (batch.totalOrders || 0) - 1),
-                totalSales: Math.max(0, (batch.totalSales || 0) - oldAmount)
-              }
-            });
-          }
-        }
-        // Update Customer totalSpent
+        // Transition FROM Countable TO non-Countable (Cancelled) -> Revert stats
         await tx.customer.update({
           where: { id: Number(existingOrder.customerId) },
           data: { totalSpent: { decrement: oldAmount } }
         });
       } else if (!wasCountable && isNowCountable) {
-        // Condition 2: Transition FROM non-Countable TO Countable -> Apply stats
-        if (isValidBatch(newBatchId)) {
-          const batch = await tx.batch.findUnique({ where: { id: Number(newBatchId!) } });
-          if (batch) {
-            await tx.batch.update({
-              where: { id: Number(newBatchId!) },
-              data: {
-                totalOrders: (batch.totalOrders || 0) + 1,
-                totalSales: (batch.totalSales || 0) + newAmount
-              }
-            });
-          }
-        }
-        // Update Customer totalSpent
+        // Transition FROM non-Countable TO Countable -> Apply stats
         await tx.customer.update({
           where: { id: Number(data.customerId || existingOrder.customerId) },
           data: { totalSpent: { increment: newAmount } }
         });
       } else if (wasCountable && isNowCountable) {
-        // Condition 3: Stayed Countable but Batch, Amount, or Customer changed -> Diff stats
+        // Stayed Countable but Amount or Customer changed -> Diff stats
         const oldCustomerId = existingOrder.customerId;
         const newCustomerId = data.customerId || oldCustomerId;
         const customerChanged = oldCustomerId !== newCustomerId;
@@ -406,48 +332,6 @@ export async function updateOrder(id: string | number, data: Partial<Order>): Pr
             data: { totalSpent: { increment: newAmount - oldAmount } }
           });
         }
-
-        if (batchChanged) {
-          // Revert old
-          if (isValidBatch(oldBatchId)) {
-            const batch = await tx.batch.findUnique({ where: { id: Number(oldBatchId!) } });
-            if (batch) {
-              await tx.batch.update({
-                where: { id: Number(oldBatchId!) },
-                data: {
-                  totalOrders: Math.max(0, (batch.totalOrders || 0) - 1),
-                  totalSales: Math.max(0, (batch.totalSales || 0) - oldAmount)
-                }
-              });
-            }
-          }
-          // Apply new
-          if (isValidBatch(newBatchId)) {
-            const batch = await tx.batch.findUnique({ where: { id: Number(newBatchId!) } });
-            if (batch) {
-              await tx.batch.update({
-                where: { id: Number(newBatchId!) },
-                data: {
-                  totalOrders: (batch.totalOrders || 0) + 1,
-                  totalSales: (batch.totalSales || 0) + newAmount
-                }
-              });
-            }
-          }
-        } else if (amountChanged) {
-          // Same batch, different amount
-          if (isValidBatch(newBatchId)) {
-            const batch = await tx.batch.findUnique({ where: { id: Number(newBatchId!) } });
-            if (batch) {
-              await tx.batch.update({
-                where: { id: Number(newBatchId!) },
-                data: {
-                  totalSales: (batch.totalSales || 0) + (newAmount - oldAmount)
-                }
-              });
-            }
-          }
-        }
       }
 
       // 3. Update the order
@@ -466,7 +350,6 @@ export async function updateOrder(id: string | number, data: Partial<Order>): Pr
           paymentMethod: data.paymentMethod,
           paymentStatus: data.paymentStatus,
           shippingStatus: data.shippingStatus,
-          batchId: data.batchId ? Number(data.batchId) : undefined,
           customerId: data.customerId ? Number(data.customerId) : undefined,
           customerEmail: data.customerEmail,
           courierName: data.courierName,
@@ -523,7 +406,6 @@ export async function updateOrder(id: string | number, data: Partial<Order>): Pr
 
     revalidatePath("/orders");
     revalidatePath("/customers");
-    revalidatePath("/batches");
 
     return {
       id: updatedOrderResult.id,
@@ -539,7 +421,6 @@ export async function updateOrder(id: string | number, data: Partial<Order>): Pr
       paymentMethod: (updatedOrderResult.paymentMethod as PaymentMethod) || "COD",
       paymentStatus: (updatedOrderResult.paymentStatus as PaymentStatus) || "Unpaid",
       shippingStatus: (updatedOrderResult.shippingStatus as ShippingStatus) || "Pending",
-      batchId: updatedOrderResult.batchId,
       createdAt: updatedOrderResult.createdAt,
       createdBy: (updatedOrderResult.createdBy as any) || { uid: "system", name: "System" },
       customerId: updatedOrderResult.customerId,
@@ -677,24 +558,8 @@ export async function cancelOrder(orderId: string): Promise<void> {
         }
       }
 
-      // Update Batch Totals (Decrement) if it was countable (Delivered)
-      const isValidBatchId = (bid: string | number | null | undefined) => bid && bid !== 'none' && bid !== 'hold';
+      // Update Customer totalSpent (Decrement) if it was countable (Delivered)
       if (order.shippingStatus === 'Delivered') {
-        if (isValidBatchId(order.batchId)) {
-          const targetBatchId = order.batchId!;
-          const batch = await tx.batch.findUnique({ where: { id: Number(targetBatchId) } });
-          if (batch) {
-            await tx.batch.update({
-              where: { id: Number(targetBatchId) },
-              data: {
-                totalOrders: Math.max(0, (batch.totalOrders || 0) - 1),
-                totalSales: Math.max(0, (batch.totalSales || 0) - order.totalAmount)
-              }
-            });
-          }
-        }
-
-        // Update Customer totalSpent
         await tx.customer.update({
           where: { id: Number(order.customerId) },
           data: { totalSpent: { decrement: order.totalAmount } }
@@ -747,7 +612,6 @@ export async function cancelOrder(orderId: string): Promise<void> {
     revalidatePath("/orders");
     revalidatePath("/inventory");
     revalidatePath("/customers");
-    revalidatePath("/batches");
     revalidatePath("/dashboard");
   } catch (error: any) {
     console.error("Error in cancelOrder:", error);

@@ -44,14 +44,14 @@ export function ViewNewCustomersDialog({
                     <div className="flex items-center justify-between">
                         <div className="space-y-1">
                             <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                                <Users className="h-6 w-6 text-purple-500" />
+                                <Users className="h-6 w-6 text-zinc-500" />
                                 New Customers
                             </DialogTitle>
                             <p className="text-sm text-muted-foreground">
                                 Customers who joined {timeframe === 'all' ? 'all time' : `this ${timeframe}`}
                             </p>
                         </div>
-                        <Badge variant="outline" className="text-sm px-3 py-1 bg-purple-50 text-purple-700 border-purple-200">
+                        <Badge variant="outline" className="text-sm px-3 py-1 bg-zinc-100 text-zinc-700 border-zinc-300">
                             {customers.length} New
                         </Badge>
                     </div>
@@ -113,7 +113,7 @@ export function ViewNewCustomersDialog({
                                                 <TableCell className="text-sm">
                                                     {format(joinDate, "MMM dd, yyyy")}
                                                 </TableCell>
-                                                <TableCell className="text-right px-6 font-bold font-mono text-purple-600 dark:text-purple-400">
+                                                <TableCell className="text-right px-6 font-bold font-mono text-zinc-600 dark:text-zinc-400">
                                                     ₱{(customer.totalSpent || 0).toLocaleString()}
                                                 </TableCell>
                                             </TableRow>

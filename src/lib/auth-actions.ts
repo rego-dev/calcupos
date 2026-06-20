@@ -17,6 +17,7 @@ export async function login(prevState: any, formData: FormData) {
     try {
         const user = await prisma.user.findUnique({
             where: { email },
+            include: { role_rel: true }
         });
 
         if (!user) {
@@ -51,15 +52,21 @@ export async function login(prevState: any, formData: FormData) {
         // Success
         // Determine where to redirect based on permissions
         const userWithPerms = user as any;
+        const roleName = userWithPerms.role_rel?.name || userWithPerms.role;
+        const isCashier = roleName?.toLowerCase() === 'cashier';
         const permissions = userWithPerms.permissions as UserPermissions;
+
+        if (isCashier) {
+            redirect("/pos");
+        }
 
         if (permissions?.dashboard) {
             redirect("/dashboard");
         }
 
         const availablePaths = [
+            { key: 'pos', path: '/pos' }, // Give POS priority over orders
             { key: 'orders', path: '/orders' },
-            { key: 'batches', path: '/batches' },
             { key: 'inventory', path: '/inventory' },
             { key: 'customers', path: '/customers' },
             { key: 'stations', path: '/stations' },

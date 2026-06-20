@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Order, Customer, Batch, ShippingStatus } from "@/lib/types";
+import { Order, Customer, ShippingStatus, CompanyProfile } from "@/lib/types";
 import { getAllOrders } from "@/app/(app)/orders/actions";
-import { getBatches } from "@/app/(app)/batches/actions";
 import { getCustomers } from "@/app/(app)/customers/actions";
+import { getCompanyProfile } from "@/app/(app)/settings/actions";
 import { startOfWeek, startOfMonth, startOfYear, endOfToday, isWithinInterval, format } from "date-fns";
 import { Loader2, CheckCircle2 } from "lucide-react";
 
@@ -15,26 +15,25 @@ function DashboardPrintContent() {
 
     const [allOrders, setAllOrders] = useState<Order[]>([]);
     const [allCustomers, setAllCustomers] = useState<Customer[]>([]);
-    const [allBatches, setAllBatches] = useState<Batch[]>([]);
+    const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [status, setStatus] = useState<'loading' | 'generating' | 'done'>('loading');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [ordersData, batchesResult, customersData] = await Promise.all([
+                const [ordersData, customersData, profile] = await Promise.all([
                     getAllOrders(),
-                    getBatches(),
-                    getCustomers()
+                    getCustomers(),
+                    getCompanyProfile()
                 ]);
 
                 // Extract bundles from result object
                 const orders = (ordersData as any).orders || [];
-                const batches = (batchesResult as any).batches || [];
 
                 setAllOrders(orders);
-                setAllBatches(batches);
                 setAllCustomers(customersData);
+                setCompanyProfile(profile);
                 setIsLoaded(true);
             } catch (error) {
                 console.error("Failed to fetch dashboard print data", error);
@@ -82,7 +81,6 @@ function DashboardPrintContent() {
             orders: number,
             revenue: number,
             productIncomes: Record<string, number>,
-            batchIds: Set<string>
         }> = {};
 
         filteredOrders.forEach(order => {
@@ -105,17 +103,12 @@ function DashboardPrintContent() {
                     orders: 0,
                     revenue: 0,
                     productIncomes: {},
-                    batchIds: new Set()
                 };
             }
 
             const entry = dataMap[periodKey];
             entry.orders += 1;
             entry.revenue += order.totalAmount;
-
-            if (order.batchId && order.batchId !== 'none') {
-                entry.batchIds.add(String(order.batchId));
-            }
 
             if (order.items && order.items.length > 0) {
                 order.items.forEach((item: any) => {
@@ -142,25 +135,14 @@ function DashboardPrintContent() {
                     }
                 });
 
-                // Format Batches
-                const batchNames = Array.from(item.batchIds).map(id => {
-                    const b = allBatches.find(bg => bg.id === id);
-                    return b ? b.batchName : id;
-                });
-
-                const batchDisplay = batchNames.length > 0
-                    ? (batchNames.length > 3 ? `${batchNames.slice(0, 3).join(", ")} +${batchNames.length - 3} more` : batchNames.join(", "))
-                    : "-";
-
                 return {
                     period: item.period,
                     orders: item.orders,
                     revenue: item.revenue,
                     topProduct,
-                    batches: batchDisplay
                 };
             });
-    }, [filteredOrders, timeframe, allBatches]);
+    }, [filteredOrders, timeframe]);
 
     useEffect(() => {
         if (isLoaded && status === 'loading') {
@@ -237,14 +219,18 @@ function DashboardPrintContent() {
                     <div className="flex justify-between items-start mb-8">
                         <div>
                             <h1 className="text-4xl font-bold text-slate-700 tracking-tight">Dashboard Summary</h1>
-                            <p className="text-slate-500 mt-1 font-medium italic">CalcuPOS Analytics Engine</p>
+                            <p className="text-slate-500 mt-1 font-medium italic">{companyProfile?.companyName || 'FlowCart Sync'} Analytics Engine</p>
                         </div>
                         <div className="text-right">
                             <div className="flex items-center gap-2 justify-end mb-1">
-                                <div className="h-8 w-8 bg-slate-800 rounded flex items-center justify-center">
-                                    <span className="text-white font-bold text-sm">TF</span>
-                                </div>
-                                <span className="text-xl font-bold text-slate-700">CalcuPOS</span>
+                                {companyProfile?.logoUrl ? (
+                                    <img src={companyProfile.logoUrl} alt={companyProfile.companyName} className="h-8 w-8 rounded object-cover" />
+                                ) : (
+                                    <div className="h-8 w-8 bg-slate-800 rounded flex items-center justify-center">
+                                        <span className="text-white font-bold text-sm">TF</span>
+                                    </div>
+                                )}
+                                <span className="text-xl font-bold text-slate-700">{companyProfile?.companyName || 'FlowCart Sync'}</span>
                             </div>
                             <p className="text-xs text-slate-400">Generated: {format(new Date(), "PP pp")}</p>
                         </div>
@@ -276,7 +262,6 @@ function DashboardPrintContent() {
                                 <tr className="bg-slate-800 text-white">
                                     <th className="py-3 px-4 text-left font-semibold rounded-tl-lg">Period</th>
                                     <th className="py-3 px-4 text-left font-semibold">Top Product</th>
-                                    <th className="py-3 px-4 text-left font-semibold">Active Batches</th>
                                     <th className="py-3 px-4 text-right font-semibold">Orders</th>
                                     <th className="py-3 px-4 text-right font-semibold rounded-tr-lg">Revenue</th>
                                 </tr>
@@ -286,14 +271,13 @@ function DashboardPrintContent() {
                                     <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-slate-50/50"}>
                                         <td className="py-3 px-4 font-bold text-slate-700 align-top">{row.period}</td>
                                         <td className="py-3 px-4 text-slate-600 align-top">{row.topProduct}</td>
-                                        <td className="py-3 px-4 text-slate-600 text-xs align-top">{row.batches}</td>
                                         <td className="py-3 px-4 text-right align-top">{row.orders}</td>
                                         <td className="py-3 px-4 text-right font-bold text-slate-800 align-top">₱{row.revenue.toLocaleString()}</td>
                                     </tr>
                                 ))}
                                 {summaryData.length === 0 && (
                                     <tr>
-                                        <td colSpan={5} className="py-6 text-center text-slate-400 italic">No consolidated data available for this timeframe</td>
+                                        <td colSpan={4} className="py-6 text-center text-slate-400 italic">No consolidated data available for this timeframe</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -302,7 +286,7 @@ function DashboardPrintContent() {
 
                     {/* Footer */}
                     <div className="mt-auto pt-10 border-t border-slate-100 text-[10px] text-slate-300 flex justify-between items-center break-inside-avoid">
-                        <p>© 2026 CalcuPOS Professional Series Report</p>
+                        <p>© {new Date().getFullYear()} {companyProfile?.companyName || 'FlowCart Sync'} Professional Series Report</p>
                         <p className="flex items-center gap-2">
                             <span className="h-1 w-1 bg-slate-200 rounded-full"></span>
                             Confidential Business Intelligence

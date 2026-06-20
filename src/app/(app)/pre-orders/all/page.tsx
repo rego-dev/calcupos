@@ -4,16 +4,14 @@ import { useEffect, useState } from "react";
 import { getPreOrders } from "../actions";
 import { getCustomers } from "../../customers/actions";
 import { getStations } from "../../stations/actions";
-import { getBatches } from "../../batches/actions";
 import PreOrderTable from "../components/pre-order-table";
-import type { PreOrder, Customer, Batch } from "@/lib/types";
+import type { PreOrder, Customer } from "@/lib/types";
 import type { Station } from "../../stations/actions";
 
 export default function PreOrdersPage() {
     const [preOrders, setPreOrders] = useState<PreOrder[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [stations, setStations] = useState<Station[]>([]);
-    const [batches, setBatches] = useState<Batch[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState(true);
     const [hasCheckedPermission, setHasCheckedPermission] = useState(false);
@@ -30,16 +28,14 @@ export default function PreOrdersPage() {
             }
 
             if (user?.permissions?.preOrders) {
-                const [preOrdersData, customersData, stationsData, batchesData] = await Promise.all([
+                const [preOrdersData, customersData, stationsData] = await Promise.all([
                     getPreOrders(),
                     getCustomers(),
                     getStations(),
-                    getBatches(),
                 ]);
                 setPreOrders(preOrdersData);
                 setCustomers(customersData);
                 setStations(stationsData);
-                setBatches(batchesData.batches);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -58,7 +54,7 @@ export default function PreOrdersPage() {
             <div className="flex flex-col gap-8 p-2">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+                        <h2 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
                             Pre-orders
                         </h2>
                         <p className="text-muted-foreground mt-1">
@@ -91,7 +87,7 @@ export default function PreOrdersPage() {
         <div className="flex flex-col gap-8 p-2">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+                    <h2 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
                         Pre-orders
                     </h2>
                     <p className="text-muted-foreground mt-1">
@@ -104,7 +100,6 @@ export default function PreOrdersPage() {
                 orders={preOrders}
                 customers={customers}
                 stations={stations}
-                batches={batches}
                 onRefresh={() => fetchData(false)}
             />
         </div>

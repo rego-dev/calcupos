@@ -67,14 +67,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
     };
 
     return (
-        <Card className="border-0 shadow-xl shadow-pink-500/10 bg-white/80 backdrop-blur-sm overflow-hidden">
+        <Card className="border-0 shadow-xl shadow-zinc-500/10 bg-white/80 backdrop-blur-sm overflow-hidden">
             {/* Decorative gradient bar */}
-            <div className="h-1.5 bg-gradient-to-r from-cyan-500 via-pink-500 to-cyan-500" />
+            <div className="h-1.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600" />
 
             <CardHeader className="space-y-3 pb-6">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center">
-                        <Shield className="w-4 h-4 text-pink-600" />
+                    <div className="w-8 h-8 rounded-lg bg-zinc-200 flex items-center justify-center">
+                        <Shield className="w-4 h-4 text-zinc-700" />
                     </div>
                     <CardTitle className="text-2xl">Personal Information</CardTitle>
                 </div>
@@ -88,9 +88,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <div className="space-y-3 group">
                     <Label
                         htmlFor="displayName"
-                        className="text-sm font-semibold flex items-center gap-2 text-slate-700"
+                        className="text-sm font-semibold flex items-center gap-2 text-zinc-700"
                     >
-                        <User className="w-4 h-4 text-pink-500" />
+                        <User className="w-4 h-4 text-amber-500" />
                         Display Name
                     </Label>
                     <Input
@@ -98,7 +98,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                         value={displayName}
                         onChange={(e) => setDisplayName(e.target.value)}
                         placeholder="Enter your display name"
-                        className="h-12 border-2 border-slate-200 focus:border-pink-400 focus:ring-pink-400/20 transition-all duration-200 hover:border-slate-300"
+                        className="h-12 border-2 border-zinc-200 focus:border-amber-400 focus:ring-amber-400/20 transition-all duration-200 hover:border-zinc-300"
                     />
                 </div>
 
@@ -106,9 +106,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <div className="space-y-3 group">
                     <Label
                         htmlFor="email"
-                        className="text-sm font-semibold flex items-center gap-2 text-slate-700"
+                        className="text-sm font-semibold flex items-center gap-2 text-zinc-700"
                     >
-                        <Mail className="w-4 h-4 text-cyan-500" />
+                        <Mail className="w-4 h-4 text-amber-500" />
                         Email Address
                     </Label>
                     <Input
@@ -117,24 +117,24 @@ export function ProfileForm({ user }: ProfileFormProps) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="your.email@example.com"
-                        className="h-12 border-2 border-slate-200 focus:border-cyan-400 focus:ring-cyan-400/20 transition-all duration-200 hover:border-slate-300"
+                        className="h-12 border-2 border-zinc-200 focus:border-amber-400 focus:ring-amber-400/20 transition-all duration-200 hover:border-zinc-300"
                     />
                 </div>
 
                 {/* Info Banner */}
-                <div className="bg-gradient-to-r from-cyan-50 to-pink-50 border-l-4 border-pink-400 p-4 rounded-r-lg">
-                    <p className="text-sm text-slate-700">
+                <div className="bg-gradient-to-r from-amber-50 to-zinc-100 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                    <p className="text-sm text-zinc-700">
                         <span className="font-semibold">Privacy Note:</span> Your information is securely stored and never shared with third parties.
                     </p>
                 </div>
 
                 {/* Warning Banner */}
-                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
+                <div className="bg-gradient-to-r from-amber-50 to-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
                     <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-orange-500 mt-0.5" />
+                        <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5" />
                         <div>
-                            <p className="text-sm font-semibold text-slate-800">Warning</p>
-                            <p className="text-sm text-slate-700">
+                            <p className="text-sm font-semibold text-zinc-800">Warning</p>
+                            <p className="text-sm text-zinc-700">
                                 Changing your personal information will affect your data across the application.
                             </p>
                         </div>
@@ -142,14 +142,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 </div>
             </CardContent>
 
-            <CardFooter className="border-t bg-slate-50/50 px-6 py-5 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
+            <CardFooter className="border-t bg-zinc-50/50 px-6 py-5 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
                 <p className="text-sm text-muted-foreground">
                     Last updated: Never
                 </p>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <Button
-                            className="bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white shadow-lg shadow-pink-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-pink-500/40 hover:scale-105"
+                            className="bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-900 hover:to-black text-white shadow-lg shadow-zinc-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-zinc-500/40 hover:scale-105"
                             disabled={isLoading}
                         >
                             <Save className="w-4 h-4 mr-2" />
@@ -165,7 +165,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleSaveChanges} className="bg-pink-600 hover:bg-pink-700">
+                            <AlertDialogAction onClick={handleSaveChanges} className="bg-zinc-800 hover:bg-zinc-900">
                                 Confirm Change
                             </AlertDialogAction>
                         </AlertDialogFooter>

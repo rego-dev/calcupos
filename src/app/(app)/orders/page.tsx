@@ -6,8 +6,7 @@ import { getOrders } from "./actions";
 import { getCustomers } from "../customers/actions";
 import { getProducts } from "../inventory/actions";
 import { getStations } from "../stations/actions";
-import { getBatches } from "../batches/actions";
-import type { Order, Customer, Product, Batch } from "@/lib/types";
+import type { Order, Customer, Product } from "@/lib/types";
 import type { Station } from "../stations/actions";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { RecentSalesTable } from "../sales/components/recent-sales-table";
@@ -17,7 +16,6 @@ export default function OrdersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [stations, setStations] = useState<Station[]>([]);
-  const [batches, setBatches] = useState<Batch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const [isAuthorized, setIsAuthorized] = useState(true);
@@ -25,18 +23,16 @@ export default function OrdersPage() {
 
   const fetchAllData = useCallback(async (isInitial = false) => {
     try {
-      const [ordersData, customersData, productsData, stationsData, batchesData] = await Promise.all([
+      const [ordersData, customersData, productsData, stationsData] = await Promise.all([
         getOrders(),
         getCustomers(),
         getProducts(),
         getStations(),
-        getBatches(),
       ]);
       setOrders(ordersData);
       setCustomers(customersData);
       setProducts(productsData);
       setStations(stationsData);
-      setBatches(batchesData.batches);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -77,7 +73,7 @@ export default function OrdersPage() {
     return (
       <div className="flex flex-col gap-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit">Orders</h1>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit">Orders</h1>
         </div>
         <div className="flex items-center justify-center p-8">
           <p className="text-muted-foreground">Loading...</p>
@@ -103,7 +99,7 @@ export default function OrdersPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit">Orders</h1>
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit">Orders</h1>
       </div>
 
       <Tabs defaultValue="all-orders" className="w-full">
@@ -117,7 +113,6 @@ export default function OrdersPage() {
             customers={customers}
             products={products}
             stations={stations}
-            batches={batches}
             onRefresh={fetchAllData}
           />
         </TabsContent>

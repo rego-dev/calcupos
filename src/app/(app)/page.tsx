@@ -15,7 +15,6 @@ export default async function AppRootPage() {
 
   const availablePaths = [
     { key: 'orders', path: '/orders' },
-    { key: 'batches', path: '/batches' },
     { key: 'inventory', path: '/inventory' },
     { key: 'customers', path: '/customers' },
     { key: 'stations', path: '/stations' },

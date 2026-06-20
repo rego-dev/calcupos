@@ -15,7 +15,6 @@ export default async function Home() {
 
   const availablePaths = [
     { key: 'orders', path: '/orders' },
-    { key: 'batches', path: '/batches' },
     { key: 'inventory', path: '/inventory' },
     { key: 'customers', path: '/customers' },
     { key: 'stations', path: '/stations' },

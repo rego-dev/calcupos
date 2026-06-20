@@ -106,9 +106,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
     // ONLY redirect if we definitely know we are on a "root-like" path that needs a redirect
     if (pathname === "/" || pathname === "/dashboard" || pathname === "") {
+      const roleName = transformedUser.role?.name?.toLowerCase() || '';
+      if (roleName === 'cashier') {
+         redirect("/pos");
+      }
+
       const availablePaths = [
         { key: 'orders', path: '/orders' },
-        { key: 'batches', path: '/batches' },
         { key: 'inventory', path: '/inventory' },
         { key: 'branches', path: '/branches' },
         { key: 'customers', path: '/customers' },

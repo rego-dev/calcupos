@@ -11,15 +11,15 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-pink-50/30 to-cyan-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100/30 to-amber-50/30">
       <div className="max-w-4xl mx-auto p-6 md:p-8 lg:p-12">
         {/* Header Section */}
         <div className="mb-8 md:mb-12">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-cyan-500 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-zinc-800 to-amber-500 flex items-center justify-center shadow-lg">
               <User className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent">
               Profile
             </h1>
           </div>

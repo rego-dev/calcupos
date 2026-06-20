@@ -217,14 +217,14 @@ export function NotificationBell({ currentUser }: { currentUser: User | null }) 
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${notification.type === 'out_of_stock'
                           ? 'bg-red-100 dark:bg-red-900'
                           : notification.type === 'low_stock'
-                            ? 'bg-orange-100 dark:bg-orange-900'
-                            : 'bg-blue-100 dark:bg-blue-900'
+                            ? 'bg-amber-100 dark:bg-amber-900'
+                            : 'bg-zinc-100 dark:bg-zinc-900'
                           }`}>
                           {notification.type === 'out_of_stock' || notification.type === 'low_stock' ? (
-                            <AlertTriangle className={`h-4 w-4 ${notification.type === 'out_of_stock' ? 'text-red-600' : 'text-orange-600'
+                            <AlertTriangle className={`h-4 w-4 ${notification.type === 'out_of_stock' ? 'text-red-600' : 'text-amber-600'
                               }`} />
                           ) : (
-                            <Package className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <Package className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
                           )}
                         </div>
                       </div>
@@ -240,7 +240,7 @@ export function NotificationBell({ currentUser }: { currentUser: User | null }) 
                       </div>
                       {!notification.read && (
                         <div className="flex-shrink-0">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
                         </div>
                       )}
                     </div>

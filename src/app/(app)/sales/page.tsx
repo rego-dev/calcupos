@@ -10,7 +10,6 @@ import {
 import {
   PhilippinePeso,
   TrendingUp,
-  Package,
   ShoppingCart,
   ShieldAlert,
   Printer,
@@ -19,7 +18,6 @@ import {
   Target,
   FileText
 } from "lucide-react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -168,11 +166,9 @@ export default function SalesPage() {
         paymentMethod: (preOrder.paymentMethod || "GCash") as any,
         paymentStatus: (preOrder.paymentStatus || "Paid") as any,
         shippingStatus: "Delivered" as any, // Treat paid pre-orders as delivered for display
-        batchId: preOrder.batchId,
         customerId: preOrder.customerId,
         customerEmail: preOrder.customerEmail,
         rushShip: false,
-        batch: preOrder.batch,
         createdAt: preOrder.createdAt
       }));
 
@@ -208,7 +204,7 @@ export default function SalesPage() {
     <div className="flex flex-col gap-8 p-2">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
             {viewType === "regular" ? "Sales" : "Pre-Order Sales"}
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -222,11 +218,6 @@ export default function SalesPage() {
             <Printer className="mr-2 h-4 w-4" />
             Print Report
           </Button>
-          <Link href="/sales/batches">
-            <Button className="bg-pink-600 hover:bg-pink-700 text-white">
-              View Batch Analytics
-            </Button>
-          </Link>
           <Tabs defaultValue="regular" value={viewType} onValueChange={(value) => setViewType(value as ViewType)}>
             <TabsList>
               <TabsTrigger value="regular">Regular Sales</TabsTrigger>
@@ -252,16 +243,16 @@ export default function SalesPage() {
         <div className="flex flex-col gap-8">
           {/* Stats Cards */}
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="relative overflow-hidden border-l-4 border-l-cyan-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/50 to-transparent dark:from-cyan-950/20 dark:to-transparent" />
+            <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
               <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
                 <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Net Income</CardTitle>
-                <div className="h-10 w-10 rounded-xl bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <TrendingUp className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <TrendingUp className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
               </CardHeader>
               <CardContent className="relative">
-                <div className="text-3xl font-bold text-cyan-700 dark:text-cyan-300">
+                <div className="text-3xl font-bold text-amber-700 dark:text-amber-300">
                   ₱{salesMetrics.netIncome.toLocaleString()}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1 font-medium">
@@ -271,41 +262,41 @@ export default function SalesPage() {
               </CardContent>
             </Card>
 
-            <Card className="relative overflow-hidden border-l-4 border-l-pink-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-transparent dark:from-pink-950/20 dark:to-transparent" />
+            <Card className="relative overflow-hidden border-l-4 border-l-zinc-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-50/50 to-transparent dark:from-zinc-950/20 dark:to-transparent" />
               <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
                 <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Revenue</CardTitle>
-                <div className="h-10 w-10 rounded-xl bg-pink-100 dark:bg-pink-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <PhilippinePeso className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+                <div className="h-10 w-10 rounded-xl bg-zinc-100 dark:bg-zinc-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <PhilippinePeso className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
                 </div>
               </CardHeader>
               <CardContent className="relative">
-                <div className="text-3xl font-bold text-pink-700 dark:text-pink-300">
+                <div className="text-3xl font-bold text-zinc-700 dark:text-zinc-300">
                   ₱{salesMetrics.totalRevenue.toLocaleString()}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2 font-medium">Total sales value</p>
               </CardContent>
             </Card>
 
-            <Card className="relative overflow-hidden border-l-4 border-l-purple-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-transparent dark:from-purple-950/20 dark:to-transparent" />
+            <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
               <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
                 <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Number of Sales</CardTitle>
-                <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <ShoppingCart className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <ShoppingCart className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
               </CardHeader>
               <CardContent className="relative">
-                <div className="text-3xl font-bold text-purple-700 dark:text-purple-300">{salesMetrics.numberSales}</div>
+                <div className="text-3xl font-bold text-amber-700 dark:text-amber-300">{salesMetrics.numberSales}</div>
                 <p className="text-xs text-muted-foreground mt-2 font-medium">Total delivered orders</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card className="border-t-4 border-t-pink-500/50 shadow-lg overflow-hidden">
+          <Card className="border-t-4 border-t-amber-500/50 shadow-lg overflow-hidden">
             <CardHeader className="border-b bg-muted/30">
               <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-pink-500" />
+                <Target className="h-5 w-5 text-amber-500" />
                 Revenue Analytics
               </CardTitle>
             </CardHeader>

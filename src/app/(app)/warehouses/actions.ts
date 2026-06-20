@@ -77,7 +77,6 @@ export async function createWarehouseProduct(data: {
     image?: string | null;
     location?: string | null;
     retailPrice?: number | null;
-    batchId?: string | null;
 }): Promise<{ success: boolean; error?: string }> {
     try {
         // Validate required fields
@@ -94,7 +93,6 @@ export async function createWarehouseProduct(data: {
                 image: data.image,
                 location: data.location,
                 retailPrice: data.retailPrice,
-                batchId: data.batchId ? Number(data.batchId) : null,
             },
         });
 
@@ -117,7 +115,6 @@ export async function updateWarehouseProduct(
         image?: string | null;
         location?: string | null;
         retailPrice?: number | null;
-        batchId?: string | null;
         alertStock?: number;
     }
 ): Promise<{ success: boolean; error?: string }> {
@@ -133,7 +130,6 @@ export async function updateWarehouseProduct(
                 ...(data.image !== undefined && { image: data.image }),
                 ...(data.location !== undefined && { location: data.location }),
                 ...(data.retailPrice !== undefined && { retailPrice: data.retailPrice }),
-                ...(data.batchId !== undefined && { batchId: data.batchId ? Number(data.batchId) : null }),
                 ...(data.alertStock !== undefined && { alertStock: data.alertStock }),
             },
         });

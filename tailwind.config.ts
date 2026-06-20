@@ -14,8 +14,35 @@ export default {
         headline: ['Inter', 'sans-serif'],
         code: ['monospace'],
         vintage: ['var(--font-vintage)'],
+        nano: ['var(--font-nano)'],
       },
       colors: {
+        /* Remap amber/yellow to CSS variables so ALL amber/yellow Tailwind
+           classes (text-amber-*, bg-amber-*, from-amber-*, border-amber-*, etc.)
+           automatically follow the active color theme. */
+        amber: {
+          50:  'hsl(var(--primary) / 0.06)',
+          100: 'hsl(var(--primary) / 0.12)',
+          200: 'hsl(var(--primary) / 0.28)',
+          300: 'hsl(var(--primary) / 0.50)',
+          400: 'hsl(var(--primary) / 0.80)',
+          500: 'hsl(var(--primary) / <alpha-value>)',
+          600: 'hsl(var(--primary) / 0.88)',
+          700: 'hsl(var(--primary) / 0.72)',
+          800: 'hsl(var(--primary) / 0.55)',
+          900: 'hsl(var(--primary) / 0.38)',
+          950: 'hsl(var(--primary) / 0.22)',
+        },
+        yellow: {
+          50:  'hsl(var(--accent) / 0.06)',
+          100: 'hsl(var(--accent) / 0.12)',
+          200: 'hsl(var(--accent) / 0.35)',
+          300: 'hsl(var(--accent) / 0.55)',
+          400: 'hsl(var(--accent) / 0.80)',
+          500: 'hsl(var(--accent) / <alpha-value>)',
+          600: 'hsl(var(--accent) / 0.85)',
+          700: 'hsl(var(--accent) / 0.70)',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

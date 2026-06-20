@@ -31,7 +31,6 @@ export type UserRole = 'admin' | 'super admin' | 'overseer' | 'packer' | 'user' 
 export type UserPermissions = {
   dashboard: boolean;
   orders: boolean;
-  batches: boolean;
   inventory: boolean;
   customers: boolean;
   reports: boolean;
@@ -64,6 +63,18 @@ export type User = {
 export type Role = {
   id: string | number;
   name: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CompanyProfile = {
+  id: number;
+  companyName: string;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  taxId: string | null;
+  logoUrl: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -140,7 +151,6 @@ export type Order = {
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
   shippingStatus: ShippingStatus;
-  batchId: string | number | null;
   createdAt?: any; // Timestamp
   createdBy?: {
     uid: string | number;
@@ -152,17 +162,7 @@ export type Order = {
   trackingNumber?: string;
   remarks?: OrderRemark;
   rushShip: boolean;
-  batch?: Batch;
 };
-
-export type Batch = {
-  id: string | number;
-  batchName: string;
-  manufactureDate: string;
-  status: 'Open' | 'Closed' | 'Delivered' | 'Cancelled';
-  totalOrders: number;
-  totalSales: number;
-}
 
 export type ProductCategory = {
   id: string | number;
@@ -234,8 +234,6 @@ export type PreOrder = {
   updatedAt: Date | string;
   customer?: Customer;
   items: PreOrderItem[];
-  batchId?: string | number | null;
-  batch?: Batch;
   salesLogs?: any[];
 };
 
@@ -287,7 +285,6 @@ export type WarehouseProduct = {
   location?: string | null;
   cost: number;
   retailPrice?: number | null;
-  batchId?: string | number | null;
   images?: any;
   createdBy?: any;
   createdAt?: Date | string;

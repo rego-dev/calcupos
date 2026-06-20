@@ -36,7 +36,6 @@ interface EditUserDialogProps {
 const DEFAULT_PERMISSIONS: UserPermissions = {
   dashboard: true,
   orders: true,
-  batches: true,
   inventory: true,
   customers: true,
   reports: true,
@@ -53,7 +52,6 @@ const DEFAULT_PERMISSIONS: UserPermissions = {
 const PERMISSION_LABELS: Record<keyof UserPermissions, string> = {
   dashboard: "Dashboard",
   orders: "Orders",
-  batches: "Batches",
   inventory: "Inventory",
   customers: "Customers",
   reports: "Reports",

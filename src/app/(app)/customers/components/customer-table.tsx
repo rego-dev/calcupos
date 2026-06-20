@@ -169,7 +169,7 @@ export default function CustomerTable({ customers: initialCustomers, onCustomerA
 
   return (
     <>
-      <Card className="border-t-4 border-t-pink-500/50 shadow-sm">
+      <Card className="border-t-4 border-t-zinc-700/50 shadow-sm">
         <div className="flex items-center justify-between gap-2 p-4 flex-wrap">
           <div className="flex items-center gap-2">
             <div className="relative">
@@ -199,7 +199,7 @@ export default function CustomerTable({ customers: initialCustomers, onCustomerA
               </Button>
             )}
           </div>
-          <Button onClick={() => setCreateDialogOpen(true)} className="bg-pink-600 hover:bg-pink-700 text-white">
+          <Button onClick={() => setCreateDialogOpen(true)} className="bg-amber-600 hover:bg-amber-700 text-white">
             <PlusCircle className="mr-2 h-4 w-4" />
             Add Customer
           </Button>
@@ -222,7 +222,7 @@ export default function CustomerTable({ customers: initialCustomers, onCustomerA
                 <TableRow key={customer.id} className="hover:bg-muted/50 transition-colors">
                   <TableCell>
                     <div className="grid gap-0.5">
-                      <div className="font-medium text-pink-700 dark:text-pink-400">{customer.name}</div>
+                      <div className="font-medium text-zinc-700 dark:text-amber-400">{customer.name}</div>
                       <div className="text-sm text-muted-foreground">
                         {customer.email}
                       </div>
@@ -236,7 +236,7 @@ export default function CustomerTable({ customers: initialCustomers, onCustomerA
                         variant={customer.isActive !== false ? "outline" : "secondary"}
                         className={customer.isActive !== false
                           ? "bg-green-50 text-green-700 border-green-200"
-                          : "bg-slate-100 text-slate-600 border-slate-200"
+                          : "bg-zinc-100 text-zinc-600 border-zinc-200"
                         }
                       >
                         {customer.isActive !== false ? "Active" : "Inactive"}

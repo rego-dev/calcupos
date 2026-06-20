@@ -148,7 +148,7 @@ export function BulkAddStockDialog({
         <Dialog open={isOpen} onOpenChange={handleClose}>
             <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden border-border/50 bg-background text-foreground">
                 {/* Full-bleed Header */}
-                <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white flex items-start gap-4 flex-col justify-center relative">
+                <div className="bg-gradient-to-r from-zinc-800 to-amber-600 p-6 text-white flex items-start gap-4 flex-col justify-center relative">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-white/20 rounded-md backdrop-blur-sm">
                             <Package className="h-6 w-6 text-white" />
@@ -166,7 +166,7 @@ export function BulkAddStockDialog({
                     <div className="flex flex-col bg-background border-r border-border/50">
                         <div className="p-4 flex-1 overflow-hidden flex flex-col">
                             <Command shouldFilter={false} className="bg-transparent h-full flex flex-col overflow-hidden">
-                                <div className="border border-border/50 rounded-lg bg-card focus-within:ring-1 focus-within:ring-purple-500/50 focus-within:border-purple-500/50 transition-all flex items-center px-3 mb-4">
+                                <div className="border border-border/50 rounded-lg bg-card focus-within:ring-1 focus-within:ring-amber-500/50 focus-within:border-amber-500/50 transition-all flex items-center px-3 mb-4">
                                     <CommandInput
                                         placeholder="Search products by name or SKU..."
                                         value={searchQuery}
@@ -197,7 +197,7 @@ export function BulkAddStockDialog({
                                                         onSelect={() => toggleProductSelection(product)}
                                                         className={cn(
                                                             "flex items-center gap-4 p-3 mb-2 rounded-xl border cursor-pointer border-border/40 transition-all",
-                                                            isSelected ? "bg-purple-500/10 border-purple-500/30" : "bg-card hover:bg-muted/50"
+                                                            isSelected ? "bg-amber-500/10 border-amber-500/30" : "bg-card hover:bg-muted/50"
                                                         )}
                                                     >
                                                         <div className="h-12 w-12 rounded-lg bg-muted/80 flex items-center justify-center overflow-hidden shrink-0 border border-white/5">
@@ -217,7 +217,7 @@ export function BulkAddStockDialog({
                                                         <div className="shrink-0">
                                                             <div className={cn(
                                                                 "h-5 w-5 rounded-full border flex items-center justify-center transition-all",
-                                                                isSelected ? "bg-purple-500 border-purple-500 text-white" : "border-muted-foreground/30 text-transparent"
+                                                                isSelected ? "bg-amber-500 border-amber-500 text-white" : "border-muted-foreground/30 text-transparent"
                                                             )}>
                                                                 <Check className="h-3 w-3" />
                                                             </div>
@@ -247,8 +247,8 @@ export function BulkAddStockDialog({
                     <div className="flex flex-col bg-muted/20 relative">
                         {selectedProducts.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-background via-muted/30 to-muted/50 rounded-br-lg">
-                                <div className="h-24 w-24 rounded-full bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center mb-6 shadow-sm border border-purple-200 dark:border-purple-500/30">
-                                    <Package className="h-10 w-10 text-purple-600 dark:text-purple-400" />
+                                <div className="h-24 w-24 rounded-full bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center mb-6 shadow-sm border border-amber-200 dark:border-amber-500/30">
+                                    <Package className="h-10 w-10 text-amber-600 dark:text-amber-400" />
                                 </div>
                                 <h3 className="text-xl font-bold text-foreground mb-2">No Products Selected</h3>
                                 <p className="text-sm text-muted-foreground max-w-[250px]">
@@ -259,12 +259,12 @@ export function BulkAddStockDialog({
                             <div className="flex-1 overflow-hidden flex flex-col p-4 bg-background/30">
                                 <div className="flex items-center justify-between mb-4 pb-2 border-b border-border/50">
                                     <Label className="text-base font-semibold">Ready to Restock</Label>
-                                    <Badge variant="secondary" className="bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20">{selectedProducts.length} Selected</Badge>
+                                    <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20">{selectedProducts.length} Selected</Badge>
                                 </div>
                                 <ScrollArea className="flex-1 pr-4 -mr-4">
                                     <div className="space-y-3 pb-4">
                                         {selectedProducts.map((product) => (
-                                            <div key={product.id} className="flex items-center gap-3 bg-card p-3 rounded-xl border border-border/50 shadow-sm transition-all hover:border-purple-500/30 relative group">
+                                            <div key={product.id} className="flex items-center gap-3 bg-card p-3 rounded-xl border border-border/50 shadow-sm transition-all hover:border-amber-500/30 relative group">
                                                 <div className="h-10 w-10 rounded-md bg-muted/80 flex items-center justify-center overflow-hidden shrink-0">
                                                     {product.image ? (
                                                         <img src={product.image} alt={product.productName} className="h-full w-full object-cover" />
@@ -290,7 +290,7 @@ export function BulkAddStockDialog({
                                                         onChange={(e) => handleQuantityChange(String(product.id), e.target.value)}
                                                         disabled={isLoading}
                                                         placeholder="Qty"
-                                                        className="text-center h-9 font-semibold text-purple-600 dark:text-purple-400 bg-purple-500/5 focus-visible:ring-purple-500"
+                                                        className="text-center h-9 font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/5 focus-visible:ring-amber-500"
                                                     />
                                                 </div>
                                                 <button
@@ -311,7 +311,7 @@ export function BulkAddStockDialog({
                             <Button
                                 onClick={handleSubmit}
                                 disabled={isLoading || selectedProducts.length === 0}
-                                className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-semibold h-12 rounded-xl shadow-md border-0 transition-all focus:ring-2 focus:ring-purple-500/50"
+                                className="w-full bg-gradient-to-r from-zinc-800 to-amber-600 hover:from-zinc-900 hover:to-amber-700 text-white font-semibold h-12 rounded-xl shadow-md border-0 transition-all focus:ring-2 focus:ring-amber-500/50"
                             >
                                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Add Stock to {selectedProducts.length} Item{selectedProducts.length !== 1 ? 's' : ''}

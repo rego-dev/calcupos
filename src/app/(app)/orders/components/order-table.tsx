@@ -26,7 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MoreHorizontal, PlusCircle, Search, Calendar as CalendarIcon, X, MessageCircle } from "lucide-react";
-import type { Order, PaymentStatus, ShippingStatus, Customer, PaymentMethod, Batch, OrderRemark, Product } from "@/lib/types";
+import type { Order, PaymentStatus, ShippingStatus, Customer, PaymentMethod, OrderRemark, Product } from "@/lib/types";
 import { Station } from "../../stations/actions";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -55,20 +55,20 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const paymentStatusStyles: Record<PaymentStatus, string> = {
-  Hold: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300",
+  Hold: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
   Paid: "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300",
   Unpaid: "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300",
-  "PAID PENDING": "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300",
+  "PAID PENDING": "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
 };
 
 const shippingStatusStyles: Record<ShippingStatus, string> = {
-  Pending: "bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300",
-  Ready: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-300",
-  Shipped: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300",
-  Delivered: "bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300",
+  Pending: "bg-zinc-100 text-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-300",
+  Ready: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
+  Shipped: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
+  Delivered: "bg-zinc-200 text-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-300",
   Claimed: "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300",
   Cancelled: "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300",
-  "Rush Ship": "bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300",
+  "Rush Ship": "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
 };
 
 const paymentStatuses: PaymentStatus[] = ["Hold", "Paid", "Unpaid", "PAID PENDING"];
@@ -81,11 +81,10 @@ interface OrderTableProps {
   customers: Customer[];
   products: Product[];
   stations: Station[];
-  batches: Batch[];
   onRefresh?: () => Promise<void>;
 }
 
-export default function OrderTable({ orders, customers, products, stations, batches, onRefresh }: OrderTableProps) {
+export default function OrderTable({ orders, customers, products, stations, onRefresh }: OrderTableProps) {
   const [localOrders, setLocalOrders] = React.useState<Order[]>(orders);
   const [searchTerm, setSearchTerm] = React.useState("");
 
@@ -95,7 +94,6 @@ export default function OrderTable({ orders, customers, products, stations, batc
   }, [orders]);
   const [paymentStatusFilter, setPaymentStatusFilter] = React.useState<string | number>("all");
   const [shippingStatusFilter, setShippingStatusFilter] = React.useState<string | number>("all");
-  const [batchFilter, setBatchFilter] = React.useState<string | number>("all");
   const [dateFilter, setDateFilter] = React.useState<DateRange | undefined>(undefined);
 
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -124,13 +122,6 @@ export default function OrderTable({ orders, customers, products, stations, batc
         newFilteredOrders = newFilteredOrders.filter(order => order.shippingStatus === shippingStatusFilter);
       }
     }
-    if (batchFilter !== "all") {
-      if (batchFilter === 'unassigned') {
-        newFilteredOrders = newFilteredOrders.filter(order => !order.batchId && order.paymentStatus !== 'Hold');
-      } else {
-        newFilteredOrders = newFilteredOrders.filter(order => order.batchId === batchFilter);
-      }
-    }
     if (dateFilter?.from) {
       newFilteredOrders = newFilteredOrders.filter(order => {
         const orderDate = new Date(order.orderDate);
@@ -150,11 +141,11 @@ export default function OrderTable({ orders, customers, products, stations, batc
     }
 
     return newFilteredOrders;
-  }, [searchTerm, paymentStatusFilter, shippingStatusFilter, batchFilter, dateFilter, localOrders]);
+  }, [searchTerm, paymentStatusFilter, shippingStatusFilter, dateFilter, localOrders]);
 
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, paymentStatusFilter, shippingStatusFilter, batchFilter, dateFilter]);
+  }, [searchTerm, paymentStatusFilter, shippingStatusFilter, dateFilter]);
 
   const paginatedOrders = filteredOrders.slice(
     (currentPage - 1) * itemsPerPage,
@@ -163,13 +154,12 @@ export default function OrderTable({ orders, customers, products, stations, batc
 
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
 
-  const isFiltered = searchTerm !== "" || paymentStatusFilter !== "all" || shippingStatusFilter !== "all" || batchFilter !== "all" || dateFilter !== undefined;
+  const isFiltered = searchTerm !== "" || paymentStatusFilter !== "all" || shippingStatusFilter !== "all" || dateFilter !== undefined;
 
   const resetFilters = () => {
     setSearchTerm("");
     setPaymentStatusFilter("all");
     setShippingStatusFilter("all");
-    setBatchFilter("all");
     setDateFilter(undefined);
   };
 
@@ -263,20 +253,6 @@ export default function OrderTable({ orders, customers, products, stations, batc
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Select value={batchFilter} onValueChange={setBatchFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by batch" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Batches</SelectItem>
-                <SelectItem value="unassigned">Unassigned</SelectItem>
-                {batches?.map(b => (
-                  <SelectItem key={b.id} value={String(b.id)}>
-                    {b.batchName} ({format(new Date(b.manufactureDate), 'MMM d')})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
             <Select value={paymentStatusFilter} onValueChange={setPaymentStatusFilter}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Payment Status" />
@@ -364,17 +340,7 @@ export default function OrderTable({ orders, customers, products, stations, batc
                     return (
                       <>
                         <TableCell className="font-medium">{String(order.id).substring(0, 7)}...</TableCell>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <span>{order.customerName}</span>
-                            {order.batch && (
-                              <div className="text-[10px] text-zinc-500 flex items-center gap-1 mt-0.5">
-                                <CalendarIcon className="h-2.5 w-2.5" />
-                                {order.batch.batchName} ({format(new Date(order.batch.manufactureDate), 'MMM d')})
-                              </div>
-                            )}
-                          </div>
-                        </TableCell>
+                        <TableCell>{order.customerName}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className={paymentStatusStyles[order.paymentStatus]}>
                             {order.paymentStatus}
@@ -481,7 +447,6 @@ export default function OrderTable({ orders, customers, products, stations, batc
         customers={customers}
         products={products}
         stations={stations}
-        batches={batches}
         onSuccess={onRefresh}
       />
 
@@ -505,7 +470,6 @@ export default function OrderTable({ orders, customers, products, stations, batc
         customers={customers}
         products={products}
         stations={stations}
-        batches={batches}
         onSuccess={onRefresh}
       />
 

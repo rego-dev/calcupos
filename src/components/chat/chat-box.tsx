@@ -271,13 +271,13 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                     className="fixed bottom-6 z-[100] group animate-in slide-in-from-bottom-5 fade-in duration-300 flex flex-col items-center"
                     style={{ right: `${24 + index * 70}px` }}
                 >
-                    <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-slate-800 text-white text-sm font-medium rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-lg whitespace-nowrap">
+                    <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-zinc-800 text-white text-sm font-medium rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-lg whitespace-nowrap">
                         {user.name}
                     </div>
 
                     <button
                         onClick={(e) => { e.stopPropagation(); onClose(); }}
-                        className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-slate-100 hover:bg-white text-slate-600 hover:text-red-500 border border-slate-200 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md z-10"
+                        className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-zinc-100 hover:bg-white text-zinc-600 hover:text-red-500 border border-zinc-200 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md z-10"
                     >
                         <X className="h-3.5 w-3.5" />
                     </button>
@@ -292,20 +292,20 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                 setMessages(prev => prev.map(m => m.senderId === user.id ? { ...m, read: true } : m));
                             }
                         }}
-                        className="relative w-12 h-12 rounded-full shadow-2xl hover:scale-105 transition-transform duration-200 focus:outline-none ring-2 ring-white/50 dark:ring-slate-800/50"
+                        className="relative w-12 h-12 rounded-full shadow-2xl hover:scale-105 transition-transform duration-200 focus:outline-none ring-2 ring-white/50 dark:ring-zinc-800/50"
                     >
                         <Avatar className="h-full w-full bg-white">
                             <AvatarImage src={`https://ui-avatars.com/api/?name=${user.name}&background=random`} alt={user.name} />
                             <AvatarFallback className="text-base">{user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         {user.isOnline === true ? (
-                            <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-white dark:ring-slate-900 shadow-sm" />
+                            <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-white dark:ring-zinc-900 shadow-sm" />
                         ) : (
-                            <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-slate-400 ring-2 ring-white dark:ring-slate-900 shadow-sm" />
+                            <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-zinc-400 ring-2 ring-white dark:ring-zinc-900 shadow-sm" />
                         )}
 
                         {unreadCount > 0 && (
-                            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-md border-[1.5px] border-white dark:border-slate-900 animate-in zoom-in">
+                            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-md border-[1.5px] border-white dark:border-zinc-900 animate-in zoom-in">
                                 {unreadCount > 9 ? "9+" : unreadCount}
                             </span>
                         )}
@@ -313,12 +313,12 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                 </div>
             ) : (
                 <div
-                    className="fixed bottom-0 w-80 h-[450px] bg-white dark:bg-slate-900 rounded-t-2xl shadow-2xl flex flex-col z-[100] overflow-hidden border-2 border-slate-200 dark:border-slate-700 animate-in slide-in-from-bottom-10 fade-in duration-300"
+                    className="fixed bottom-0 w-80 h-[450px] bg-white dark:bg-zinc-900 rounded-t-2xl shadow-2xl flex flex-col z-[100] overflow-hidden border-2 border-zinc-200 dark:border-zinc-700 animate-in slide-in-from-bottom-10 fade-in duration-300"
                     style={{ right: `${40 + index * 340}px` }}
                 >
                     {/* Enhanced Header */}
                     <div className="relative overflow-hidden shrink-0 z-10">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-zinc-800 to-amber-600" />
                         <div className="relative p-3 flex items-center justify-between">
                             <div
                                 className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity flex-1"
@@ -332,7 +332,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                     {user.isOnline === true ? (
                                         <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-white" />
                                     ) : (
-                                        <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-slate-400 ring-2 ring-white" />
+                                        <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-zinc-400 ring-2 ring-white" />
                                     )}
                                 </div>
                                 <div className="flex flex-col">
@@ -341,12 +341,12 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                         {user.isOnline === true ? (
                                             <>
                                                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                                                <span className="text-[10px] text-blue-100">Active now</span>
+                                                <span className="text-[10px] text-amber-100">Active now</span>
                                             </>
                                         ) : (
                                             <>
-                                                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                                                <span className="text-[10px] text-blue-100">Offline</span>
+                                                <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+                                                <span className="text-[10px] text-amber-100">Offline</span>
                                             </>
                                         )}
                                     </div>
@@ -370,28 +370,28 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                     </div>
 
                     {/* Messages Area */}
-                    <ScrollArea className="flex-1 min-h-0 bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-950 dark:to-slate-900">
+                    <ScrollArea className="flex-1 min-h-0 bg-gradient-to-br from-zinc-50 to-amber-50/30 dark:from-zinc-950 dark:to-zinc-900">
                         <div className="p-4 space-y-4">
                             {/* Profile Hero Section */}
                             <div className="flex flex-col items-center justify-center py-6 text-center space-y-3">
                                 <div className="relative">
-                                    <div className="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-20" />
+                                    <div className="absolute inset-0 bg-amber-500 rounded-full blur-2xl opacity-20" />
                                     <Avatar className="relative h-20 w-20 ring-4 ring-white shadow-xl">
                                         <AvatarImage src={`https://ui-avatars.com/api/?name=${user.name}&background=random`} alt={user.name} />
                                         <AvatarFallback className="text-2xl">{user.name.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">{user.name}</h3>
-                                    <p className="text-xs text-muted-foreground mt-1">Connected on CalcuPOS</p>
+                                    <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100">{user.name}</h3>
+                                    <p className="text-xs text-muted-foreground mt-1">Connected on FlowCart Sync</p>
                                 </div>
                             </div>
 
                             {loading ? (
                                 <div className="flex items-center justify-center p-8">
                                     <div className="text-center">
-                                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3 animate-pulse">
-                                            <Package2 className="w-6 h-6 text-blue-600" />
+                                        <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-3 animate-pulse">
+                                            <Package2 className="w-6 h-6 text-amber-600" />
                                         </div>
                                         <p className="text-sm text-muted-foreground">Loading messages...</p>
                                     </div>
@@ -417,8 +417,8 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                                     className={cn(
                                                         "px-4 py-2.5 text-[15px] shadow-md whitespace-pre-wrap relative",
                                                         isMe
-                                                            ? "bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-md"
-                                                            : "bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-2xl rounded-bl-md border border-slate-200 dark:border-slate-700"
+                                                            ? "bg-gradient-to-br from-amber-600 to-zinc-800 text-white rounded-2xl rounded-br-md"
+                                                            : "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-2xl rounded-bl-md border border-zinc-200 dark:border-zinc-700"
                                                     )}
                                                 >
                                                     {(() => {
@@ -449,7 +449,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                                     <span className="text-[10px] text-muted-foreground">
                                                         {new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: 'numeric' }).format(new Date(msg.createdAt))}
                                                     </span>
-                                                    {isMe && <CheckCheck className="w-3 h-3 text-blue-600" />}
+                                                    {isMe && <CheckCheck className="w-3 h-3 text-amber-600" />}
                                                 </div>
                                             </div>
                                         </div>
@@ -461,13 +461,13 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                     </ScrollArea>
 
                     {/* Enhanced Input Area */}
-                    <div className="p-2 border-t-2 bg-white dark:bg-slate-900 dark:border-slate-800 shrink-0">
+                    <div className="p-2 border-t-2 bg-white dark:bg-zinc-900 dark:border-zinc-800 shrink-0">
                         <div className="flex items-center gap-2">
                             <div className="flex gap-1">
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-9 w-9 text-blue-600 hover:bg-blue-50 rounded-full"
+                                    className="h-9 w-9 text-amber-600 hover:bg-amber-50 rounded-full"
                                     disabled={user.isActive === false}
                                 >
                                     <ImageIcon className="h-5 w-5" />
@@ -477,7 +477,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                     variant="ghost"
                                     size="icon"
                                     title="Warehouse Products"
-                                    className="h-9 w-9 text-purple-600 hover:bg-purple-50 rounded-full"
+                                    className="h-9 w-9 text-zinc-600 hover:bg-zinc-100 rounded-full"
                                     onClick={() => setIsProductModalOpen(true)}
                                     disabled={user.isActive === false}
                                 >
@@ -490,14 +490,14 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         placeholder={user.isActive === false ? "Cannot chat with inactive user..." : "Type a message..."}
-                                        className="w-full rounded-full bg-slate-100 dark:bg-slate-800 dark:text-slate-100 border-2 border-transparent focus:border-blue-400 focus:bg-white dark:focus:bg-slate-800 px-4 py-2 h-9 pr-10"
+                                        className="w-full rounded-full bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 border-2 border-transparent focus:border-amber-400 focus:bg-white dark:focus:bg-zinc-800 px-4 py-2 h-9 pr-10"
                                         disabled={sending || user.isActive === false}
                                     />
                                     <Button
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-slate-400 hover:text-slate-600 hover:bg-transparent"
+                                        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-400 hover:text-zinc-600 hover:bg-transparent"
                                     >
                                         <Smile className="h-4 w-4" />
                                     </Button>
@@ -509,8 +509,8 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                 className={cn(
                                     "h-9 w-9 rounded-full shadow-lg transition-all",
                                     newMessage.trim()
-                                        ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-blue-500/30"
-                                        : "bg-slate-200 hover:bg-slate-300 text-slate-600"
+                                        ? "bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 shadow-amber-500/30"
+                                        : "bg-zinc-200 hover:bg-zinc-300 text-zinc-600"
                                 )}
                                 disabled={sending || user.isActive === false}
                             >
@@ -602,10 +602,10 @@ function ProductSelectorModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-6xl h-[85vh] flex flex-col p-0 z-[150] overflow-hidden bg-white dark:bg-slate-950">
+            <DialogContent className="sm:max-w-6xl h-[85vh] flex flex-col p-0 z-[150] overflow-hidden bg-white dark:bg-zinc-950">
                 {/* Enhanced Header */}
                 <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800" />
                     <div className="relative p-6">
                         <DialogHeader>
                             <div className="flex items-center justify-between pr-8">
@@ -615,13 +615,13 @@ function ProductSelectorModal({
                                     </div>
                                     <div>
                                         <DialogTitle className="text-2xl font-bold text-white">Warehouse Products</DialogTitle>
-                                        <p className="text-purple-100 text-sm mt-1">Browse and transfer inventory items</p>
+                                        <p className="text-zinc-300 text-sm mt-1">Browse and transfer inventory items</p>
                                     </div>
                                 </div>
                                 {currentUser?.permissions?.adminManage && selectedProductIds.size > 0 && (
                                     <Button
                                         size="sm"
-                                        className="h-10 gap-2 bg-white text-purple-600 hover:bg-white/90 shadow-lg font-semibold"
+                                        className="h-10 gap-2 bg-white text-zinc-800 hover:bg-white/90 shadow-lg font-semibold"
                                         onClick={handleBulkTransferClick}
                                     >
                                         <ArrowRightLeft className="h-4 w-4" />
@@ -641,7 +641,7 @@ function ProductSelectorModal({
                             placeholder="Search by name, SKU, or manufacturer..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10 h-12 border-2 focus:border-purple-400 bg-white dark:bg-slate-900 dark:text-slate-100 dark:border-slate-800"
+                            className="pl-10 h-12 border-2 focus:border-amber-400 bg-white dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800"
                         />
                     </div>
 
@@ -650,18 +650,18 @@ function ProductSelectorModal({
                             {loading ? (
                                 <div className="col-span-full flex items-center justify-center p-16">
                                     <div className="text-center">
-                                        <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-4 animate-pulse">
-                                            <Package2 className="w-8 h-8 text-purple-600" />
+                                        <div className="w-16 h-16 rounded-full bg-zinc-100 flex items-center justify-center mx-auto mb-4 animate-pulse">
+                                            <Package2 className="w-8 h-8 text-zinc-600" />
                                         </div>
                                         <p className="text-sm text-muted-foreground">Loading products...</p>
                                     </div>
                                 </div>
                             ) : filteredProducts.length === 0 ? (
                                 <div className="col-span-full flex flex-col items-center justify-center p-16">
-                                    <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                                        <Search className="w-10 h-10 text-slate-400" />
+                                    <div className="w-20 h-20 rounded-full bg-zinc-100 flex items-center justify-center mx-auto mb-4">
+                                        <Search className="w-10 h-10 text-zinc-400" />
                                     </div>
-                                    <p className="text-base font-medium text-slate-700 mb-1">No products found</p>
+                                    <p className="text-base font-medium text-zinc-700 mb-1">No products found</p>
                                     <p className="text-sm text-muted-foreground">Try adjusting your search terms</p>
                                 </div>
                             ) : (
@@ -683,10 +683,10 @@ function ProductSelectorModal({
                                         <div
                                             key={product.id}
                                             className={cn(
-                                                "group relative flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden transition-all duration-200 border-2 shadow-sm hover:shadow-lg",
+                                                "group relative flex flex-col bg-white dark:bg-zinc-900 rounded-xl overflow-hidden transition-all duration-200 border-2 shadow-sm hover:shadow-lg",
                                                 isSelected
-                                                    ? 'border-purple-500 ring-2 ring-purple-200 shadow-purple-200 dark:shadow-purple-900/50'
-                                                    : 'border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700'
+                                                    ? 'border-amber-500 ring-2 ring-amber-200 shadow-amber-200 dark:shadow-amber-900/50'
+                                                    : 'border-zinc-200 dark:border-zinc-800 hover:border-amber-300 dark:hover:border-amber-700'
                                             )}
                                         >
                                             {currentUser?.permissions?.adminManage && (
@@ -694,8 +694,8 @@ function ProductSelectorModal({
                                                     <div className={cn(
                                                         "w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
                                                         isSelected
-                                                            ? "bg-purple-600 border-purple-600"
-                                                            : "bg-white border-slate-300 hover:border-purple-400"
+                                                            ? "bg-amber-600 border-amber-600"
+                                                            : "bg-white border-zinc-300 hover:border-amber-400"
                                                     )}>
                                                         {isSelected && (
                                                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -706,7 +706,7 @@ function ProductSelectorModal({
                                                 </div>
                                             )}
 
-                                            <div className="h-44 w-full bg-gradient-to-br from-slate-100 to-purple-50 relative overflow-hidden">
+                                            <div className="h-44 w-full bg-gradient-to-br from-zinc-100 to-zinc-200 relative overflow-hidden">
                                                 {product.image || product.images ? (
                                                     <img
                                                         src={imageUrl}
@@ -715,13 +715,13 @@ function ProductSelectorModal({
                                                     />
                                                 ) : (
                                                     <div className="flex items-center justify-center w-full h-full">
-                                                        <ImageIcon className="h-12 w-12 text-slate-300" />
+                                                        <ImageIcon className="h-12 w-12 text-zinc-300" />
                                                     </div>
                                                 )}
                                             </div>
 
                                             <div className="p-3 flex flex-col gap-2">
-                                                <h4 className="font-semibold text-sm truncate text-slate-900 dark:text-slate-100" title={product.productName}>
+                                                <h4 className="font-semibold text-sm truncate text-zinc-900 dark:text-zinc-100" title={product.productName}>
                                                     {product.productName}
                                                 </h4>
                                                 <Badge variant="outline" className="w-fit text-[10px] font-mono">
@@ -733,7 +733,7 @@ function ProductSelectorModal({
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
-                                                            className="h-7 text-[10px] gap-1 px-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300"
+                                                            className="h-7 text-[10px] gap-1 px-2 border-amber-200 text-amber-600 hover:bg-amber-50 hover:border-amber-300"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 setTransferringProduct(product);
@@ -745,7 +745,7 @@ function ProductSelectorModal({
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
-                                                            className="h-7 text-[10px] gap-1 px-2 bg-purple-50 border-purple-200 text-purple-600 hover:bg-purple-100 hover:border-purple-300"
+                                                            className="h-7 text-[10px] gap-1 px-2 bg-zinc-100 border-zinc-200 text-zinc-600 hover:bg-zinc-200 hover:border-zinc-300"
                                                             onClick={async (e) => {
                                                                 e.stopPropagation();
                                                                 try {
@@ -941,11 +941,11 @@ function TransferStockModal({
             <DialogContent className="sm:max-w-md z-[160] p-0 overflow-hidden bg-white">
                 {/* Header */}
                 <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-600 to-zinc-800" />
                     <div className="relative p-6">
                         <DialogHeader>
                             <DialogTitle className="text-xl font-bold text-white">Transfer to Inventory</DialogTitle>
-                            <DialogDescription className="text-blue-100">
+                            <DialogDescription className="text-amber-100">
                                 Transfer stock from warehouse to main inventory
                             </DialogDescription>
                         </DialogHeader>
@@ -954,31 +954,31 @@ function TransferStockModal({
 
                 {/* Content */}
                 <div className="p-6 space-y-5">
-                    <div className="bg-gradient-to-br from-slate-50 to-purple-50 rounded-xl p-4 border-2 border-purple-200">
+                    <div className="bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl p-4 border-2 border-zinc-200">
                         <div className="space-y-2">
-                            <div className="text-sm font-medium text-slate-600">Product</div>
-                            <div className="text-lg font-bold text-slate-900">{product.productName}</div>
+                            <div className="text-sm font-medium text-zinc-600">Product</div>
+                            <div className="text-lg font-bold text-zinc-900">{product.productName}</div>
                             <Badge variant="outline" className="font-mono">{product.sku}</Badge>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-blue-50 rounded-lg p-3 border-2 border-blue-200">
-                            <div className="text-xs font-medium text-blue-600 mb-1">Available</div>
-                            <div className="text-2xl font-bold text-blue-700">{product.quantity}</div>
-                            <div className="text-xs text-blue-600 mt-0.5">units</div>
+                        <div className="bg-amber-50 rounded-lg p-3 border-2 border-amber-200">
+                            <div className="text-xs font-medium text-amber-600 mb-1">Available</div>
+                            <div className="text-2xl font-bold text-amber-700">{product.quantity}</div>
+                            <div className="text-xs text-amber-600 mt-0.5">units</div>
                         </div>
                         {existingStock && (
-                            <div className="bg-purple-50 rounded-lg p-3 border-2 border-purple-200">
-                                <div className="text-xs font-medium text-purple-600 mb-1">Current Stock</div>
-                                <div className="text-2xl font-bold text-purple-700">{existingStock.quantity}</div>
-                                <div className="text-xs text-purple-600 mt-0.5">in inventory</div>
+                            <div className="bg-zinc-100 rounded-lg p-3 border-2 border-zinc-200">
+                                <div className="text-xs font-medium text-zinc-600 mb-1">Current Stock</div>
+                                <div className="text-2xl font-bold text-zinc-700">{existingStock.quantity}</div>
+                                <div className="text-xs text-zinc-600 mt-0.5">in inventory</div>
                             </div>
                         )}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="quantity" className="text-sm font-semibold text-slate-700">
+                        <Label htmlFor="quantity" className="text-sm font-semibold text-zinc-700">
                             Quantity to Transfer
                         </Label>
                         <Input
@@ -989,13 +989,13 @@ function TransferStockModal({
                             value={quantity}
                             onChange={(e) => setQuantity(e.target.value)}
                             placeholder={`Max: ${product.quantity}`}
-                            className="h-11 border-2 focus:border-purple-400"
+                            className="h-11 border-2 focus:border-amber-400"
                         />
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t-2 bg-slate-50">
+                <div className="p-6 border-t-2 bg-zinc-100">
                     <div className="flex gap-3">
                         <Button
                             variant="outline"
@@ -1008,7 +1008,7 @@ function TransferStockModal({
                         <Button
                             onClick={handleTransfer}
                             disabled={isSubmitting}
-                            className="flex-1 h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg font-semibold"
+                            className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg font-semibold"
                         >
                             {isSubmitting ? "Transferring..." : "Transfer Stock"}
                         </Button>
@@ -1130,11 +1130,11 @@ function BulkTransferModal({
             <DialogContent className="sm:max-w-xl z-[160] p-0 overflow-hidden bg-white">
                 {/* Header */}
                 <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-600 to-zinc-800" />
                     <div className="relative p-6">
                         <DialogHeader>
                             <DialogTitle className="text-xl font-bold text-white">Bulk Transfer Stock</DialogTitle>
-                            <DialogDescription className="text-blue-100">
+                            <DialogDescription className="text-amber-100">
                                 Specify transfer quantities for the selected products
                             </DialogDescription>
                         </DialogHeader>
@@ -1144,7 +1144,7 @@ function BulkTransferModal({
                 {/* Content */}
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-4">
-                        <span className="text-sm font-semibold text-slate-700">{selectedProducts.length} Items Selected</span>
+                        <span className="text-sm font-semibold text-zinc-700">{selectedProducts.length} Items Selected</span>
                         <Button variant="outline" size="sm" onClick={handleTransferAllClick} className="text-xs">
                             Set All to Max Max Stock
                         </Button>
@@ -1158,7 +1158,7 @@ function BulkTransferModal({
                                 else if (product.images && typeof product.images === 'string') imageUrl = product.images;
 
                                 return (
-                                    <div key={product.id} className="flex gap-4 items-center p-3 bg-slate-50 dark:bg-slate-900 border rounded-lg">
+                                    <div key={product.id} className="flex gap-4 items-center p-3 bg-zinc-50 dark:bg-zinc-900 border rounded-lg">
                                         <img src={imageUrl} alt={product.productName} className="w-12 h-12 rounded object-cover border bg-white" />
                                         <div className="flex-1 min-w-0">
                                             <p className="font-medium text-sm truncate" title={product.productName}>{product.productName}</p>
@@ -1182,7 +1182,7 @@ function BulkTransferModal({
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t-2 bg-slate-50">
+                <div className="p-6 border-t-2 bg-zinc-100">
                     <div className="flex gap-3">
                         <Button
                             variant="outline"
@@ -1195,7 +1195,7 @@ function BulkTransferModal({
                         <Button
                             onClick={handleTransfer}
                             disabled={isSubmitting}
-                            className="flex-1 h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg font-semibold"
+                            className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg font-semibold"
                         >
                             {isSubmitting ? "Transferring..." : "Confirm Transfer"}
                         </Button>

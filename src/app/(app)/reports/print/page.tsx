@@ -165,7 +165,7 @@ function PrintReportContent() {
                             <div className="h-10 w-10 bg-slate-800 rounded-full flex items-center justify-center">
                                 <span className="text-white font-bold text-lg">TF</span>
                             </div>
-                            <span className="text-2xl font-bold text-slate-700">CalcuPOS</span>
+                            <span className="text-2xl font-bold text-slate-700">FlowCart Sync</span>
                         </div>
                     </div>
 
@@ -173,7 +173,7 @@ function PrintReportContent() {
                     <div className="bg-slate-50 p-8 mb-8 grid grid-cols-2 gap-12 rounded-sm text-sm">
                         <div>
                             <h3 className="text-slate-400 font-bold uppercase tracking-wider mb-2 text-xs">Report For</h3>
-                            <p className="font-bold text-slate-700 text-base">CalcuPOS Store</p>
+                            <p className="font-bold text-slate-700 text-base">FlowCart Sync Store</p>
                             <p className="text-slate-500">Inventory & Sales Management</p>
                             <p className="text-slate-500">Anaheim Store</p>
                             <p className="text-slate-500">1720 W La Palma Ave, Anaheim, CA</p>

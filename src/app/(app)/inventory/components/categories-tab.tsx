@@ -229,8 +229,8 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                                                     <AvatarFallback><FolderOpen className="h-4 w-4" /></AvatarFallback>
                                                 </Avatar>
                                             ) : (
-                                                <div className="h-10 w-10 rounded-full bg-cyan-100 dark:bg-cyan-950 flex items-center justify-center border border-border">
-                                                    <FolderOpen className="h-4 w-4 text-cyan-500" />
+                                                <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-950 flex items-center justify-center border border-border">
+                                                    <FolderOpen className="h-4 w-4 text-amber-500" />
                                                 </div>
                                             )}
                                             {category.name}
@@ -309,7 +309,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
             <Dialog open={isCreateOpen} onOpenChange={setCreateOpen}>
                 <DialogContent className="sm:max-w-lg overflow-hidden p-0">
                     {/* Gradient Header */}
-                    <div className="bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 px-6 py-5">
+                    <div className="bg-gradient-to-r from-zinc-800 via-zinc-900 to-amber-500 px-6 py-5">
                         <div className="flex items-center gap-3 text-white">
                             <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
                                 <FolderOpen className="h-5 w-5" />
@@ -325,9 +325,9 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
 
                     <div className="p-6">
                         {/* Form Section */}
-                        <div className="bg-purple-50/50 dark:bg-purple-950/20 rounded-lg p-5 mb-4 border border-purple-200/30 dark:border-purple-800/30">
+                        <div className="bg-zinc-100/50 dark:bg-zinc-900/20 rounded-lg p-5 mb-4 border border-zinc-300/30 dark:border-zinc-700/30">
                             <div className="flex items-center gap-2 mb-4">
-                                <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                 </svg>
                                 <h3 className="font-semibold text-sm">Category Details</h3>
@@ -335,7 +335,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                             <div className="grid gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="category-name" className="flex items-center gap-2 text-sm">
-                                        <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                                         </svg>
                                         Category Name
@@ -351,7 +351,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="category-description" className="flex items-center gap-2 text-sm">
-                                        <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
                                         </svg>
                                         Description (optional)
@@ -369,14 +369,14 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                         </div>
 
                         {/* Image Upload Section */}
-                        <div className="bg-purple-50/50 dark:bg-purple-950/20 rounded-lg p-5 mb-6 border border-purple-200/30 dark:border-purple-800/30">
+                        <div className="bg-zinc-100/50 dark:bg-zinc-900/20 rounded-lg p-5 mb-6 border border-zinc-300/30 dark:border-zinc-700/30">
                             <div className="flex items-center gap-2 mb-4">
-                                <ImageIcon className="w-4 h-4 text-purple-500" />
+                                <ImageIcon className="w-4 h-4 text-zinc-500" />
                                 <h3 className="font-semibold text-sm">Category Image</h3>
                             </div>
                             <div className="grid gap-2">
                                 {!imagePreview ? (
-                                    <div className="border-2 border-dashed border-purple-300 dark:border-purple-800/50 rounded-md p-6 text-center bg-white dark:bg-gray-950 transition-colors hover:bg-purple-50 dark:hover:bg-purple-900/10">
+                                    <div className="border-2 border-dashed border-zinc-300 dark:border-zinc-700/50 rounded-md p-6 text-center bg-white dark:bg-gray-950 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800/10">
                                         <Input
                                             id="category-image"
                                             type="file"
@@ -385,15 +385,15 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                                             className="hidden"
                                         />
                                         <Label htmlFor="category-image" className="cursor-pointer">
-                                            <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-3">
-                                                <ImageIcon className="h-6 w-6 text-purple-500" />
+                                            <div className="h-12 w-12 rounded-full bg-zinc-200 dark:bg-zinc-800/30 flex items-center justify-center mx-auto mb-3">
+                                                <ImageIcon className="h-6 w-6 text-zinc-500" />
                                             </div>
-                                            <span className="block text-sm font-medium text-purple-600 dark:text-purple-400">Click to upload image</span>
+                                            <span className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">Click to upload image</span>
                                             <span className="block text-xs text-muted-foreground mt-1">Recommended size: 400x400px</span>
                                         </Label>
                                     </div>
                                 ) : (
-                                    <div className="relative border-2 border-purple-200 dark:border-purple-800/50 rounded-md overflow-hidden bg-white dark:bg-gray-950 w-full max-w-[200px] mx-auto">
+                                    <div className="relative border-2 border-zinc-300 dark:border-zinc-700/50 rounded-md overflow-hidden bg-white dark:bg-gray-950 w-full max-w-[200px] mx-auto">
                                         <div className="aspect-square bg-muted">
                                             <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                                         </div>
@@ -418,7 +418,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                             <Button
                                 onClick={handleCreate}
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600"
+                                className="flex-1 bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-900 hover:to-zinc-950"
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" />
                                 {isSubmitting ? "Creating..." : "Create Category"}
@@ -432,7 +432,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
             <Dialog open={!!editingCategory} onOpenChange={(open) => { if (!open) { setEditingCategory(null); resetForm(); } }}>
                 <DialogContent className="sm:max-w-lg overflow-hidden p-0">
                     {/* Gradient Header */}
-                    <div className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 px-6 py-5">
+                    <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-zinc-800 px-6 py-5">
                         <div className="flex items-center gap-3 text-white">
                             <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
                                 <Pencil className="h-5 w-5" />
@@ -448,9 +448,9 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
 
                     <div className="p-6">
                         {/* Form Section */}
-                        <div className="bg-cyan-50/50 dark:bg-cyan-950/20 rounded-lg p-5 mb-4 border border-cyan-200/30 dark:border-cyan-800/30">
+                        <div className="bg-amber-50/50 dark:bg-amber-950/20 rounded-lg p-5 mb-4 border border-amber-200/30 dark:border-amber-800/30">
                             <div className="flex items-center gap-2 mb-4">
-                                <svg className="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                                 <h3 className="font-semibold text-sm">Category Details</h3>
@@ -458,7 +458,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                             <div className="grid gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="edit-category-name" className="flex items-center gap-2 text-sm">
-                                        <svg className="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                                         </svg>
                                         Category Name
@@ -473,7 +473,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="edit-category-description" className="flex items-center gap-2 text-sm">
-                                        <svg className="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
                                         </svg>
                                         Description (optional)
@@ -490,14 +490,14 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                         </div>
 
                         {/* Image Upload Section */}
-                        <div className="bg-cyan-50/50 dark:bg-cyan-950/20 rounded-lg p-5 mb-6 border border-cyan-200/30 dark:border-cyan-800/30">
+                        <div className="bg-amber-50/50 dark:bg-amber-950/20 rounded-lg p-5 mb-6 border border-amber-200/30 dark:border-amber-800/30">
                             <div className="flex items-center gap-2 mb-4">
-                                <ImageIcon className="w-4 h-4 text-cyan-500" />
+                                <ImageIcon className="w-4 h-4 text-amber-500" />
                                 <h3 className="font-semibold text-sm">Category Image</h3>
                             </div>
                             <div className="grid gap-2">
                                 {!imagePreview ? (
-                                    <div className="border-2 border-dashed border-cyan-300 dark:border-cyan-800/50 rounded-md p-6 text-center bg-white dark:bg-gray-950 transition-colors hover:bg-cyan-50 dark:hover:bg-cyan-900/10">
+                                    <div className="border-2 border-dashed border-amber-300 dark:border-amber-800/50 rounded-md p-6 text-center bg-white dark:bg-gray-950 transition-colors hover:bg-amber-50 dark:hover:bg-amber-900/10">
                                         <Input
                                             id="edit-category-image"
                                             type="file"
@@ -506,14 +506,14 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                                             className="hidden"
                                         />
                                         <Label htmlFor="edit-category-image" className="cursor-pointer">
-                                            <div className="h-12 w-12 rounded-full bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center mx-auto mb-3">
-                                                <ImageIcon className="h-6 w-6 text-cyan-500" />
+                                            <div className="h-12 w-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-3">
+                                                <ImageIcon className="h-6 w-6 text-amber-500" />
                                             </div>
-                                            <span className="block text-sm font-medium text-cyan-600 dark:text-cyan-400">Click to upload image</span>
+                                            <span className="block text-sm font-medium text-amber-600 dark:text-amber-400">Click to upload image</span>
                                         </Label>
                                     </div>
                                 ) : (
-                                    <div className="relative border-2 border-cyan-200 dark:border-cyan-800/50 rounded-md overflow-hidden bg-white dark:bg-gray-950 w-full max-w-[200px] mx-auto">
+                                    <div className="relative border-2 border-amber-200 dark:border-amber-800/50 rounded-md overflow-hidden bg-white dark:bg-gray-950 w-full max-w-[200px] mx-auto">
                                         <div className="aspect-square bg-muted">
                                             <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                                         </div>
@@ -538,7 +538,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                             <Button
                                 onClick={handleUpdate}
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
+                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700"
                             >
                                 <Pencil className="mr-2 h-4 w-4" />
                                 {isSubmitting ? "Saving..." : "Save Changes"}

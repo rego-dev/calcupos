@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Customer, Order, PaymentStatus, ShippingStatus, PaymentMethod, Batch, OrderRemark, Product } from "@/lib/types";
+import { Customer, Order, PaymentStatus, ShippingStatus, PaymentMethod, OrderRemark, Product } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -39,7 +39,6 @@ interface EditOrderDialogProps {
   customers: Customer[];
   products: Product[];
   stations: Station[];
-  batches: Batch[];
   onSuccess?: () => Promise<void>;
 }
 
@@ -56,7 +55,6 @@ export function EditOrderDialog({
   customers,
   products,
   stations,
-  batches,
   onSuccess,
 }: EditOrderDialogProps) {
   const { toast } = useToast();
@@ -75,7 +73,6 @@ export function EditOrderDialog({
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("COD");
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("Unpaid");
   const [shippingStatus, setShippingStatus] = useState<ShippingStatus>("Pending");
-  const [batchId, setBatchId] = useState<string | number | null>(null);
   const [courierName, setCourierName] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
   const [remarks, setRemarks] = useState<OrderRemark>('');
@@ -144,7 +141,6 @@ export function EditOrderDialog({
       setPaymentMethod(order.paymentMethod);
       setPaymentStatus(order.paymentStatus);
       setShippingStatus(order.shippingStatus);
-      setBatchId(String(order.batchId || (order.paymentStatus === 'Hold' ? 'hold' : null)));
       setCourierName(order.courierName || "");
       setTrackingNumber(order.trackingNumber || "");
       setRemarks(order.remarks || '');
@@ -314,9 +310,8 @@ export function EditOrderDialog({
         shippingFee: parseFloat(shippingFee) || 0,
         totalAmount: totalAmount || 0,
         paymentMethod,
-        paymentStatus: batchId === 'hold' ? 'Hold' : paymentStatus,
+        paymentStatus,
         shippingStatus,
-        batchId: (batchId === 'hold' || batchId === 'none' || !batchId) ? null : batchId,
         courierName,
         trackingNumber,
         remarks,
@@ -668,27 +663,6 @@ export function EditOrderDialog({
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="batchId">Delivery Batch</Label>
-                      <Select
-                        onValueChange={(value: string) => setBatchId(String(value))}
-                        value={batchId || ''}
-                        disabled={customerName === "Walk In Customer"}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select batch" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="hold">Hold for Next Batch</SelectItem>
-                          <SelectItem value="none">Normal Delivery</SelectItem>
-                          {/* Add actual batches here */}
-                          {batches && batches.length > 0 && <div className="border-t my-1" />}
-                          {batches && batches.filter(b => b.status === "Open" && !b.batchName.toLowerCase().includes("batch test")).map(b => (
-                            <SelectItem key={b.id} value={String(b.id)}>{b.batchName}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid gap-2">
                       <Label htmlFor="paymentMethod">Payment Method</Label>
                       <Select
                         onValueChange={(value: PaymentMethod) => setPaymentMethod(value)}
@@ -714,7 +688,7 @@ export function EditOrderDialog({
                       <Select
                         onValueChange={(value: PaymentStatus) => setPaymentStatus(value)}
                         value={paymentStatus}
-                        disabled={batchId === 'hold' || customerName === "Walk In Customer"}
+                        disabled={customerName === "Walk In Customer"}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select status" />
@@ -751,12 +725,12 @@ export function EditOrderDialog({
 
                   <div className="space-y-4 pt-4 border-t">
                     <Label className="text-sm font-semibold flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4 text-blue-500" />
+                      <ImageIcon className="w-4 h-4 text-amber-500" />
                       Proof of Payment <span className="text-red-500">*</span>
                     </Label>
                     <div className="flex flex-col gap-4">
                       {paymentProofPreviewUrl ? (
-                        <div className="relative w-full max-w-sm aspect-video rounded-xl overflow-hidden border-2 border-slate-200 group">
+                        <div className="relative w-full max-w-sm aspect-video rounded-xl overflow-hidden border-2 border-zinc-200 group">
                           <img
                             src={paymentProofPreviewUrl}
                             alt="Payment Proof"
@@ -785,12 +759,12 @@ export function EditOrderDialog({
                         </div>
                       ) : (
                         <div
-                          className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors"
+                          className="border-2 border-dashed border-zinc-300 rounded-xl p-8 text-center bg-zinc-50 hover:bg-zinc-100 cursor-pointer transition-colors"
                           onClick={() => paymentProofInputRef.current?.click()}
                         >
-                          <ImageIcon className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                          <p className="text-sm font-medium text-slate-600">Click to upload payment proof</p>
-                          <p className="text-xs text-slate-400 mt-1">Image or PDF (Max 5MB)</p>
+                          <ImageIcon className="h-8 w-8 text-zinc-400 mx-auto mb-2" />
+                          <p className="text-sm font-medium text-zinc-600">Click to upload payment proof</p>
+                          <p className="text-xs text-zinc-400 mt-1">Image or PDF (Max 5MB)</p>
                         </div>
                       )}
                       <input
@@ -801,7 +775,7 @@ export function EditOrderDialog({
                         className="hidden"
                       />
                       {isReadingPaymentProof && (
-                        <div className="flex items-center gap-2 text-sm text-blue-600 animate-pulse">
+                        <div className="flex items-center gap-2 text-sm text-amber-600 animate-pulse">
                           <Loader className="h-4 h-4 animate-spin" />
                           Reading file...
                         </div>

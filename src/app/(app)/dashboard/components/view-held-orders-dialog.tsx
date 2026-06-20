@@ -106,14 +106,14 @@ export function ViewHeldOrdersDialog({
                     <div className="flex items-center justify-between">
                         <div className="space-y-1">
                             <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                                <Archive className="h-6 w-6 text-orange-500" />
+                                <Archive className="h-6 w-6 text-amber-500" />
                                 Held Orders
                             </DialogTitle>
                             <p className="text-sm text-muted-foreground">
                                 Detailed view of orders and items currently on hold
                             </p>
                         </div>
-                        <Badge variant="outline" className="text-sm px-3 py-1 bg-orange-50 text-orange-700 border-orange-200">
+                        <Badge variant="outline" className="text-sm px-3 py-1 bg-amber-50 text-amber-700 border-amber-200">
                             {orders.length} Orders
                         </Badge>
                     </div>
@@ -229,7 +229,7 @@ export function ViewHeldOrdersDialog({
                     <div className="flex w-full items-center justify-between">
                         <div className="flex flex-col">
                             <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Total Held Value</span>
-                            <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                            <span className="text-xl font-bold bg-gradient-to-r from-amber-600 to-red-600 bg-clip-text text-transparent">
                                 ₱{totalHeldValue.toLocaleString()}
                             </span>
                         </div>

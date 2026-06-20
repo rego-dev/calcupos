@@ -13,7 +13,6 @@ export async function GET(
       where: { id: Number(orderId) },
       include: {
         customer: true,
-        batch: true,
       },
     });
 
@@ -39,7 +38,6 @@ export async function GET(
       paymentMethod: (order.paymentMethod as any) || "COD",
       paymentStatus: (order.paymentStatus as any) || "Unpaid",
       shippingStatus: (order.shippingStatus as any) || "Pending",
-      batchId: order.batchId,
       paymentProofFileName: (order as any).paymentProofFileName || null,
       paymentProofMimeType: (order as any).paymentProofMimeType || null,
       paymentProofDataUrl: (order as any).paymentProofDataUrl || null,
@@ -100,7 +98,6 @@ export async function PUT(
     if (body.paymentMethod !== undefined) updateData.paymentMethod = body.paymentMethod;
     if (body.paymentStatus !== undefined) updateData.paymentStatus = body.paymentStatus;
     if (body.shippingStatus !== undefined) updateData.shippingStatus = body.shippingStatus;
-    if (body.batchId !== undefined) updateData.batchId = body.batchId;
     if (body.customerId !== undefined) updateData.customerId = body.customerId;
     if (body.customerEmail !== undefined) updateData.customerEmail = body.customerEmail;
     if (body.courierName !== undefined) updateData.courierName = body.courierName;
@@ -115,7 +112,6 @@ export async function PUT(
       data: updateData,
       include: {
         customer: true,
-        batch: true,
       },
     });
 
@@ -134,7 +130,6 @@ export async function PUT(
       paymentMethod: (updatedOrder.paymentMethod as any) || "COD",
       paymentStatus: (updatedOrder.paymentStatus as any) || "Unpaid",
       shippingStatus: (updatedOrder.shippingStatus as any) || "Pending",
-      batchId: updatedOrder.batchId,
       createdAt: updatedOrder.createdAt,
       createdBy: (updatedOrder.createdBy as any) || { uid: "system", name: "System" },
       customerId: updatedOrder.customerId,

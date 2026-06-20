@@ -3,6 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { applyTheme, getStoredTheme } from "@/lib/themes";
 
 export function ThemeToggle() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -10,29 +11,20 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setIsMounted(true);
-    const storedTheme = localStorage.getItem("theme");
+    const { mode, color } = getStoredTheme();
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
-      document.documentElement.classList.add("dark");
-      setIsDarkMode(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setIsDarkMode(false);
-    }
+    const resolvedMode = mode || (prefersDark ? "dark" : "light");
+    applyTheme(resolvedMode, color);
+    setIsDarkMode(resolvedMode === "dark");
   }, []);
 
   const toggleTheme = () => {
-    if (document.documentElement.classList.contains("dark")) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      setIsDarkMode(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      setIsDarkMode(true);
-    }
+    const { color } = getStoredTheme();
+    const newMode = isDarkMode ? "light" : "dark";
+    applyTheme(newMode, color);
+    setIsDarkMode(!isDarkMode);
   };
-  
+
   if (!isMounted) {
     return <div className="h-10 w-10" />;
   }

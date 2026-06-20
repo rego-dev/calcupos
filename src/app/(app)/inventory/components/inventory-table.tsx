@@ -221,7 +221,7 @@ export default function InventoryTable({ products: initialProducts, onRefresh, c
                   className={product.totalStock === 0 ? "bg-red-50 dark:bg-red-950/20" : ""}
                 >
                   <TableCell>
-                    <div className="h-12 w-12 overflow-hidden rounded-xl border-2 border-white/10 bg-muted/50 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:border-pink-500/50 cursor-pointer group">
+                    <div className="h-12 w-12 overflow-hidden rounded-xl border-2 border-white/10 bg-muted/50 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:border-amber-500/50 cursor-pointer group">
                       {product.images?.[0] ? (
                         <img
                           src={product.images[0]}
@@ -241,7 +241,7 @@ export default function InventoryTable({ products: initialProducts, onRefresh, c
                   </TableCell>
                   <TableCell>
                     {product.category ? (
-                      <Badge className="bg-cyan-500/15 text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/25">
+                      <Badge className="bg-amber-500/15 text-amber-400 border-amber-500/30 hover:bg-amber-500/25">
                         {product.category.name}
                       </Badge>
                     ) : (

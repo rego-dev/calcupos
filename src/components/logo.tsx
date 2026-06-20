@@ -12,17 +12,21 @@ export function Logo({ className }: { className?: string }) {
   }, [])
 
   return (
-    <div className={cn("flex items-center gap-3", className)} suppressHydrationWarning>
+    <div className={cn("flex items-center", className)} suppressHydrationWarning>
       {isMounted && (
-        <img
-          src="/images/logo.png"
-          alt="CalcuPOS Logo"
-          className="h-10 w-10 rounded-full object-cover shadow-sm"
-        />
+        <>
+          <img
+            src="/images/logo.png"
+            alt="FlowCart Sync"
+            className="hidden h-10 w-10 rounded-full object-cover shadow-sm group-data-[collapsible=icon]:block"
+          />
+          <img
+            src="/logo.png"
+            alt="FlowCart Sync"
+            className="h-9 w-auto object-contain group-data-[collapsible=icon]:hidden"
+          />
+        </>
       )}
-      <span className="group-data-[collapsible=icon]:hidden text-[23px] font-vintage bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-md tracking-wide">
-        CalcuPOS OMS
-      </span>
     </div>
   )
 }

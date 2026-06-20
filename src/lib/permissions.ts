@@ -21,6 +21,14 @@ export function hasPermission(
         }
     }
 
+    const isCashier = formattedRole === 'cashier';
+    if (isCashier) {
+        if (pathname === '/pos' || pathname.startsWith('/pos/') || pathname === '/profile' || pathname.startsWith('/profile/')) {
+            return true;
+        }
+        return false;
+    }
+
     // Normalize pathname by removing trailing slash (unless it's just '/')
     const normalizedPath = pathname !== '/' && pathname.endsWith('/')
         ? pathname.slice(0, -1)
@@ -47,8 +55,8 @@ export function hasPermission(
     }
 
     // Core Features
+    if (normalizedPath.startsWith('/pos')) return !!permissions?.orders;
     if (normalizedPath.startsWith('/orders')) return !!permissions?.orders;
-    if (normalizedPath.startsWith('/batches')) return !!permissions?.batches;
     if (normalizedPath.startsWith('/inventory')) return !!permissions?.inventory;
     if (normalizedPath.startsWith('/customers')) return !!permissions?.customers;
     if (normalizedPath.startsWith('/stations')) return !!permissions?.stations;

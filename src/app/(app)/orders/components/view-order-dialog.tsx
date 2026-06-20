@@ -271,13 +271,13 @@ export function ViewOrderDialog({ isOpen, onClose, order, onPaymentStatusUpdated
                                                         <img
                                                             src={currentPaymentProof.dataUrl}
                                                             alt="Proof of Payment"
-                                                            className="max-h-28 w-auto rounded-md border border-slate-200"
+                                                            className="max-h-28 w-auto rounded-md border border-zinc-200"
                                                         />
                                                         <a
                                                             href={currentPaymentProof.dataUrl}
                                                             target="_blank"
                                                             rel="noreferrer"
-                                                            className="text-blue-600 hover:underline text-sm block font-medium"
+                                                            className="text-amber-600 hover:underline text-sm block font-medium"
                                                         >
                                                             View Payment Proof
                                                         </a>
@@ -287,7 +287,7 @@ export function ViewOrderDialog({ isOpen, onClose, order, onPaymentStatusUpdated
                                                         href={currentPaymentProof.dataUrl}
                                                         target="_blank"
                                                         rel="noreferrer"
-                                                        className="text-blue-600 hover:underline text-sm font-medium"
+                                                        className="text-amber-600 hover:underline text-sm font-medium"
                                                     >
                                                         View Payment Proof
                                                     </a>
@@ -508,17 +508,13 @@ export function ViewOrderDialog({ isOpen, onClose, order, onPaymentStatusUpdated
                                             <p className="text-xs text-muted-foreground mb-1">Order Date</p>
                                             <p className="font-medium">{order.orderDate}</p>
                                         </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground mb-1">Batch / Cycle</p>
-                                            <p className="font-medium">{order.batch?.batchName || <span className="text-muted-foreground italic">None</span>}</p>
-                                        </div>
                                         <div className="col-span-2">
                                             <p className="text-xs text-muted-foreground mb-1">Remarks</p>
                                             <p className="font-medium text-sm italic">{order.remarks || <span className="text-muted-foreground">None</span>}</p>
                                         </div>
                                     </div>
                                     {order.rushShip && (
-                                        <div className="mt-3 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-4 py-2 rounded-lg text-sm font-bold text-center">
+                                        <div className="mt-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-lg text-sm font-bold text-center">
                                             🚀 RUSH SHIPMENT
                                         </div>
                                     )}

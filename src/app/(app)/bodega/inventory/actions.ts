@@ -143,7 +143,7 @@ export async function updateBodegaProduct(id: string | number, productData: Part
             throw new Error('Product not found');
         }
 
-        // Use raw query for update to handle potential batchId validation issues
+        // Use raw query for update to support partial field updates
         const updates = [];
         const values = [];
 

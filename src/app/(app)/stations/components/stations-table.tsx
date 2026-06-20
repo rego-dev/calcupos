@@ -177,14 +177,14 @@ export default function StationsTable({ stations: initialStations, onRefresh }: 
                             )}
                         </div>
                     </div>
-                    <Button onClick={() => setAddDialogOpen(true)} className="bg-pink-600 hover:bg-pink-700 text-white shrink-0">
+                    <Button onClick={() => setAddDialogOpen(true)} className="bg-zinc-800 hover:bg-zinc-900 text-white shrink-0">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Add Station
                     </Button>
                 </div>
 
                 <TabsContent value="list" className="mt-0">
-                    <Card className="border-t-4 border-t-pink-500/50 shadow-sm">
+                    <Card className="border-t-4 border-t-amber-500/50 shadow-sm">
                         <CardContent className="p-0">
                             <Table>
                                 <TableHeader className="bg-muted/30">
@@ -204,7 +204,7 @@ export default function StationsTable({ stations: initialStations, onRefresh }: 
                                         <TableRow key={station.id} className="hover:bg-muted/50 transition-colors">
                                             <TableCell className="font-medium">
                                                 <div className="flex items-center gap-2">
-                                                    <MapPin className="h-4 w-4 text-pink-500" />
+                                                    <MapPin className="h-4 w-4 text-amber-500" />
                                                     {station.name}
                                                 </div>
                                             </TableCell>

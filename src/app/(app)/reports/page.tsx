@@ -86,7 +86,7 @@ export default function ReportsPage() {
     <div className="flex flex-col gap-8 p-2" suppressHydrationWarning>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent w-fit pb-1">
+          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
             Reports & Analytics
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -100,7 +100,7 @@ export default function ReportsPage() {
       </div>
 
       <div className="grid gap-8">
-        <Card className="border-t-4 border-t-pink-500/50 shadow-sm">
+        <Card className="border-t-4 border-t-zinc-700/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Sales Over Time</CardTitle>
@@ -137,7 +137,7 @@ export default function ReportsPage() {
         </Card>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <Card className="border-t-4 border-t-pink-500/50 shadow-sm">
+          <Card className="border-t-4 border-t-zinc-700/50 shadow-sm">
             <CardHeader>
               <CardTitle>Top Customers</CardTitle>
               <CardDescription>Top 5 customers by total spending.</CardDescription>
@@ -146,7 +146,7 @@ export default function ReportsPage() {
               {isMounted && <TopCustomersChart customers={customers} />}
             </CardContent>
           </Card>
-          <Card className="border-t-4 border-t-pink-500/50 shadow-sm">
+          <Card className="border-t-4 border-t-zinc-700/50 shadow-sm">
             <CardHeader>
               <CardTitle>Courier Usage</CardTitle>
               <CardDescription>Distribution of couriers used for shipments.</CardDescription>

@@ -18,14 +18,7 @@ export async function getCustomers(): Promise<Customer[]> {
     }
   });
 
-  // RAW SQL FALLBACK: Since Prisma Client might be stale and not fetching the isActive column,
-  // we fetch it manually using a raw query.
-  const statuses = await prisma.$queryRaw<any[]>`SELECT id, isActive FROM customers`;
-  const statusMap = statuses.reduce((acc, curr) => {
-    // MySQL TINYINT(1) can come as number 0/1 or boolean true/false depending on driver
-    acc[curr.id] = curr.isActive;
-    return acc;
-  }, {} as Record<string, any>);
+
 
   // Filter: Show all customers EXCEPT "Walk In Customer" from other users
   const filteredCustomers = customers.filter(customer => {
@@ -71,7 +64,7 @@ export async function getCustomers(): Promise<Customer[]> {
       })),
     totalSpent: customer.totalSpent || 0,
     role: customer.role as UserRole | undefined,
-    isActive: statusMap[customer.id] === undefined ? true : Number(statusMap[customer.id]) !== 0,
+    isActive: customer.isActive ?? true,
   }));
 }
 
@@ -309,8 +302,10 @@ export async function toggleCustomerStatus(customerId: string | number, isActive
 
     console.log(`Toggling customer ${customerId} to ${isActive}`);
 
-    // Use raw SQL with template literals ($executeRaw)
-    await prisma.$executeRaw`UPDATE customers SET isActive = ${isActive ? 1 : 0} WHERE id = ${customerId}`;
+    await prisma.customer.update({
+      where: { id: Number(customerId) },
+      data: { isActive: isActive }
+    });
 
     return true;
   } catch (error) {

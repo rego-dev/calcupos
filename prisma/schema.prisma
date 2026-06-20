@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model Customer {
@@ -59,13 +58,10 @@ model Order {
   rushShip       Boolean        @default(false)
   createdBy      Json?
   customerId     Int
-  batchId        Int?
   inventoryLogs  InventoryLog[]
-  batch          Batch?         @relation(fields: [batchId], references: [id])
   customer       Customer       @relation(fields: [customerId], references: [id])
   salesLogs      SalesLog[]
 
-  @@index([batchId])
   @@index([customerId])
   @@index([createdAt])
   @@index([orderDate])
@@ -85,26 +81,6 @@ model Notification {
 
   @@index([userId])
   @@map("notifications")
-}
-
-model Batch {
-  id                Int                @id @default(autoincrement())
-  batchName         String
-  status            String
-  totalOrders       Int?
-  totalSales        Float?
-  createdBy         Json?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  manufactureDate   DateTime           @default(now())
-  orders            Order[]
-  preOrders         PreOrder[]
-  products          Product[]
-  warehouseProducts WarehouseProduct[]
-
-  @@index([createdAt])
-  @@index([manufactureDate])
-  @@map("batches")
 }
 
 model ProductCategory {
@@ -134,18 +110,15 @@ model Product {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @default(now()) @updatedAt
   branchId         Int?
-  batchId          Int?
   categoryId       Int?
   warehouseId      Int?
   inventoryLogs    InventoryLog[]
   preOrders        PreOrder[]
-  batch            Batch?            @relation(fields: [batchId], references: [id])
   category         ProductCategory?  @relation(fields: [categoryId], references: [id])
   warehouseProduct WarehouseProduct? @relation(fields: [warehouseId], references: [id])
   branch           Branch?           @relation(fields: [branchId], references: [id])
 
   @@index([warehouseId])
-  @@index([batchId])
   @@index([categoryId])
   @@index([branchId])
   @@index([createdAt])
@@ -254,15 +227,12 @@ model WarehouseProduct {
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @default(now()) @updatedAt
   alertStock       Int              @default(0)
-  batchId          Int?
   productId        Int?
   categoryId       Int?
   inventoryLogs    InventoryLog[]
   products         Product[]
-  batch            Batch?           @relation(fields: [batchId], references: [id])
   category         ProductCategory? @relation(fields: [categoryId], references: [id])
 
-  @@index([batchId])
   @@index([productId])
   @@index([categoryId])
   @@map("warehouse_products")
@@ -336,17 +306,14 @@ model PreOrder {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @default(now()) @updatedAt
   customerId    Int
-  batchId       Int?
   productId     Int?
   inventoryLogs InventoryLog[]
   items         PreOrderItem[]
-  batch         Batch?         @relation(fields: [batchId], references: [id])
   customer      Customer       @relation(fields: [customerId], references: [id])
   product       Product?       @relation(fields: [productId], references: [id])
   salesLogs     SalesLog[]
 
   @@index([customerId])
-  @@index([batchId])
   @@index([productId])
   @@index([createdAt])
   @@index([orderDate])
@@ -367,6 +334,20 @@ model PreOrderItem {
 
   @@index([preOrderId])
   @@map("pre_order_items")
+}
+
+model CompanyProfile {
+  id          Int      @id @default(1)
+  companyName String   @default("FlowCart Sync")
+  address     String?
+  phone       String?
+  email       String?
+  taxId       String?
+  logoUrl     String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@map("company_profile")
 }
 
 model InventoryLog {
