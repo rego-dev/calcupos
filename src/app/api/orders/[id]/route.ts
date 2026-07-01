@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireApiPermission } from '@/lib/require-auth';
 
 // GET /api/orders/[id] - Get a specific order
 export async function GET(
@@ -7,6 +8,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('orders');
+    if (!auth.ok) return auth.response;
+
     const { id: orderId } = await params;
 
     const order = await prisma.order.findUnique({
@@ -67,6 +71,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('orders');
+    if (!auth.ok) return auth.response;
+
     const { id: orderId } = await params;
     const body = await request.json();
 
@@ -156,6 +163,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('orders');
+    if (!auth.ok) return auth.response;
+
     const { id: orderId } = await params;
 
     // Check if order exists

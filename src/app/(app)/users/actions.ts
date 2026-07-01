@@ -23,7 +23,7 @@ export async function getUsers(): Promise<User[]> {
       id: user.id,
       name: user.name,
       email: user.email,
-      password: user.password,
+      // password intentionally omitted — never expose the hash to callers/clients.
       roleId: user.roleId,
       role: user.role_rel ? {
         id: user.role_rel.id,
@@ -195,7 +195,7 @@ export async function createUser(userData: {
       id: user.id,
       name: user.name,
       email: user.email,
-      password: user.password,
+      // password intentionally omitted — never expose the hash to callers/clients.
       roleId: user.roleId,
       role: user.role_rel ? {
         id: user.role_rel.id,
@@ -397,7 +397,7 @@ export async function updateUser(
       id: user.id,
       name: user.name,
       email: user.email,
-      password: user.password,
+      // password intentionally omitted — never expose the hash to callers/clients.
       roleId: user.roleId,
       role: user.role_rel ? {
         id: user.role_rel.id,

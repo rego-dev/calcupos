@@ -48,7 +48,8 @@ export type User = {
   id: string | number;
   name: string;
   email: string;
-  password: string;
+  /** Only ever populated server-side; must never be sent to the client. */
+  password?: string;
   roleId?: string | number | null;
   role?: Role | null;
   branchId?: string | number | null;

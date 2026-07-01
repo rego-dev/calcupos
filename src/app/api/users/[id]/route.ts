@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import { requireApiPermission } from '@/lib/require-auth';
 
 // GET /api/users/[id] - Get a specific user
 export async function GET(
@@ -8,6 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('users');
+    if (!auth.ok) return auth.response;
+
     const { id: userId } = await params;
 
     // Check if relations are available in the current client
@@ -33,7 +37,7 @@ export async function GET(
       id: user.id,
       name: user.name,
       email: user.email,
-      password: user.password,
+      // password intentionally omitted — never expose the hash.
       roleId: user.roleId,
       role: user.role ? {
         id: user.role.id,
@@ -69,6 +73,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('users');
+    if (!auth.ok) return auth.response;
+
     const { id: userId } = await params;
     const body = await request.json();
     const { name, email, password, roleId, branchId, permissions } = body;
@@ -134,7 +141,7 @@ export async function PUT(
       id: updatedUser.id,
       name: updatedUser.name,
       email: updatedUser.email,
-      password: updatedUser.password,
+      // password intentionally omitted — never expose the hash.
       roleId: updatedUser.roleId,
       role: updatedUser.role ? {
         id: updatedUser.role.id,
@@ -170,6 +177,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('users');
+    if (!auth.ok) return auth.response;
+
     const { id: userId } = await params;
 
     // Check if user exists

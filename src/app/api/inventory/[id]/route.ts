@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { updateProduct, deleteProduct } from '@/app/(app)/inventory/actions';
+import { requireApiPermission } from '@/lib/require-auth';
 
 // GET /api/inventory/[id] - Get a specific product
 export async function GET(
@@ -8,6 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('inventory');
+    if (!auth.ok) return auth.response;
+
     const { id: productId } = await params;
 
     const product = await prisma.product.findUnique({
@@ -52,6 +56,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('inventory');
+    if (!auth.ok) return auth.response;
+
     const { id: productId } = await params;
     const body = await request.json();
 
@@ -73,6 +80,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('inventory');
+    if (!auth.ok) return auth.response;
+
     const { id: productId } = await params;
 
     await deleteProduct(productId);

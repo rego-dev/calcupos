@@ -1,22 +1,16 @@
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { getSessionUserId } from "@/lib/session";
 import { User, UserPermissions } from "@/lib/types";
 
 export async function getCurrentUser(): Promise<User | null> {
-    const cookieStore = await cookies();
-    const sessionId = cookieStore.get("session")?.value;
+    const userId = await getSessionUserId();
 
-    if (!sessionId) {
-        return null;
-    }
-
-    const parsedId = parseInt(sessionId as string, 10);
-    if (isNaN(parsedId)) {
+    if (userId === null) {
         return null;
     }
 
     const user = await (prisma.user as any).findUnique({
-        where: { id: parsedId },
+        where: { id: userId },
         include: {
             role_rel: true,
             branch: true,
@@ -43,7 +37,8 @@ export async function getCurrentUser(): Promise<User | null> {
         id: user.id,
         name: user.name,
         email: user.email,
-        password: user.password,
+        // password intentionally omitted — the hash must never leave the server layer,
+        // and nothing downstream (permission checks, UI) needs it.
         roleId: user.roleId,
         role: resolvedRole,
         branchId: user.branchId,

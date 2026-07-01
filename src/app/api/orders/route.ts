@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrders, createOrder } from '@/app/(app)/orders/actions';
+import { requireApiPermission } from '@/lib/require-auth';
 
 // GET /api/orders - Get all orders
 export async function GET() {
   try {
+    const auth = await requireApiPermission('orders');
+    if (!auth.ok) return auth.response;
+
     const orders = await getOrders();
     return NextResponse.json({ success: true, data: orders });
   } catch (error) {
@@ -18,6 +22,9 @@ export async function GET() {
 // POST /api/orders - Create a new order
 export async function POST(request: NextRequest) {
   try {
+    const auth = await requireApiPermission('orders');
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const orderData = body;
 

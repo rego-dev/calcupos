@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@/lib/types';
+import { requireApiPermission } from '@/lib/require-auth';
 
 // GET /api/customers/[id] - Get a specific customer
 export async function GET(
@@ -8,6 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('customers');
+    if (!auth.ok) return auth.response;
+
     const { id: customerId } = await params;
 
     const customer = await prisma.customer.findUnique({
@@ -60,6 +64,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('customers');
+    if (!auth.ok) return auth.response;
+
     const { id: customerId } = await params;
     const body = await request.json();
 
@@ -138,6 +145,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await requireApiPermission('customers');
+    if (!auth.ok) return auth.response;
+
     const { id: customerId } = await params;
 
     // Check if customer exists

@@ -22,10 +22,11 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // Skip redirection for POST requests (Server Actions)
-    if (request.method === 'POST' && !hasSession) {
-        return NextResponse.next();
-    }
+    // NOTE: This middleware only handles UX redirects based on cookie presence.
+    // It is NOT the security boundary — the session cookie is encrypted/signed
+    // (iron-session) and every server action / API route independently validates
+    // it server-side (getCurrentUser / requireUser / requirePermission). A forged
+    // or tampered cookie will fail those checks even if it passes the check below.
 
     if (!hasSession && !isAuthPage) {
         // Redirect to login if no session and trying to access protected page

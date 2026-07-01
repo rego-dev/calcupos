@@ -1,27 +1,21 @@
 import React from "react";
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { getSessionUserId } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { hasPermission } from "@/lib/permissions";
 import POSHeader from "./components/pos-header";
 
 export default async function POSLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const sessionId = cookieStore.get("session")?.value;
+  const sessionUserId = await getSessionUserId();
 
-  if (!sessionId) {
-    redirect("/login");
-  }
-
-  const parsedId = parseInt(sessionId as string, 10);
-  if (isNaN(parsedId)) {
+  if (sessionUserId === null) {
     redirect("/login");
   }
 
   let user;
   try {
     user = await prisma.user.findUnique({
-      where: { id: parsedId as any },
+      where: { id: sessionUserId },
       include: {
         role_rel: true,
       },

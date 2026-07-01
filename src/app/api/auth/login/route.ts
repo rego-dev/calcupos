@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { cookies } from 'next/headers';
+import { createSession } from '@/lib/session';
+import { rateLimit, resetRateLimit } from '@/lib/rate-limit';
+
+const LOGIN_LIMIT = 5;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
 // POST /api/auth/login - Authenticate user
 export async function POST(request: NextRequest) {
@@ -13,6 +17,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'Email and password are required' },
         { status: 400 }
+      );
+    }
+
+    // Rate limit by client IP + email to slow brute-force / credential stuffing.
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
+    const rlKey = `login:${ip}:${String(email).toLowerCase()}`;
+    const rl = rateLimit(rlKey, LOGIN_LIMIT, LOGIN_WINDOW_MS);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Too many login attempts. Please try again later.' },
+        { status: 429 }
       );
     }
 
@@ -43,14 +61,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Set session cookie
-    const cookieStore = await cookies();
-    cookieStore.set('session', user.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_APP_URL?.startsWith('https') === true,
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: '/',
-    });
+    // Credentials verified — clear the rate-limit bucket and issue a signed,
+    // encrypted session cookie (iron-session) that cannot be forged client-side.
+    resetRateLimit(rlKey);
+    await createSession(user.id);
 
     // Transform user data for response
     const transformedUser = {

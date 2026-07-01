@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getProducts, createProduct } from '@/app/(app)/inventory/actions';
+import { requireApiPermission } from '@/lib/require-auth';
 
 // GET /api/inventory - Get all products
 export async function GET() {
   try {
+    const auth = await requireApiPermission('inventory');
+    if (!auth.ok) return auth.response;
+
     const products = await getProducts();
     return NextResponse.json({ success: true, data: products });
   } catch (error) {
@@ -18,6 +22,9 @@ export async function GET() {
 // POST /api/inventory - Create a new product
 export async function POST(request: NextRequest) {
   try {
+    const auth = await requireApiPermission('inventory');
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const productData = body;
 

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUsers, createUser } from '@/app/(app)/users/actions';
+import { requireApiPermission } from '@/lib/require-auth';
 
 // GET /api/users - Get all users
 export async function GET() {
   try {
+    const auth = await requireApiPermission('users');
+    if (!auth.ok) return auth.response;
+
     const users = await getUsers();
     return NextResponse.json({ success: true, data: users });
   } catch (error) {
@@ -18,6 +22,9 @@ export async function GET() {
 // POST /api/users - Create a new user
 export async function POST(request: NextRequest) {
   try {
+    const auth = await requireApiPermission('users');
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const { name, email, password, role, branchId, permissions } = body;
 

@@ -1,23 +1,22 @@
 import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { getSessionUserId } from "@/lib/session";
 import { subscribeToChatEvents, ChatEvent } from "@/lib/chat-emitter";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
-    // Authenticate using session cookie
-    const cookieStore = await cookies();
-    const sessionId = cookieStore.get("session")?.value;
+    // Authenticate using the signed session cookie.
+    const sessionUserId = await getSessionUserId();
 
-    if (!sessionId) {
+    if (sessionUserId === null) {
         return new Response("Unauthorized", { status: 401 });
     }
 
-    // Verify user exists
+    // Verify user still exists
     const user = await prisma.user.findUnique({
-        where: { id: Number(sessionId) },
+        where: { id: sessionUserId },
         select: { id: true },
     });
 

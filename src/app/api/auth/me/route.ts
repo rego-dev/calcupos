@@ -1,23 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { User, UserPermissions } from "@/lib/types";
+import { getSessionUserId } from "@/lib/session";
+import { User } from "@/lib/types";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
-        const cookieStore = await cookies();
-        const sessionId = cookieStore.get("session")?.value;
-        if (!sessionId) {
-            return NextResponse.json({ user: null }, { status: 401 });
-        }
-
-        const parsedId = parseInt(sessionId as string, 10);
-        if (isNaN(parsedId)) {
+        const sessionUserId = await getSessionUserId();
+        if (sessionUserId === null) {
             return NextResponse.json({ user: null }, { status: 401 });
         }
 
         const user = await (prisma.user as any).findUnique({
-            where: { id: parsedId },
+            where: { id: sessionUserId },
             include: {
                 role_rel: true,
                 branch: true,
@@ -32,7 +26,6 @@ export async function GET(request: NextRequest) {
             id: user.id,
             name: user.name,
             email: user.email,
-            password: user.password,
             roleId: user.roleId,
             role: user.role_rel ? {
                 id: user.role_rel.id,

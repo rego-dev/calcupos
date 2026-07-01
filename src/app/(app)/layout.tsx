@@ -1,31 +1,25 @@
 import React from "react";
 import { AppShell } from "./app-shell";
 import { User, UserPermissions } from "@/lib/types";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { getSessionUserId } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { hasPermission } from "@/lib/permissions";
 import { AccessDenied } from "@/components/access-denied";
 import { ReloadButton } from "@/components/reload-button";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const sessionId = cookieStore.get("session")?.value;
+  const sessionUserId = await getSessionUserId();
 
-  if (!sessionId) {
-    redirect("/login");
-  }
-
-
-  const parsedId = parseInt(sessionId as string, 10);
-  if (isNaN(parsedId)) {
+  if (sessionUserId === null) {
     redirect("/login");
   }
 
   let user;
   try {
     user = await prisma.user.findUnique({
-      where: { id: parsedId as any },
+      where: { id: sessionUserId },
       include: {
         role_rel: true,
         branch: true,
@@ -52,7 +46,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     id: String(user.id),
     name: user.name,
     email: user.email,
-    password: user.password,
+    // password intentionally omitted — this object is passed to a client component.
     roleId: user.roleId ? String(user.roleId) : null,
     role: user.role_rel ? {
       id: String(user.role_rel.id),

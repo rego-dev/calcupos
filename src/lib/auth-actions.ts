@@ -2,9 +2,14 @@
 
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserPermissions } from "./types";
+import { createSession, destroySession, getSessionUserId } from "./session";
+import { rateLimit, resetRateLimit } from "./rate-limit";
+
+const LOGIN_LIMIT = 5;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
 export async function login(prevState: any, formData: FormData) {
     const email = formData.get("email") as string;
@@ -12,6 +17,22 @@ export async function login(prevState: any, formData: FormData) {
 
     if (!email || !password) {
         return { error: "Email and password are required" };
+    }
+
+    // Rate limit by client IP + email to slow down credential stuffing / brute force.
+    const headerStore = await headers();
+    const ip =
+        headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        headerStore.get("x-real-ip") ||
+        "unknown";
+    const rlKey = `login:${ip}:${email.toLowerCase()}`;
+    const rl = rateLimit(rlKey, LOGIN_LIMIT, LOGIN_WINDOW_MS);
+    if (!rl.allowed) {
+        return {
+            error: `Too many login attempts. Please try again in ${Math.ceil(
+                rl.retryAfterSeconds / 60
+            )} minute(s).`,
+        };
     }
 
     try {
@@ -34,15 +55,10 @@ export async function login(prevState: any, formData: FormData) {
             return { error: "Invalid email or password" };
         }
 
-        // In a real app, you'd use a session library or JWT
-        // For now, we'll set a simple cookie to simulate a session
-        const cookieStore = await cookies();
-        cookieStore.set("session", String(user.id), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_APP_URL?.startsWith('https') === true,
-            maxAge: 60 * 60 * 24 * 7, // 1 week
-            path: "/",
-        });
+        // Credentials verified — clear the rate-limit bucket and issue a signed,
+        // encrypted session cookie (iron-session) that cannot be forged client-side.
+        resetRateLimit(rlKey);
+        await createSession(user.id);
 
         await prisma.user.update({
             where: { id: user.id },
@@ -96,13 +112,12 @@ export async function login(prevState: any, formData: FormData) {
 }
 
 export async function logout() {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("session")?.value;
+    const userId = await getSessionUserId();
 
-    if (session) {
+    if (userId !== null) {
         try {
             await prisma.user.update({
-                where: { id: Number(session) },
+                where: { id: userId },
                 data: { isOnline: false }
             });
         } catch (error) {
@@ -110,6 +125,6 @@ export async function logout() {
         }
     }
 
-    cookieStore.delete("session");
+    await destroySession();
     redirect("/login");
 }
