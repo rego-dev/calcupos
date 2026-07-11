@@ -309,7 +309,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
             <Dialog open={isCreateOpen} onOpenChange={setCreateOpen}>
                 <DialogContent className="sm:max-w-lg overflow-hidden p-0">
                     {/* Gradient Header */}
-                    <div className="bg-gradient-to-r from-zinc-800 via-zinc-900 to-amber-500 px-6 py-5">
+                    <div className="px-6 py-5">
                         <div className="flex items-center gap-3 text-white">
                             <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
                                 <FolderOpen className="h-5 w-5" />
@@ -418,7 +418,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                             <Button
                                 onClick={handleCreate}
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-900 hover:to-zinc-950"
+                                className="flex-1"
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" />
                                 {isSubmitting ? "Creating..." : "Create Category"}
@@ -432,7 +432,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
             <Dialog open={!!editingCategory} onOpenChange={(open) => { if (!open) { setEditingCategory(null); resetForm(); } }}>
                 <DialogContent className="sm:max-w-lg overflow-hidden p-0">
                     {/* Gradient Header */}
-                    <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-zinc-800 px-6 py-5">
+                    <div className="px-6 py-5">
                         <div className="flex items-center gap-3 text-white">
                             <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
                                 <Pencil className="h-5 w-5" />
@@ -538,7 +538,7 @@ export function CategoriesTab({ categories: initialCategories, onRefresh }: Cate
                             <Button
                                 onClick={handleUpdate}
                                 disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700"
+                                className="flex-1"
                             >
                                 <Pencil className="mr-2 h-4 w-4" />
                                 {isSubmitting ? "Saving..." : "Save Changes"}

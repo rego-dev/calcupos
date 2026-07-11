@@ -23,6 +23,23 @@ function getSessionPassword(): string {
 
 const ONE_WEEK_SECONDS = 60 * 60 * 24 * 7;
 
+/**
+ * Whether the session cookie must be marked `Secure` (HTTPS-only).
+ *
+ * Defaults to on in production so the cookie is never sent over plaintext. But a
+ * `Secure` cookie is silently dropped by browsers when the app is served over
+ * plain HTTP on a non-localhost origin (e.g. testing a production build via a
+ * LAN IP like http://192.168.x.x:8080) — which makes login appear to "work" yet
+ * every page reports Access Denied because the session never persists. Set
+ * `SESSION_COOKIE_SECURE=false` in that environment to allow HTTP. Real HTTPS
+ * deployments should leave this unset (or `true`).
+ */
+function cookieSecure(): boolean {
+    if (process.env.SESSION_COOKIE_SECURE === "false") return false;
+    if (process.env.SESSION_COOKIE_SECURE === "true") return true;
+    return process.env.NODE_ENV === "production";
+}
+
 function buildSessionOptions(): SessionOptions {
     return {
         password: getSessionPassword(),
@@ -30,7 +47,7 @@ function buildSessionOptions(): SessionOptions {
         ttl: ONE_WEEK_SECONDS,
         cookieOptions: {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: cookieSecure(),
             sameSite: "lax",
             maxAge: ONE_WEEK_SECONDS,
             path: "/",

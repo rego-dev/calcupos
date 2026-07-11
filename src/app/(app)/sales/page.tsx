@@ -1,31 +1,14 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  PhilippinePeso,
-  TrendingUp,
-  ShoppingCart,
-  ShieldAlert,
-  Printer,
-  Loader2,
-  ArrowUpRight,
-  Target,
-  FileText
-} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ShieldAlert, Printer, Loader2, Target } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RecentSalesTable } from "./components/recent-sales-table";
-import { Badge } from "@/components/ui/badge";
-import { Order, ShippingStatus, PreOrder } from "@/lib/types";
+import { SalesModule } from "./components/sales-module";
+import { Order, PreOrder } from "@/lib/types";
 import { getSalesData, getPreOrderSalesData } from "./actions";
-import { format } from "date-fns";
 
 // Dynamically import charts to disable SSR
 const SalesChart = dynamic(() => import("../reports/components/sales-chart"), {
@@ -53,7 +36,6 @@ export default function SalesPage() {
     setMounted(true);
     const fetchData = async () => {
       setIsLoading(true);
-
       if (viewType === "regular") {
         const { orders, isAuthorized } = await getSalesData(timeframe);
         if (!isAuthorized) {
@@ -73,78 +55,30 @@ export default function SalesPage() {
         setIsAuthorized(true);
         setAllPreOrders(preOrders);
       }
-
       setIsLoading(false);
     };
     fetchData();
   }, [timeframe, viewType]);
 
   const handlePrint = () => {
-    window.open(`/sales/report?timeframe=${timeframe}`, '_blank');
+    window.open(`/sales/report?timeframe=${timeframe}`, "_blank");
   };
 
-  const salesMetrics = useMemo(() => {
-    if (viewType === "regular") {
-      const deliveredOrders = allOrders.filter((order: any) => order.shippingStatus === 'Delivered');
+  // Orders fed to the sales module. Regular view uses the full order set so
+  // transactions, voids and returns are all visible; pre-order view maps paid
+  // pre-orders into Order-compatible objects.
+  const moduleOrders = useMemo<Order[]>(() => {
+    if (viewType === "regular") return allOrders;
 
-      let totalRevenue = 0;
-      let totalCost = 0;
-      const numberSales = deliveredOrders.length;
-
-      deliveredOrders.forEach((order: any) => {
-        totalRevenue += order.totalAmount || 0;
-
-        const items = Array.isArray(order.items)
-          ? order.items
-          : (typeof order.items === 'string' ? JSON.parse(order.items) : []);
-
-        items.forEach((item: any) => {
-          const qty = item.quantity || 0;
-          const cost = item.product?.cost || 0;
-          totalCost += qty * cost;
-        });
-      });
-
-      const netIncome = totalRevenue - totalCost;
-
-      return {
-        totalRevenue,
-        totalCost,
-        netIncome,
-        numberSales,
-        deliveredOrders
-      };
-    } else {
-      // Pre-order sales metrics
-      const paidPreOrders = allPreOrders; // Already filtered for 'Paid' status
-
-      let totalRevenue = 0;
-      let totalCost = 0;
-      const numberSales = paidPreOrders.length;
-
-      paidPreOrders.forEach((preOrder: any) => {
-        totalRevenue += preOrder.totalAmount || 0;
-
-        const items = preOrder.items || [];
-        items.forEach((item: any) => {
-          const qty = item.quantity || 0;
-          // Pre-order items don't have product cost, estimate using pricePerUnit * 0.5 or use 0
-          const cost = 0; // We don't have cost data for pre-order items
-          totalCost += qty * cost;
-        });
-      });
-
-      const netIncome = totalRevenue - totalCost;
-
-      // Convert pre-orders to Order-compatible format for components
-      const deliveredOrders: Order[] = paidPreOrders.map((preOrder: any) => ({
-        id: preOrder.id,
-        customerName: preOrder.customerName,
-        contactNumber: preOrder.contactNumber || "",
-        address: preOrder.address || "",
-        orderDate: preOrder.orderDate,
-        itemName: preOrder.items?.map((item: any) => item.productName).join(", ") || "Pre-order items",
-        items: preOrder.items?.map((item: any) => ({
+    return allPreOrders.map((preOrder: any) => ({
+      id: preOrder.id,
+      customerName: preOrder.customerName,
+      contactNumber: preOrder.contactNumber || "",
+      address: preOrder.address || "",
+      orderDate: preOrder.orderDate,
+      itemName: preOrder.items?.map((item: any) => item.productName).join(", ") || "Pre-order items",
+      items:
+        preOrder.items?.map((item: any) => ({
           product: {
             id: "",
             name: item.productName,
@@ -155,32 +89,23 @@ export default function SalesPage() {
             alertStock: 0,
             cost: 0,
             retailPrice: item.pricePerUnit,
-            images: item.images || []
+            images: item.images || [],
           },
-          quantity: item.quantity
+          quantity: item.quantity,
         })) || [],
-        quantity: preOrder.items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0,
-        price: preOrder.items?.[0]?.pricePerUnit || 0,
-        shippingFee: 0,
-        totalAmount: preOrder.totalAmount,
-        paymentMethod: (preOrder.paymentMethod || "GCash") as any,
-        paymentStatus: (preOrder.paymentStatus || "Paid") as any,
-        shippingStatus: "Delivered" as any, // Treat paid pre-orders as delivered for display
-        customerId: preOrder.customerId,
-        customerEmail: preOrder.customerEmail,
-        rushShip: false,
-        createdAt: preOrder.createdAt
-      }));
-
-      return {
-        totalRevenue,
-        totalCost,
-        netIncome,
-        numberSales,
-        deliveredOrders
-      };
-    }
-  }, [allOrders, allPreOrders, viewType]);
+      quantity: preOrder.items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0,
+      price: preOrder.items?.[0]?.pricePerUnit || 0,
+      shippingFee: 0,
+      totalAmount: preOrder.totalAmount,
+      paymentMethod: (preOrder.paymentMethod || "GCash") as any,
+      paymentStatus: (preOrder.paymentStatus || "Paid") as any,
+      shippingStatus: "Delivered" as any,
+      customerId: preOrder.customerId,
+      customerEmail: preOrder.customerEmail,
+      rushShip: false,
+      createdAt: preOrder.createdAt,
+    })) as Order[];
+  }, [viewType, allOrders, allPreOrders]);
 
   if (!mounted) {
     return (
@@ -202,29 +127,39 @@ export default function SalesPage() {
 
   return (
     <div className="flex flex-col gap-8 p-2">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
-            {viewType === "regular" ? "Sales" : "Pre-Order Sales"}
+          <h1 className="text-4xl font-extrabold tracking-tight text-amber-500 w-fit pb-1">
+            {viewType === "regular" ? "Sales Module" : "Pre-Order Sales"}
           </h1>
           <p className="text-muted-foreground mt-1">
             {viewType === "regular"
-              ? "Overview of your sales performance and metrics."
+              ? "Transactions, product & date breakdowns, invoices, returns, voids and POS Z-readings."
               : "Overview of your pre-order sales performance and metrics."}
           </p>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={handlePrint}>
+        <div className="flex flex-nowrap items-center gap-3 overflow-x-auto lg:overflow-x-visible">
+          <Button variant="outline" onClick={handlePrint} className="shrink-0">
             <Printer className="mr-2 h-4 w-4" />
             Print Report
           </Button>
-          <Tabs defaultValue="regular" value={viewType} onValueChange={(value) => setViewType(value as ViewType)}>
+          <Tabs
+            defaultValue="regular"
+            value={viewType}
+            onValueChange={(value) => setViewType(value as ViewType)}
+            className="shrink-0"
+          >
             <TabsList>
               <TabsTrigger value="regular">Regular Sales</TabsTrigger>
               <TabsTrigger value="preorder">Pre-Order Sales</TabsTrigger>
             </TabsList>
           </Tabs>
-          <Tabs defaultValue="month" value={timeframe} onValueChange={(value) => setTimeframe(value as Timeframe)}>
+          <Tabs
+            defaultValue="month"
+            value={timeframe}
+            onValueChange={(value) => setTimeframe(value as Timeframe)}
+            className="shrink-0"
+          >
             <TabsList>
               <TabsTrigger value="week">This Week</TabsTrigger>
               <TabsTrigger value="month">This Month</TabsTrigger>
@@ -241,59 +176,9 @@ export default function SalesPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-8">
-          {/* Stats Cards */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
-              <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Net Income</CardTitle>
-                <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <TrendingUp className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                </div>
-              </CardHeader>
-              <CardContent className="relative">
-                <div className="text-3xl font-bold text-amber-700 dark:text-amber-300">
-                  ₱{salesMetrics.netIncome.toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1 font-medium">
-                  <ArrowUpRight className="h-3 w-3" />
-                  Profit after costs
-                </p>
-              </CardContent>
-            </Card>
+          <SalesModule orders={moduleOrders} />
 
-            <Card className="relative overflow-hidden border-l-4 border-l-zinc-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-50/50 to-transparent dark:from-zinc-950/20 dark:to-transparent" />
-              <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Revenue</CardTitle>
-                <div className="h-10 w-10 rounded-xl bg-zinc-100 dark:bg-zinc-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <PhilippinePeso className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
-                </div>
-              </CardHeader>
-              <CardContent className="relative">
-                <div className="text-3xl font-bold text-zinc-700 dark:text-zinc-300">
-                  ₱{salesMetrics.totalRevenue.toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground mt-2 font-medium">Total sales value</p>
-              </CardContent>
-            </Card>
-
-            <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
-              <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Number of Sales</CardTitle>
-                <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <ShoppingCart className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                </div>
-              </CardHeader>
-              <CardContent className="relative">
-                <div className="text-3xl font-bold text-amber-700 dark:text-amber-300">{salesMetrics.numberSales}</div>
-                <p className="text-xs text-muted-foreground mt-2 font-medium">Total delivered orders</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card className="border-t-4 border-t-amber-500/50 shadow-lg overflow-hidden">
+          <Card className="border-t-4 border-t-amber-500/50 shadow-sm overflow-hidden">
             <CardHeader className="border-b bg-muted/30">
               <CardTitle className="flex items-center gap-2">
                 <Target className="h-5 w-5 text-amber-500" />
@@ -301,15 +186,11 @@ export default function SalesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <SalesChart orders={salesMetrics.deliveredOrders} timeframe={timeframe} />
+              <SalesChart orders={moduleOrders} timeframe={timeframe} />
             </CardContent>
           </Card>
-
-          {/* Transactions Table */}
-          <RecentSalesTable orders={salesMetrics.deliveredOrders} />
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }

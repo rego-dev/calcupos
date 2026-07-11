@@ -87,13 +87,31 @@ export default function DashboardPage() {
 
         setAllOrders(orders);
 
-        const customersResponse = await fetch('/api/customers');
-        if (!customersResponse.ok) throw new Error('Failed to fetch customers');
-        const customersData = await customersResponse.json();
-        setAllCustomers(customersData.success ? customersData.data : []);
+        // Customer data is optional for the dashboard. A user may have the
+        // `dashboard` permission without the `customers` permission, in which
+        // case /api/customers returns 403. Degrade gracefully (the "New
+        // Customers" metric simply shows 0) instead of failing the whole page.
+        try {
+          const customersResponse = await fetch('/api/customers');
+          if (customersResponse.ok) {
+            const customersData = await customersResponse.json();
+            setAllCustomers(customersData.success ? customersData.data : []);
+          } else {
+            setAllCustomers([]);
+          }
+        } catch (customerErr) {
+          console.warn('Dashboard: could not load customers (continuing without):', customerErr);
+          setAllCustomers([]);
+        }
 
-        const lsProducts = await getLowStockProducts();
-        setLowStockProducts(lsProducts || []);
+        // Low-stock is also optional context; never let it break the dashboard.
+        try {
+          const lsProducts = await getLowStockProducts();
+          setLowStockProducts(lsProducts || []);
+        } catch (stockErr) {
+          console.warn('Dashboard: could not load low-stock products (continuing without):', stockErr);
+          setLowStockProducts([]);
+        }
 
         setIsAuthorized(true);
 
@@ -251,7 +269,7 @@ export default function DashboardPage() {
     return (
       <div className="flex flex-col gap-8 p-4 lg:p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent w-fit">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-amber-500 w-fit">Dashboard</h1>
         </div>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center gap-3">
@@ -267,7 +285,7 @@ export default function DashboardPage() {
     return (
       <div className="flex flex-col gap-8 p-4 lg:p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent w-fit">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-amber-500 w-fit">Dashboard</h1>
         </div>
         <div className="flex items-center justify-center h-64">
           <div className="text-center space-y-2">
@@ -294,7 +312,7 @@ export default function DashboardPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent pb-1">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-amber-500 pb-1">
             Dashboard
           </h1>
           <p className="text-base text-muted-foreground">
@@ -317,7 +335,7 @@ export default function DashboardPage() {
       {/* Stats Cards */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
         <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
+          <div className="absolute inset-0" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Total Sales</CardTitle>
             <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -336,7 +354,7 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
+          <div className="absolute inset-0" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Total Shipping Fees</CardTitle>
             <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -355,7 +373,7 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="relative overflow-hidden border-l-4 border-l-zinc-400 shadow-lg hover:shadow-xl transition-all duration-300 group">
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-50/50 to-transparent dark:from-zinc-950/20 dark:to-transparent" />
+          <div className="absolute inset-0" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Total Orders</CardTitle>
             <div className="h-10 w-10 rounded-xl bg-zinc-100 dark:bg-zinc-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -375,7 +393,7 @@ export default function DashboardPage() {
           className="relative overflow-hidden border-l-4 border-l-zinc-400 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
           onClick={() => setIsNewCustomersDialogOpen(true)}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-50/50 to-transparent dark:from-zinc-950/20 dark:to-transparent" />
+          <div className="absolute inset-0" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">New Customers</CardTitle>
             <div className="h-10 w-10 rounded-xl bg-zinc-100 dark:bg-zinc-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -395,7 +413,7 @@ export default function DashboardPage() {
           className="relative overflow-hidden border-l-4 border-l-amber-400 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
           onClick={() => setIsHeldOrdersDialogOpen(true)}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20 dark:to-transparent" />
+          <div className="absolute inset-0" />
           <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">Held Orders</CardTitle>
             <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center group-hover:scale-110 transition-transform">

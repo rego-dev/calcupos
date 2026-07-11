@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack -p 9002",
     "build": "prisma generate && cross-env NODE_ENV=production next build --webpack",
-    "start": "next start",
+    "start": "next start -p 8080",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate"

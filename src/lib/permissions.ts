@@ -5,8 +5,11 @@ export function hasPermission(
     permissions: UserPermissions | null | undefined,
     role: string | null | undefined
 ): boolean {
-    if (!role) return false;
-
+    // NOTE: a user may have a valid `permissions` object without an assigned
+    // role. Access is driven by the permissions JSON below, so we must NOT
+    // hard-deny when `role` is missing — doing so would hide every nav item
+    // and block every page for role-less users. Role is only used for the
+    // Super Admin safety net and the Cashier restriction.
     const formattedRole = role?.toLowerCase() || '';
     const isSuperAdmin = formattedRole === 'super admin' || formattedRole === 'superadmin';
 

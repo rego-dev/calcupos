@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Settings2, Lock, Building2, ShieldCheck, Database, Shield, Loader2, MapPin, Palette } from "lucide-react";
+import { Settings2, Lock, Building2, ShieldCheck, Database, Shield, Loader2, Palette, SlidersHorizontal } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAuthenticatedUser } from "../users/actions";
 import { hasPermission } from "@/lib/permissions";
@@ -11,7 +11,7 @@ import { CompanyProfileTab } from "./components/company-profile-tab";
 import { UserManagementTab } from "./components/user-management-tab";
 import { DatabaseManagementTab } from "./components/database-management-tab";
 import { AdminManageTab } from "./components/admin-manage-tab";
-import { StationsTab } from "./components/stations-tab";
+import { PosSetupTab } from "./components/pos-setup-tab";
 import { AppearanceTab } from "./components/appearance-tab";
 
 export default function SettingsPage() {
@@ -33,15 +33,15 @@ export default function SettingsPage() {
   const canAdminManage = hasPermission("/admin", permissions, role);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-zinc-100/30 to-amber-50/30">
+    <div className="min-h-screen">
       <div className="w-full p-6 md:p-8">
         {/* Header Section */}
         <div className="mb-8 md:mb-12">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-zinc-800 to-amber-500 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
               <Settings2 className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-amber-500">
               Settings
             </h1>
           </div>
@@ -77,8 +77,8 @@ export default function SettingsPage() {
               )}
               {canStations && (
                 <TabsTrigger value="stations">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Courier & Pickup Stations
+                  <SlidersHorizontal className="h-4 w-4 mr-2" />
+                  POS Setup
                 </TabsTrigger>
               )}
               {canDatabaseManagement && (
@@ -115,7 +115,7 @@ export default function SettingsPage() {
 
             {canStations && (
               <TabsContent value="stations" className="mt-6">
-                <StationsTab />
+                <PosSetupTab />
               </TabsContent>
             )}
 

@@ -149,7 +149,7 @@ export function AddStationDialog({ isOpen, onClose, onSuccess }: AddStationDialo
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-2xl">
                 {/* Gradient Header */}
-                <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-r from-zinc-800 to-amber-600 rounded-t-lg flex items-center px-6">
+                <div className="absolute top-0 left-0 right-0 h-16 rounded-t-lg flex items-center px-6">
                     <div className="flex items-center gap-3 text-white">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -352,7 +352,7 @@ export function AddStationDialog({ isOpen, onClose, onSuccess }: AddStationDialo
                         <Button
                             onClick={handleSave}
                             disabled={isSubmitting}
-                            className="flex-1 bg-gradient-to-r from-zinc-800 to-amber-600 hover:from-zinc-900 hover:to-amber-700"
+                            className="flex-1"
                         >
                             {isSubmitting ? "Creating..." : "Create Station"}
                         </Button>

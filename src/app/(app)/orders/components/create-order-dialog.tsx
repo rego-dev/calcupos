@@ -390,13 +390,13 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent
-          className="sm:max-w-4xl max-h-[95vh] flex flex-col p-0 overflow-hidden bg-gradient-to-br from-zinc-50 to-amber-50/30"
+          className="sm:max-w-4xl max-h-[95vh] flex flex-col p-0 overflow-hidden"
           onPointerDownOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
           {/* Header with gradient */}
           <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-zinc-800 to-amber-600 opacity-90" />
+            <div className="absolute inset-0 opacity-90" />
             <div className="relative p-6 pb-8">
               <DialogHeader>
                 <div className="flex items-center gap-3 mb-2">
@@ -424,7 +424,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
             <div className="flex-1 flex flex-col items-center justify-center gap-8 py-12 px-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-green-500 rounded-full blur-2xl opacity-20 animate-pulse" />
-                <div className="relative bg-gradient-to-br from-green-500 to-emerald-600 p-6 rounded-full shadow-2xl">
+                <div className="relative p-6 rounded-full shadow-2xl">
                   <CheckCircle2 className="h-16 w-16 text-white" />
                 </div>
               </div>
@@ -446,7 +446,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                 <Button
                   onClick={handlePrintReceipt}
                   size="lg"
-                  className="flex-1 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg h-12"
+                  className="flex-1 text-white shadow-lg h-12"
                 >
                   <Printer className="mr-2 h-5 w-5" />
                   Print Receipt
@@ -467,7 +467,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
               <div className="space-y-6 max-w-3xl mx-auto">
                 {/* Customer Information Card */}
                 <div className="bg-white rounded-xl shadow-sm border-2 border-slate-200">
-                  <div className="bg-gradient-to-r from-amber-50 to-zinc-100 px-6 py-4 border-b-2 border-amber-200 rounded-t-xl">
+                  <div className="px-6 py-4 border-b-2 border-amber-200 rounded-t-xl">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
                         <User className="w-4 h-4 text-amber-600" />
@@ -605,7 +605,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
 
                 {/* Item Purchases Card */}
                 <div className="bg-white rounded-xl shadow-sm border-2 border-slate-200">
-                  <div className="bg-gradient-to-r from-zinc-100 to-zinc-200 px-6 py-4 border-b-2 border-zinc-300 flex items-center justify-between rounded-t-xl">
+                  <div className="px-6 py-4 border-b-2 border-zinc-300 flex items-center justify-between rounded-t-xl">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-zinc-200 flex items-center justify-center">
                         <Package className="w-4 h-4 text-zinc-700" />
@@ -646,11 +646,11 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                         {selectedItems.map((item) => (
                           <div
                             key={item.product.id}
-                            className="flex items-center gap-4 p-4 bg-gradient-to-r from-slate-50 to-zinc-100/30 border-2 border-slate-200 rounded-xl hover:border-zinc-300 transition-all group"
+                            className="flex items-center gap-4 p-4 border-2 border-slate-200 rounded-xl hover:border-zinc-300 transition-all group"
                           >
                             <Avatar className="h-14 w-14 rounded-xl border-2 border-white shadow-sm">
                               <AvatarImage src={item.product.images?.[0] as string} alt={item.product.name} />
-                              <AvatarFallback className="rounded-xl bg-gradient-to-br from-zinc-100 to-zinc-200">
+                              <AvatarFallback className="rounded-xl">
                                 <ImageIcon className="h-6 w-6 text-zinc-700" />
                               </AvatarFallback>
                             </Avatar>
@@ -685,7 +685,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
                         ))}
 
                         {/* Order Summary */}
-                        <div className="bg-gradient-to-r from-amber-50 to-zinc-100 border-2 border-amber-200 rounded-xl p-4 mt-4">
+                        <div className="border-2 border-amber-200 rounded-xl p-4 mt-4">
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
                               <span className="text-slate-600">Subtotal ({selectedItems.reduce((sum, item) => sum + (typeof item.quantity === 'string' ? 0 : item.quantity), 0)} items)</span>
@@ -712,7 +712,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
 
                 {/* Delivery & Payment Card */}
                 <div className="bg-white rounded-xl shadow-sm border-2 border-slate-200">
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b-2 border-green-200 rounded-t-xl">
+                  <div className="px-6 py-4 border-b-2 border-green-200 rounded-t-xl">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
                         <Truck className="w-4 h-4 text-green-600" />
@@ -978,7 +978,7 @@ Total Amount: ₱${lastCreatedOrder.totalAmount.toFixed(2)}
               {!lastCreatedOrder && (
                 <Button
                   onClick={handleSave}
-                  className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg font-semibold"
+                  className="flex-1 h-11 text-white shadow-lg font-semibold"
                   disabled={isSubmitting || isReadingPaymentProof || selectedItems.length === 0}
                 >
                   {isSubmitting ? "Creating..." : "Create Order"}

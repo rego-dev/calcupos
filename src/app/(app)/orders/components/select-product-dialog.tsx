@@ -128,10 +128,10 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0 overflow-hidden bg-gradient-to-br from-zinc-50 to-amber-50/30 dark:from-zinc-950 dark:to-amber-950/20">
+      <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0 overflow-hidden">
         {/* Enhanced Header */}
         <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800 opacity-90" />
+          <div className="absolute inset-0 opacity-90" />
           <div className="relative p-6 pb-8">
             <DialogHeader>
               <div className="flex items-center gap-3 mb-2">
@@ -154,7 +154,7 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
           {/* Left Panel: Product List */}
           <div className="flex flex-col gap-4 h-full min-h-0 bg-white dark:bg-slate-900 rounded-xl shadow-sm border-2 border-slate-200 dark:border-slate-800 overflow-hidden">
             {/* Search and Filter Bar */}
-            <div className="bg-gradient-to-r from-amber-50 to-zinc-100 dark:from-amber-900/10 dark:to-zinc-900/10 p-4 border-b-2 border-amber-200 dark:border-amber-900/30">
+            <div className="p-4 border-b-2 border-amber-200 dark:border-amber-900/30">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -224,7 +224,7 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
                       className={cn(
                         "relative flex items-center gap-4 p-4 rounded-xl transition-all duration-200 cursor-pointer border-2 dark:shadow-none",
                         isSelected
-                          ? "bg-gradient-to-r from-amber-50 to-zinc-100 dark:from-amber-900/20 dark:to-zinc-900/20 border-amber-300 dark:border-amber-700 shadow-md"
+                          ? "     border-amber-300 dark:border-amber-700 shadow-md"
                           : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-amber-200 dark:hover:border-amber-800 hover:shadow-sm"
                       )}
                       onClick={() => handleProductClick(product)}
@@ -238,7 +238,7 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
 
                       <Avatar className="h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 shadow-sm">
                         <AvatarImage src={product.images?.[0]} alt={product.name} />
-                        <AvatarFallback className="rounded-xl bg-gradient-to-br from-amber-100 to-zinc-200 dark:from-amber-900/50 dark:to-zinc-900/50">
+                        <AvatarFallback className="rounded-xl">
                           <ImageIcon className="h-7 w-7 text-amber-600 dark:text-amber-400" />
                         </AvatarFallback>
                       </Avatar>
@@ -268,10 +268,10 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
           {/* Right Panel: Selected Products */}
           <div className="flex flex-col rounded-xl shadow-sm border-2 border-slate-200 dark:border-slate-800 h-full min-h-0 overflow-hidden bg-white dark:bg-slate-900">
             {selectedProducts.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-br from-zinc-50 to-amber-50/30 dark:from-zinc-900 dark:to-amber-900/10">
+              <div className="flex-1 flex flex-col items-center justify-center p-8">
                 <div className="relative mb-6">
                   <div className="absolute inset-0 bg-amber-500 rounded-full blur-2xl opacity-10" />
-                  <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-zinc-200 dark:from-amber-900/50 dark:to-zinc-900/50 flex items-center justify-center">
+                  <div className="relative w-24 h-24 rounded-full flex items-center justify-center">
                     <ShoppingCart className="h-12 w-12 text-amber-600 dark:text-amber-400" />
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
             ) : (
               <div className="flex flex-col h-full min-h-0">
                 {/* Selected Header */}
-                <div className="bg-gradient-to-r from-amber-50 to-zinc-100 p-4 border-b-2 border-amber-200 dark:from-amber-900/20 dark:to-zinc-900/20 dark:border-amber-900/30 flex-shrink-0">
+                <div className="p-4 border-b-2 border-amber-200 dark:border-amber-900/30 flex-shrink-0">
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
@@ -306,7 +306,7 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
                 </div>
 
                 {/* Selected Products List */}
-                <ScrollArea className="flex-1 min-h-0 bg-gradient-to-br from-zinc-50/50 to-amber-50/20 dark:from-zinc-950/50 dark:to-amber-950/20">
+                <ScrollArea className="flex-1 min-h-0">
                   <div className="p-4 space-y-3">
                     {selectedProducts.map((item) => (
                       <div
@@ -316,7 +316,7 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
                         <div className="flex items-start gap-3">
                           <Avatar className="h-16 w-16 rounded-xl border-2 border-amber-100 dark:border-amber-900 shadow-sm">
                             <AvatarImage src={item.product.images?.[0]} alt={item.product.name} />
-                            <AvatarFallback className="rounded-xl bg-gradient-to-br from-amber-100 to-zinc-200 dark:from-amber-900/50 dark:to-zinc-900/50">
+                            <AvatarFallback className="rounded-xl">
                               <ImageIcon className="h-7 w-7 text-amber-600 dark:text-amber-400" />
                             </AvatarFallback>
                           </Avatar>
@@ -415,7 +415,7 @@ export function SelectProductDialog({ isOpen, onClose, onProductSelect, products
             <Button
               onClick={handleAddToOrder}
               disabled={selectedProducts.length === 0}
-              className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg font-semibold disabled:opacity-50"
+              className="flex-1 h-11 text-white shadow-lg font-semibold disabled:opacity-50"
             >
               Save Selection
             </Button>

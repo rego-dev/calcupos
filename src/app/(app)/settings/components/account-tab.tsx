@@ -69,7 +69,7 @@ export function AccountTab() {
 
   return (
     <Card className="border-0 shadow-xl shadow-zinc-500/10 bg-white/80 backdrop-blur-sm overflow-hidden">
-      <div className="h-1.5 bg-gradient-to-r from-zinc-800 via-amber-500 to-zinc-800" />
+      <div className="h-1.5" />
 
       <CardHeader className="space-y-3 pb-6">
         <div className="flex items-center gap-2">
@@ -189,7 +189,7 @@ export function AccountTab() {
         </div>
 
         {/* Security Tips */}
-        <div className="bg-gradient-to-r from-amber-50 to-zinc-100 border-l-4 border-amber-400 p-4 rounded-r-lg">
+        <div className="border-l-4 border-amber-400 p-4 rounded-r-lg">
           <p className="text-sm font-semibold text-zinc-700 mb-2">Password Tips:</p>
           <ul className="text-sm text-zinc-600 space-y-1 ml-4 list-disc">
             <li>Use at least 12 characters</li>
@@ -199,7 +199,7 @@ export function AccountTab() {
         </div>
 
         {/* Warning Banner */}
-        <div className="bg-gradient-to-r from-amber-50 to-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+        <div className="border-l-4 border-amber-400 p-4 rounded-r-lg">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5" />
             <div>
@@ -219,7 +219,7 @@ export function AccountTab() {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
-              className="bg-gradient-to-r from-zinc-800 to-amber-600 hover:from-zinc-900 hover:to-amber-700 text-white shadow-lg shadow-zinc-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-zinc-500/40 hover:scale-105"
+              className="text-white shadow-lg shadow-zinc-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-zinc-500/40 hover:scale-105"
               disabled={!passwordsMatch || strength.strength < 50 || isPending}
             >
               {isPending ? (

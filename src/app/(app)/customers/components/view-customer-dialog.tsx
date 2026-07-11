@@ -134,7 +134,7 @@ export function ViewCustomerDialog({
         <DialogContent className="sm:max-w-2xl p-0 overflow-hidden bg-white">
           {/* Enhanced Header - CalcuPOS Blue */}
           <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800" />
+            <div className="absolute inset-0" />
             <div className="relative p-6">
               <DialogHeader>
                 <div className="flex items-start gap-4">
@@ -178,7 +178,7 @@ export function ViewCustomerDialog({
 
           {/* Stats Cards */}
           <div className="grid grid-cols-2 gap-3 px-6 -mt-4">
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 border-2 border-amber-500/30 shadow-sm">
+            <div className="rounded-xl p-4 border-2 border-amber-500/30 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
                   <DollarSign className="w-5 h-5 text-white" />
@@ -189,7 +189,7 @@ export function ViewCustomerDialog({
                 </div>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 border-2 border-amber-500/30 shadow-sm">
+            <div className="rounded-xl p-4 border-2 border-amber-500/30 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-amber-600 flex items-center justify-center">
                   <ShoppingBag className="w-5 h-5 text-white" />
@@ -259,7 +259,7 @@ export function ViewCustomerDialog({
                   }
                   setIsOrderHistoryModalOpen(true);
                 }}
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg"
+                className="text-white shadow-lg"
               >
                 <Package className="w-4 h-4 mr-2" />
                 View History
@@ -280,7 +280,7 @@ export function ViewCustomerDialog({
         <DialogContent className="sm:max-w-6xl h-[85vh] flex flex-col p-0 overflow-hidden bg-white">
           {/* Enhanced Header - CalcuPOS Blue */}
           <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800" />
+            <div className="absolute inset-0" />
             <div className="relative p-6">
               <DialogHeader>
                 <div className="flex items-center gap-3 mb-3">
@@ -343,7 +343,7 @@ export function ViewCustomerDialog({
                 yearlyOrders.map((yearData) => (
                   <Card key={yearData.year} className="border-2 border-zinc-200 shadow-sm overflow-hidden">
                     {/* Year Summary Header */}
-                    <CardHeader className="bg-gradient-to-r from-amber-50 to-amber-100 border-b-2 border-amber-500/30 pb-4">
+                    <CardHeader className="border-b-2 border-amber-500/30 pb-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
@@ -440,7 +440,7 @@ export function ViewCustomerDialog({
           <DialogFooter className="px-6 pb-6 border-t bg-zinc-50">
             <Button
               onClick={() => setIsOrderHistoryModalOpen(false)}
-              className="w-full h-11 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg font-semibold"
+              className="w-full h-11 text-white shadow-lg font-semibold"
             >
               Close History
             </Button>

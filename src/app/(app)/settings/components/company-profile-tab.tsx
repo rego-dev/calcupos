@@ -94,7 +94,7 @@ export function CompanyProfileTab() {
 
   return (
     <Card className="border-0 shadow-xl shadow-zinc-500/10 bg-white/80 backdrop-blur-sm overflow-hidden">
-      <div className="h-1.5 bg-gradient-to-r from-zinc-800 via-amber-500 to-zinc-800" />
+      <div className="h-1.5" />
 
       <CardHeader className="space-y-3 pb-6">
         <div className="flex items-center gap-2">
@@ -233,7 +233,7 @@ export function CompanyProfileTab() {
         <Button
           onClick={handleSave}
           disabled={!companyName.trim() || isPending}
-          className="bg-gradient-to-r from-zinc-800 to-amber-600 hover:from-zinc-900 hover:to-amber-700 text-white shadow-lg shadow-zinc-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-zinc-500/40 hover:scale-105"
+          className="text-white shadow-lg shadow-zinc-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-zinc-500/40 hover:scale-105"
         >
           {isPending ? (
             <>

@@ -125,9 +125,9 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0 overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100/30">
+            <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0 overflow-hidden">
                 <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800 opacity-90" />
+                    <div className="absolute inset-0 opacity-90" />
                     <div className="relative p-6 pb-8">
                         <DialogHeader>
                             <div className="flex items-center gap-3 mb-2">
@@ -147,7 +147,7 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
 
                 <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 px-6 pb-6 overflow-hidden min-h-0">
                     <div className="flex flex-col gap-4 h-full min-h-0 bg-white dark:bg-zinc-950 rounded-xl shadow-sm border-2 border-zinc-200 dark:border-zinc-800 overflow-hidden">
-                        <div className="bg-gradient-to-r from-zinc-100 to-zinc-200 dark:from-zinc-900/20 dark:to-zinc-800/20 p-4 border-b-2 border-zinc-300 dark:border-zinc-700/50">
+                        <div className="p-4 border-b-2 border-zinc-300 dark:border-zinc-700/50">
                             <div className="relative flex-1">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 <Input
@@ -173,7 +173,7 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
                                             className={cn(
                                                 "relative flex items-center gap-4 p-4 rounded-xl transition-all duration-200 cursor-pointer border-2",
                                                 isSelected
-                                                    ? "bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-amber-300 dark:border-amber-700 shadow-md"
+                                                    ? "     border-amber-300 dark:border-amber-700 shadow-md"
                                                     : "bg-white dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 hover:border-amber-200 dark:hover:border-amber-800 hover:shadow-sm"
                                             )}
                                             onClick={() => handleProductClick(product)}
@@ -186,7 +186,7 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
 
                                             <Avatar className="h-16 w-16 rounded-xl border-2 border-white shadow-sm">
                                                 <AvatarImage src={product.images?.[0]} alt={product.name} />
-                                                <AvatarFallback className="rounded-xl bg-gradient-to-br from-amber-100 to-amber-200">
+                                                <AvatarFallback className="rounded-xl">
                                                     <ImageIcon className="h-7 w-7 text-amber-600" />
                                                 </AvatarFallback>
                                             </Avatar>
@@ -211,10 +211,10 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
 
                     <div className="flex flex-col rounded-xl shadow-sm border-2 border-zinc-200 dark:border-zinc-800 h-full min-h-0 overflow-hidden bg-white dark:bg-zinc-950">
                         {selectedProducts.length === 0 ? (
-                            <div className="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-br from-zinc-50 to-amber-50/30">
+                            <div className="flex-1 flex flex-col items-center justify-center p-8">
                                 <div className="relative mb-6">
                                     <div className="absolute inset-0 bg-amber-500 rounded-full blur-2xl opacity-10" />
-                                    <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center">
+                                    <div className="relative w-24 h-24 rounded-full flex items-center justify-center">
                                         <Package className="h-12 w-12 text-amber-600" />
                                     </div>
                                 </div>
@@ -225,7 +225,7 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
                             </div>
                         ) : (
                             <div className="flex flex-col h-full min-h-0">
-                                <div className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 p-4 border-b-2 border-amber-200 dark:border-amber-900/50 flex-shrink-0">
+                                <div className="p-4 border-b-2 border-amber-200 dark:border-amber-900/50 flex-shrink-0">
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
@@ -247,7 +247,7 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
                                     </div>
                                 </div>
 
-                                <ScrollArea className="flex-1 min-h-0 bg-gradient-to-br from-zinc-50/50 to-amber-50/20 dark:from-zinc-900/50 dark:to-amber-900/10">
+                                <ScrollArea className="flex-1 min-h-0">
                                     <div className="p-4 space-y-3">
                                         {selectedProducts.map((item) => (
                                             <div
@@ -257,7 +257,7 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
                                                 <div className="flex items-start gap-3">
                                                     <Avatar className="h-16 w-16 rounded-xl border-2 border-amber-100 shadow-sm">
                                                         <AvatarImage src={item.product.images?.[0]} alt={item.product.name} />
-                                                        <AvatarFallback className="rounded-xl bg-gradient-to-br from-amber-100 to-amber-200">
+                                                        <AvatarFallback className="rounded-xl">
                                                             <ImageIcon className="h-7 w-7 text-amber-600" />
                                                         </AvatarFallback>
                                                     </Avatar>
@@ -347,7 +347,7 @@ export function BulkAddStockDialog({ isOpen, onClose, products: allProducts, onS
                         <Button
                             onClick={handleApply}
                             disabled={selectedProducts.length === 0 || isLoading}
-                            className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-lg font-semibold disabled:opacity-50"
+                            className="flex-1 h-11 text-white shadow-lg font-semibold disabled:opacity-50"
                         >
                             {isLoading ? "Updating..." : `Add Stock to ${selectedProducts.length} Items`}
                         </Button>

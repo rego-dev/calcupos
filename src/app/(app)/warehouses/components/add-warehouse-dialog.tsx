@@ -195,9 +195,9 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-hidden p-0 bg-gradient-to-br from-zinc-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-amber-950">
+            <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-hidden p-0">
                 {/* Enhanced Gradient Header */}
-                <div className="relative bg-gradient-to-r from-zinc-800 via-zinc-900 to-amber-600 px-8 py-6 overflow-hidden">
+                <div className="relative px-8 py-6 overflow-hidden">
                     {/* Decorative elements */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                     <div className="absolute bottom-0 left-0 w-48 h-48 bg-zinc-500/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
@@ -218,7 +218,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                 {/* Scrollable Content */}
                 <div className="overflow-y-auto max-h-[calc(95vh-200px)] px-8 py-6">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 mb-6 p-1.5 bg-gradient-to-r from-amber-100 to-zinc-200 dark:from-amber-950/50 dark:to-zinc-800/50 h-12 rounded-xl shadow-sm">
+                        <TabsList className="grid w-full grid-cols-2 mb-6 p-1.5 h-12 rounded-xl shadow-sm">
                             <TabsTrigger
                                 value="new"
                                 className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-amber-600 font-semibold transition-all duration-200"
@@ -235,9 +235,9 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
 
                         <TabsContent value="new" className="space-y-6">
                             {/* Basic Information Section */}
-                            <div className="relative bg-gradient-to-br from-amber-50 to-zinc-100 dark:from-amber-950/30 dark:to-zinc-900/30 rounded-2xl p-6 space-y-5 border border-amber-200/50 dark:border-amber-800/50 shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div className="relative rounded-2xl p-6 space-y-5 border border-amber-200/50 dark:border-amber-800/50 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-br from-amber-500 to-zinc-700 rounded-lg shadow-sm">
+                                    <div className="p-2 rounded-lg shadow-sm">
                                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
@@ -269,7 +269,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                             <Input
                                                 value={baseSku}
                                                 readOnly
-                                                className="bg-gradient-to-br from-zinc-100 to-zinc-50 dark:from-zinc-800 dark:to-zinc-900 border-2 border-gray-200 dark:border-gray-700 font-mono font-semibold text-center rounded-lg h-11"
+                                                className="border-2 border-gray-200 dark:border-gray-700 font-mono font-semibold text-center rounded-lg h-11"
                                             />
                                             <div className="flex gap-2">
                                                 <Input
@@ -299,9 +299,9 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                     </Label>
 
                                     {!imagePreview ? (
-                                        <div className="relative border-3 border-dashed border-amber-300 dark:border-amber-700 rounded-2xl p-8 hover:bg-gradient-to-br hover:from-amber-50 hover:to-zinc-100 dark:hover:from-amber-950/30 dark:hover:to-zinc-900/30 transition-all duration-300 text-center cursor-pointer group overflow-hidden">
+                                        <div className="relative border-3 border-dashed border-amber-300 dark:border-amber-700 rounded-2xl p-8 transition-all duration-300 text-center cursor-pointer group overflow-hidden">
                                             {/* Animated background gradient */}
-                                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-zinc-500/5 to-zinc-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                                             <Input
                                                 id="image"
@@ -311,7 +311,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             />
                                             <div className="relative flex flex-col items-center gap-3">
-                                                <div className="p-4 bg-gradient-to-br from-amber-500 to-zinc-700 rounded-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                                                <div className="p-4 rounded-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                                                     <ImageIcon className="w-8 h-8 text-white" />
                                                 </div>
                                                 <div>
@@ -325,7 +325,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="relative w-full h-56 bg-gradient-to-br from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 rounded-2xl overflow-hidden border-2 border-amber-300 dark:border-amber-700 shadow-md hover:shadow-lg transition-shadow duration-200">
+                                        <div className="relative w-full h-56 rounded-2xl overflow-hidden border-2 border-amber-300 dark:border-amber-700 shadow-md hover:shadow-lg transition-shadow duration-200">
                                             <img
                                                 src={imagePreview}
                                                 alt="Preview"
@@ -341,7 +341,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                                             </Button>
                                             <div className="absolute bottom-3 right-3 flex gap-2">
                                                 <label htmlFor="change-image" className="cursor-pointer">
-                                                    <div className="inline-flex items-center justify-center rounded-xl text-sm font-semibold bg-gradient-to-r from-zinc-800 to-amber-600 text-white hover:from-zinc-900 hover:to-amber-700 h-9 px-4 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
+                                                    <div className="inline-flex items-center justify-center rounded-xl text-sm font-semibold text-white h-9 px-4 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200">
                                                         Change Image
                                                     </div>
                                                     <Input
@@ -360,9 +360,9 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                         </TabsContent>
 
                         <TabsContent value="existing" className="space-y-6">
-                            <div className="relative bg-gradient-to-br from-zinc-100 to-zinc-50 dark:from-zinc-900/30 dark:to-zinc-950/30 rounded-2xl p-6 space-y-5 border border-zinc-300/50 dark:border-zinc-700/50 shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div className="relative rounded-2xl p-6 space-y-5 border border-zinc-300/50 dark:border-zinc-700/50 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-lg shadow-sm">
+                                    <div className="p-2 rounded-lg shadow-sm">
                                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                         </svg>
@@ -472,9 +472,9 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                     </Tabs>
 
                     {/* Common Fields */}
-                    <div className="relative bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 rounded-2xl p-6 space-y-5 mt-6 border border-emerald-200/50 dark:border-emerald-800/50 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div className="relative rounded-2xl p-6 space-y-5 mt-6 border border-emerald-200/50 dark:border-emerald-800/50 shadow-sm hover:shadow-md transition-shadow duration-200">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg shadow-sm">
+                            <div className="p-2 rounded-lg shadow-sm">
                                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                 </svg>
@@ -586,7 +586,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                     </div>
                 </div>
 
-                <DialogFooter className="gap-3 sm:gap-3 px-8 py-5 border-t-2 border-gray-200 dark:border-gray-800 bg-gradient-to-r from-zinc-50 to-white dark:from-zinc-950 dark:to-zinc-900">
+                <DialogFooter className="gap-3 sm:gap-3 px-8 py-5 border-t-2 border-gray-200 dark:border-gray-800">
                     <Button
                         variant="outline"
                         onClick={onClose}
@@ -598,7 +598,7 @@ export function AddWarehouseDialog({ isOpen, onClose, onSuccess }: AddWarehouseD
                     <Button
                         onClick={handleSave}
                         disabled={isSubmitting}
-                        className="h-11 px-8 bg-gradient-to-r from-zinc-800 via-zinc-900 to-amber-600 hover:from-zinc-900 hover:via-black hover:to-amber-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+                        className="h-11 px-8 text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
                     >
                         {isSubmitting ? (
                             <span className="flex items-center gap-2">

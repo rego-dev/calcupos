@@ -141,6 +141,32 @@ export async function markMessagesAsRead(senderId: string) {
     }
 }
 
+// Regular inventory products, normalized for the chat product picker.
+export async function getChatProducts() {
+    try {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) throw new Error("Unauthorized");
+
+        const products = await prisma.product.findMany({
+            orderBy: { createdAt: "desc" },
+            take: 100,
+        });
+
+        return products.map((p) => ({
+            id: p.id,
+            productName: p.name,
+            sku: p.sku,
+            price: p.retailPrice ?? p.cost ?? 0,
+            cost: p.cost ?? 0,
+            images: p.images,
+            quantity: p.quantity,
+        }));
+    } catch (error) {
+        console.error("Failed to fetch chat products:", error);
+        return [];
+    }
+}
+
 export async function getAllWarehouseProducts() {
     try {
         const currentUser = await getCurrentUser();

@@ -315,7 +315,7 @@ export default function EndShiftDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-5 pb-4 border-b">
+        <div className="p-5 pb-4 border-b">
           <DialogHeader>
             <DialogTitle className="text-xl flex items-center gap-2.5">
               <div className="h-9 w-9 rounded-lg bg-primary/15 flex items-center justify-center">
@@ -423,7 +423,7 @@ export default function EndShiftDialog({
                     {DENOMINATIONS.filter((d) => d.type === "bill").map((d) => (
                       <div
                         key={d.value}
-                        className="flex items-center gap-3 bg-background border border-border/60 rounded-xl px-4  py-2.5 hover:border-primary/30 transition-colors group"
+                        className="flex items-center gap-3 bg-background border border-border/60 rounded-xl px-4 py-2.5 hover:border-primary/30 transition-colors group"
                       >
                         <span className="font-bold text-sm w-16 text-primary">
                           {d.label}

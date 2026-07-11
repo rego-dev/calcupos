@@ -4,24 +4,53 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-    const email = 'admin@calcupos.com';
-    const password = 'password123';
-    const name = 'Admin User';
+    const email = 'admin@fcs.com';
+    const password = '123700';
+    const name = 'Super Admin';
+    const roleName = 'super admin';
+    const permissions = {
+        dashboard: true,
+        orders: true,
+        batches: true,
+        inventory: true,
+        customers: true,
+        reports: true,
+        users: true,
+        settings: true,
+        adminManage: true,
+        stations: true,
+        preOrders: true,
+        warehouses: true,
+    };
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const role = await prisma.role.upsert({
+        where: { name: roleName },
+        update: {},
+        create: { name: roleName },
+    });
+
     const user = await prisma.user.upsert({
         where: { email },
-        update: {},
+        update: {
+            name,
+            password: hashedPassword,
+            role: roleName,
+            roleId: role.id,
+            permissions,
+        },
         create: {
             email,
             name,
             password: hashedPassword,
-            role: 'admin',
+            role: roleName,
+            roleId: role.id,
+            permissions,
         },
     });
 
-    console.log(`User created/found: ${user.email}`);
+    console.log(`Super admin created/found: ${user.email}`);
     console.log(`Password: ${password}`);
 }
 

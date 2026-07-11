@@ -229,7 +229,7 @@ export function ViewHeldOrdersDialog({
                     <div className="flex w-full items-center justify-between">
                         <div className="flex flex-col">
                             <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Total Held Value</span>
-                            <span className="text-xl font-bold bg-gradient-to-r from-amber-600 to-red-600 bg-clip-text text-transparent">
+                            <span className="text-xl font-bold text-amber-500">
                                 ₱{totalHeldValue.toLocaleString()}
                             </span>
                         </div>

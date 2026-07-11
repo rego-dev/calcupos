@@ -162,7 +162,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-3xl">
         {/* Gradient Header */}
-        <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-r from-amber-500 to-amber-600 rounded-t-lg flex items-center px-6">
+        <div className="absolute top-0 left-0 right-0 h-16 rounded-t-lg flex items-center px-6">
           <div className="flex items-center gap-3 text-white">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -401,7 +401,7 @@ export function AddProductDialog({ isOpen, onClose, onSuccess, simpleMode = fals
             <Button
               onClick={handleSave}
               disabled={isLoading}
-              className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700"
+              className="flex-1"
             >
               {isLoading ? "Adding..." : "Add Product"}
             </Button>

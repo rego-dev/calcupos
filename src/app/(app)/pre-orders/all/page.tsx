@@ -54,7 +54,7 @@ export default function PreOrdersPage() {
             <div className="flex flex-col gap-8 p-2">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
+                        <h2 className="text-4xl font-extrabold tracking-tight text-amber-500 w-fit pb-1">
                             Pre-orders
                         </h2>
                         <p className="text-muted-foreground mt-1">
@@ -87,7 +87,7 @@ export default function PreOrdersPage() {
         <div className="flex flex-col gap-8 p-2">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent w-fit pb-1">
+                    <h2 className="text-4xl font-extrabold tracking-tight text-amber-500 w-fit pb-1">
                         Pre-orders
                     </h2>
                     <p className="text-muted-foreground mt-1">

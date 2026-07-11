@@ -1,11 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Timer } from "lucide-react";
+import { LogOut, LayoutDashboard, Clock } from "lucide-react";
 import Link from "next/link";
 import EndShiftDialog from "./end-shift-dialog";
 import { performLogout } from "../actions";
+
+function HeaderClock() {
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setNow(new Date());
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-muted/50 border border-border">
+      <Clock className="h-4 w-4 text-amber-500 shrink-0" />
+      <div className="leading-tight text-right tabular-nums">
+        <div className="text-sm font-bold" suppressHydrationWarning>
+          {now ? now.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true }) : "--:--:--"}
+        </div>
+        <div className="text-[10px] text-muted-foreground" suppressHydrationWarning>
+          {now ? now.toLocaleDateString("en-PH", { weekday: "short", month: "short", day: "numeric", year: "numeric" }) : ""}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface POSHeaderProps {
   userName: string;
@@ -24,7 +48,7 @@ export default function POSHeader({
     <>
       <header className="h-14 border-b flex items-center justify-between px-4 bg-card text-card-foreground shrink-0 shadow-sm border-border">
         <div className="flex items-center gap-4">
-          <h1 className="font-nano text-lg font-bold tracking-[0.1em] bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent">
+          <h1 className="font-nano text-lg font-bold tracking-[0.1em] text-amber-500">
             FLOWCART SYNC
           </h1>
           <span className="text-sm text-muted-foreground font-medium pl-4 border-l border-border uppercase tracking-widest hidden sm:inline-block">
@@ -32,6 +56,8 @@ export default function POSHeader({
           </span>
         </div>
         <div className="flex items-center gap-3">
+          <HeaderClock />
+
           <div className="text-sm font-medium mr-2 max-w-[120px] truncate hidden md:block">
             <span className="opacity-60 text-xs uppercase tracking-wider block">
               {roleName}

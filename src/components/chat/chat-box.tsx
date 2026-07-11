@@ -13,31 +13,18 @@ import {
     Video,
     Minus,
     Image as ImageIcon,
-    PlusCircle,
     Smile,
     ThumbsUp,
-    ArrowRightLeft,
     Package2,
     Search,
     CheckCheck,
-    MoreVertical
 } from "lucide-react";
-import { sendMessage, getMessages, markMessagesAsRead, getAllWarehouseProducts, transferStock, getProductBySku, bulkTransferStock } from "./chat-actions";
+import { sendMessage, getMessages, markMessagesAsRead, getChatProducts } from "./chat-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 interface ChatBoxProps {
@@ -67,6 +54,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
     const [sending, setSending] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+    const [attachedProduct, setAttachedProduct] = useState<any | null>(null);
     const { toast } = useToast();
     const hasLoadedRef = useRef(false);
     const isMinimizedRef = useRef(isMinimized);
@@ -158,18 +146,41 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
         }
     }, [messages, isMinimized, loading]);
 
+    const productImageUrl = (product: any): string => {
+        if (!product) return "";
+        if (product.image) return product.image;
+        if (product.images) {
+            if (Array.isArray(product.images) && product.images.length > 0) return product.images[0];
+            if (typeof product.images === "string") return product.images;
+        }
+        return "";
+    };
+
+    const buildMessageContent = (): string => {
+        const text = newMessage.trim();
+        if (!attachedProduct) return text;
+        const img = productImageUrl(attachedProduct);
+        const imageTag = img ? `\n[[IMAGE:${img}]]` : "";
+        const price = attachedProduct.price != null ? `\nPrice: ₱${attachedProduct.price}` : "";
+        const productBlock = `📦 Product Inquiry:\nName: ${attachedProduct.productName}\nSKU: ${attachedProduct.sku}${price}${imageTag}`;
+        return text ? `${productBlock}\n\n${text}` : productBlock;
+    };
+
     const handleSendMessage = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
-        if (!newMessage.trim()) return;
+        if (!newMessage.trim() && !attachedProduct) return;
         if (user.isActive === false) return;
+
+        const content = buildMessageContent();
 
         setSending(true);
         try {
-            const result = await sendMessage(String(user.id), newMessage);
+            const result = await sendMessage(String(user.id), content);
             if (result.success && result.message) {
                 const newMsg = result.message as unknown as Message;
                 setMessages((prev) => [...prev, newMsg]);
                 setNewMessage("");
+                setAttachedProduct(null);
             } else {
                 toast({
                     variant: "destructive",
@@ -197,12 +208,9 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
 
     if (!mounted) return null;
 
-    const handleProductSelect = async (product: any) => {
-        // Only close modal for non-request actions (sharing products)
-        if (!product.isRequest) {
-            setIsProductModalOpen(false);
-        }
-
+    // Attach the selected product to the compose box so the user can type a
+    // question (e.g. "how much?") and send it together as a product inquiry.
+    const handleProductSelect = (product: any) => {
         if (user.isActive === false) {
             toast({
                 variant: "destructive",
@@ -211,55 +219,9 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
             });
             return;
         }
-
-        let imageUrl = "";
-        if (product.image) {
-            imageUrl = product.image;
-        } else if (product.images) {
-            if (Array.isArray(product.images) && product.images.length > 0) {
-                imageUrl = product.images[0];
-            } else if (typeof product.images === 'string') {
-                imageUrl = product.images;
-            }
-        }
-
-        const prefix = product.isRequest ? "📢 REQUESTING Product from Warehouse:" : "📦 Shared Product:";
-        const imageTag = imageUrl ? `\n[[IMAGE:${imageUrl}]]` : "";
-        const productMessage = `${prefix}\nName: ${product.productName}\nSKU: ${product.sku}${product.isRequest ? "" : `\nCost: ₱${product.cost}`}${imageTag}`;
-        // Expand the chatbox if it was minimized
+        setAttachedProduct(product);
+        setIsProductModalOpen(false);
         setIsMinimized(false);
-
-        // Immediately send the message instead of just setting the input
-        setSending(true);
-        try {
-            // Using statically imported sendMessage
-            const result = await sendMessage(String(user.id), productMessage);
-            if (result.success && result.message) {
-                const newMsg = result.message as unknown as Message;
-                setMessages((prev) => [...prev, newMsg]);
-                if (product.isRequest) {
-                    toast({
-                        title: "Request Sent",
-                        description: `Request for "${product.productName}" has been sent.`,
-                    });
-                }
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Error",
-                    description: result.error || "Failed to send message",
-                });
-            }
-        } catch (error) {
-            console.error("Failed to send message", error);
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "An unexpected error occurred",
-            });
-        } finally {
-            setSending(false);
-        }
     };
 
     const unreadCount = messages.filter(m => m.senderId === user.id && !(m as any).read).length;
@@ -318,7 +280,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                 >
                     {/* Enhanced Header */}
                     <div className="relative overflow-hidden shrink-0 z-10">
-                        <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-zinc-800 to-amber-600" />
+                        <div className="absolute inset-0" />
                         <div className="relative p-3 flex items-center justify-between">
                             <div
                                 className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity flex-1"
@@ -370,7 +332,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                     </div>
 
                     {/* Messages Area */}
-                    <ScrollArea className="flex-1 min-h-0 bg-gradient-to-br from-zinc-50 to-amber-50/30 dark:from-zinc-950 dark:to-zinc-900">
+                    <ScrollArea className="flex-1 min-h-0">
                         <div className="p-4 space-y-4">
                             {/* Profile Hero Section */}
                             <div className="flex flex-col items-center justify-center py-6 text-center space-y-3">
@@ -417,7 +379,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                                     className={cn(
                                                         "px-4 py-2.5 text-[15px] shadow-md whitespace-pre-wrap relative",
                                                         isMe
-                                                            ? "bg-gradient-to-br from-amber-600 to-zinc-800 text-white rounded-2xl rounded-br-md"
+                                                            ? "   text-white rounded-2xl rounded-br-md"
                                                             : "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-2xl rounded-bl-md border border-zinc-200 dark:border-zinc-700"
                                                     )}
                                                 >
@@ -462,6 +424,32 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
 
                     {/* Enhanced Input Area */}
                     <div className="p-2 border-t-2 bg-white dark:bg-zinc-900 dark:border-zinc-800 shrink-0">
+                        {attachedProduct && (
+                            <div className="mb-2 flex items-center gap-2 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-2">
+                                {productImageUrl(attachedProduct) ? (
+                                    <img src={productImageUrl(attachedProduct)} alt={attachedProduct.productName} className="h-9 w-9 rounded-md object-cover border bg-white" />
+                                ) : (
+                                    <div className="h-9 w-9 rounded-md border bg-white flex items-center justify-center">
+                                        <Package2 className="h-4 w-4 text-amber-600" />
+                                    </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-semibold truncate text-zinc-800 dark:text-zinc-100">{attachedProduct.productName}</p>
+                                    <p className="text-[10px] text-muted-foreground truncate">
+                                        {attachedProduct.sku}{attachedProduct.price != null ? ` · ₱${attachedProduct.price}` : ""}
+                                    </p>
+                                </div>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 shrink-0 text-zinc-500 hover:text-red-500"
+                                    onClick={() => setAttachedProduct(null)}
+                                >
+                                    <X className="h-3.5 w-3.5" />
+                                </Button>
+                            </div>
+                        )}
                         <div className="flex items-center gap-2">
                             <div className="flex gap-1">
                                 <Button
@@ -476,7 +464,7 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    title="Warehouse Products"
+                                    title="Attach product"
                                     className="h-9 w-9 text-zinc-600 hover:bg-zinc-100 rounded-full"
                                     onClick={() => setIsProductModalOpen(true)}
                                     disabled={user.isActive === false}
@@ -508,13 +496,13 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                                 size="icon"
                                 className={cn(
                                     "h-9 w-9 rounded-full shadow-lg transition-all",
-                                    newMessage.trim()
-                                        ? "bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 shadow-amber-500/30"
+                                    (newMessage.trim() || attachedProduct)
+                                        ? "     shadow-amber-500/30"
                                         : "bg-zinc-200 hover:bg-zinc-300 text-zinc-600"
                                 )}
                                 disabled={sending || user.isActive === false}
                             >
-                                {newMessage.trim() ? <Send className="h-4 w-4 text-white" /> : <ThumbsUp className="h-4 w-4" />}
+                                {(newMessage.trim() || attachedProduct) ? <Send className="h-4 w-4 text-white" /> : <ThumbsUp className="h-4 w-4" />}
                             </Button>
                         </div>
                     </div>
@@ -524,8 +512,6 @@ export function ChatBox({ user, currentUser, onClose, index = 0 }: ChatBoxProps)
                 isOpen={isProductModalOpen}
                 onClose={() => setIsProductModalOpen(false)}
                 onSelect={handleProductSelect}
-                currentUser={currentUser}
-                targetUser={user}
             />
         </>
     );
@@ -537,26 +523,14 @@ function ProductSelectorModal({
     isOpen,
     onClose,
     onSelect,
-    currentUser,
-    targetUser
 }: {
     isOpen: boolean;
     onClose: () => void;
     onSelect: (product: any) => void;
-    currentUser: User | null;
-    targetUser?: any;
 }) {
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [transferringProduct, setTransferringProduct] = useState<any | null>(null);
-    const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(new Set());
-    const [isBulkTransferModalOpen, setIsBulkTransferModalOpen] = useState(false);
-    const { toast } = useToast();
-
-    const handleTransferSuccess = () => {
-        loadProducts();
-    };
 
     useEffect(() => {
         if (isOpen) {
@@ -567,8 +541,7 @@ function ProductSelectorModal({
     async function loadProducts() {
         setLoading(true);
         try {
-            // Using statically imported getAllWarehouseProducts
-            const data = await getAllWarehouseProducts();
+            const data = await getChatProducts();
             setProducts(data);
         } catch (error) {
             console.error("Failed to load products", error);
@@ -577,27 +550,9 @@ function ProductSelectorModal({
         }
     }
 
-    const toggleProductSelection = (id: string) => {
-        const next = new Set(selectedProductIds);
-        if (next.has(id)) next.delete(id);
-        else next.add(id);
-        setSelectedProductIds(next);
-    };
-
-    const handleBulkTransferClick = () => {
-        if (selectedProductIds.size === 0) return;
-        setIsBulkTransferModalOpen(true);
-    };
-
-    const handleBulkTransferSuccess = () => {
-        setSelectedProductIds(new Set());
-        loadProducts();
-    };
-
     const filteredProducts = products.filter(p =>
         p.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.manufacturer && p.manufacturer.toLowerCase().includes(searchTerm.toLowerCase()))
+        p.sku.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -605,29 +560,17 @@ function ProductSelectorModal({
             <DialogContent className="sm:max-w-6xl h-[85vh] flex flex-col p-0 z-[150] overflow-hidden bg-white dark:bg-zinc-950">
                 {/* Enhanced Header */}
                 <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-900 to-zinc-800" />
+                    <div className="absolute inset-0" />
                     <div className="relative p-6">
                         <DialogHeader>
-                            <div className="flex items-center justify-between pr-8">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                        <Package2 className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div>
-                                        <DialogTitle className="text-2xl font-bold text-white">Warehouse Products</DialogTitle>
-                                        <p className="text-zinc-300 text-sm mt-1">Browse and transfer inventory items</p>
-                                    </div>
+                            <div className="flex items-center gap-3 pr-8">
+                                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                    <Package2 className="w-5 h-5 text-white" />
                                 </div>
-                                {currentUser?.permissions?.adminManage && selectedProductIds.size > 0 && (
-                                    <Button
-                                        size="sm"
-                                        className="h-10 gap-2 bg-white text-zinc-800 hover:bg-white/90 shadow-lg font-semibold"
-                                        onClick={handleBulkTransferClick}
-                                    >
-                                        <ArrowRightLeft className="h-4 w-4" />
-                                        Transfer Selected ({selectedProductIds.size})
-                                    </Button>
-                                )}
+                                <div>
+                                    <DialogTitle className="text-2xl font-bold text-white">Products</DialogTitle>
+                                    <p className="text-zinc-300 text-sm mt-1">Select a product to attach to your message</p>
+                                </div>
                             </div>
                         </DialogHeader>
                     </div>
@@ -638,7 +581,7 @@ function ProductSelectorModal({
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                         <Input
-                            placeholder="Search by name, SKU, or manufacturer..."
+                            placeholder="Search by name or SKU..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="pl-10 h-12 border-2 focus:border-amber-400 bg-white dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800"
@@ -666,7 +609,7 @@ function ProductSelectorModal({
                                 </div>
                             ) : (
                                 filteredProducts.map(product => {
-                                    let imageUrl = "/placeholder-image.jpg";
+                                    let imageUrl = "";
                                     if (product.image) {
                                         imageUrl = product.image;
                                     } else if (product.images) {
@@ -677,37 +620,15 @@ function ProductSelectorModal({
                                         }
                                     }
 
-                                    const isSelected = selectedProductIds.has(String(product.id));
-
                                     return (
-                                        <div
+                                        <button
+                                            type="button"
                                             key={product.id}
-                                            className={cn(
-                                                "group relative flex flex-col bg-white dark:bg-zinc-900 rounded-xl overflow-hidden transition-all duration-200 border-2 shadow-sm hover:shadow-lg",
-                                                isSelected
-                                                    ? 'border-amber-500 ring-2 ring-amber-200 shadow-amber-200 dark:shadow-amber-900/50'
-                                                    : 'border-zinc-200 dark:border-zinc-800 hover:border-amber-300 dark:hover:border-amber-700'
-                                            )}
+                                            onClick={() => onSelect(product)}
+                                            className="group relative flex flex-col text-left bg-white dark:bg-zinc-900 rounded-xl overflow-hidden transition-all duration-200 border-2 shadow-sm hover:shadow-lg border-zinc-200 dark:border-zinc-800 hover:border-amber-400 dark:hover:border-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                                         >
-                                            {currentUser?.permissions?.adminManage && (
-                                                <div className="absolute top-3 left-3 z-10" onClick={(e) => { e.stopPropagation(); toggleProductSelection(product.id); }}>
-                                                    <div className={cn(
-                                                        "w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
-                                                        isSelected
-                                                            ? "bg-amber-600 border-amber-600"
-                                                            : "bg-white border-zinc-300 hover:border-amber-400"
-                                                    )}>
-                                                        {isSelected && (
-                                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            <div className="h-44 w-full bg-gradient-to-br from-zinc-100 to-zinc-200 relative overflow-hidden">
-                                                {product.image || product.images ? (
+                                            <div className="h-44 w-full relative overflow-hidden">
+                                                {imageUrl ? (
                                                     <img
                                                         src={imageUrl}
                                                         alt={product.productName}
@@ -718,95 +639,25 @@ function ProductSelectorModal({
                                                         <ImageIcon className="h-12 w-12 text-zinc-300" />
                                                     </div>
                                                 )}
+                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                                                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-semibold bg-amber-600 px-3 py-1.5 rounded-full shadow">Attach</span>
+                                                </div>
                                             </div>
 
-                                            <div className="p-3 flex flex-col gap-2">
+                                            <div className="p-3 flex flex-col gap-1.5">
                                                 <h4 className="font-semibold text-sm truncate text-zinc-900 dark:text-zinc-100" title={product.productName}>
                                                     {product.productName}
                                                 </h4>
-                                                <Badge variant="outline" className="w-fit text-[10px] font-mono">
-                                                    {product.sku}
-                                                </Badge>
-
-                                                {currentUser?.permissions?.adminManage ? (
-                                                    <div className="grid grid-cols-2 gap-1.5 mt-1">
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            className="h-7 text-[10px] gap-1 px-2 border-amber-200 text-amber-600 hover:bg-amber-50 hover:border-amber-300"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setTransferringProduct(product);
-                                                            }}
-                                                        >
-                                                            <ArrowRightLeft className="h-3 w-3" />
-                                                            Partial
-                                                        </Button>
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            className="h-7 text-[10px] gap-1 px-2 bg-zinc-100 border-zinc-200 text-zinc-600 hover:bg-zinc-200 hover:border-zinc-300"
-                                                            onClick={async (e) => {
-                                                                e.stopPropagation();
-                                                                try {
-                                                                    // Using statically imported transferStock
-                                                                    const res = await transferStock(product.id, undefined, {
-                                                                        id: targetUser.id,
-                                                                        name: targetUser.name,
-                                                                        email: targetUser.email
-                                                                    });
-                                                                    if (res.success) {
-                                                                        toast({
-                                                                            title: "Transfer Successful",
-                                                                            description: `Entire product transferred to Main Inventory.`
-                                                                        });
-
-                                                                        try {
-                                                                            // Using statically imported sendMessage
-                                                                            let imageUrl = "";
-                                                                            if (product.image) imageUrl = product.image;
-                                                                            else if (product.images) {
-                                                                                if (Array.isArray(product.images)) imageUrl = product.images[0] || "";
-                                                                                else if (typeof product.images === 'string') imageUrl = product.images;
-                                                                            }
-                                                                            const imageTag = imageUrl ? `\n[[IMAGE:${imageUrl}]]` : "";
-                                                                            await sendMessage(targetUser.id, `✅ Transfer Successful: All stock of ${product.productName}\nSKU: ${product.sku}\ntransferred to your inventory.${imageTag}`);
-                                                                        } catch (err) {
-                                                                            console.error("Failed to send confirmation msg", err);
-                                                                        }
-                                                                        loadProducts();
-                                                                    } else {
-                                                                        toast({
-                                                                            variant: "destructive",
-                                                                            title: "Transfer Failed",
-                                                                            description: (res as any).error || "Failed to transfer product"
-                                                                        });
-                                                                    }
-                                                                } catch (err) {
-                                                                    console.error("Transfer error:", err);
-                                                                }
-                                                            }}
-                                                        >
-                                                            <ArrowRightLeft className="h-3 w-3" />
-                                                            All Stock
-                                                        </Button>
-                                                    </div>
-                                                ) : (
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className="w-full h-7 text-[10px] mt-1 gap-1 border-amber-200 text-amber-600 hover:bg-amber-50 hover:border-amber-300"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            onSelect({ ...product, isRequest: true });
-                                                        }}
-                                                    >
-                                                        <ArrowRightLeft className="h-3 w-3" />
-                                                        Request Item
-                                                    </Button>
-                                                )}
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <Badge variant="outline" className="w-fit text-[10px] font-mono">
+                                                        {product.sku}
+                                                    </Badge>
+                                                    {product.price != null && (
+                                                        <span className="text-sm font-bold text-amber-600">₱{product.price}</span>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
+                                        </button>
                                     );
                                 })
                             )}
@@ -814,393 +665,6 @@ function ProductSelectorModal({
                     </ScrollArea>
                 </div>
 
-                <TransferStockModal
-                    isOpen={!!transferringProduct}
-                    onClose={() => setTransferringProduct(null)}
-                    product={transferringProduct}
-                    onSuccess={handleTransferSuccess}
-                    targetUser={targetUser}
-                />
-
-                <BulkTransferModal
-                    isOpen={isBulkTransferModalOpen}
-                    onClose={() => setIsBulkTransferModalOpen(false)}
-                    selectedProducts={products.filter(p => selectedProductIds.has(String(p.id)))}
-                    onSuccess={handleBulkTransferSuccess}
-                    targetUser={targetUser}
-                />
-            </DialogContent>
-        </Dialog>
-    );
-}
-
-function TransferStockModal({
-    isOpen,
-    onClose,
-    product,
-    onSuccess,
-    targetUser
-}: {
-    isOpen: boolean;
-    onClose: () => void;
-    product: any;
-    onSuccess: () => void;
-    targetUser?: any;
-}) {
-    const { toast } = useToast();
-    const [quantity, setQuantity] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [existingStock, setExistingStock] = useState<{ quantity: number } | null>(null);
-
-    useEffect(() => {
-        if (isOpen && product) {
-            checkExistingStock();
-        }
-    }, [isOpen, product]);
-
-    const checkExistingStock = async () => {
-        try {
-            // Using statically imported getProductBySku
-            const existing = await getProductBySku(product.sku, targetUser?.id);
-            if (existing) {
-                setExistingStock({ quantity: existing.quantity });
-            } else {
-                setExistingStock({ quantity: 0 });
-            }
-        } catch (error) {
-            console.error("Failed to check existing stock", error);
-        }
-    };
-
-    const handleTransfer = async () => {
-        if (!product) return;
-
-        const transferQty = parseInt(quantity);
-        if (!quantity || transferQty <= 0 || transferQty > product.quantity) {
-            toast({
-                variant: "destructive",
-                title: "Invalid Quantity",
-                description: `Please enter a valid quantity between 1 and ${product.quantity}.`,
-            });
-            return;
-        }
-
-        setIsSubmitting(true);
-        try {
-            // Using statically imported transferStock
-            const result = await transferStock(product.id, transferQty, {
-                id: targetUser.id,
-                name: targetUser.name,
-                email: targetUser.email
-            });
-
-            if (result.success) {
-                toast({
-                    title: "Transfer Successful",
-                    description: `${transferQty} units transferred to Main Inventory.`,
-                });
-                setQuantity("");
-                onClose();
-                onSuccess();
-
-                try {
-                    // Using statically imported sendMessage
-                    let imageUrl = "";
-                    if (product.image) imageUrl = product.image;
-                    else if (product.images) {
-                        if (Array.isArray(product.images)) imageUrl = product.images[0] || "";
-                        else if (typeof product.images === 'string') imageUrl = product.images;
-                    }
-                    const imageTag = imageUrl ? `\n[[IMAGE:${imageUrl}]]` : "";
-                    await sendMessage(targetUser.id, `✅ Transfer Successful: ${transferQty} unit(s) of ${product.productName}\nSKU: ${product.sku}\ntransferred to your inventory.${imageTag}`);
-                } catch (err) {
-                    console.error("Failed to send confirmation msg", err);
-                }
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Transfer Failed",
-                    description: (result as any).error || "Failed to transfer product.",
-                });
-            }
-        } catch (error) {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "An unexpected error occurred.",
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    if (!product) return null;
-
-    return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-md z-[160] p-0 overflow-hidden bg-white">
-                {/* Header */}
-                <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-amber-600 to-zinc-800" />
-                    <div className="relative p-6">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-bold text-white">Transfer to Inventory</DialogTitle>
-                            <DialogDescription className="text-amber-100">
-                                Transfer stock from warehouse to main inventory
-                            </DialogDescription>
-                        </DialogHeader>
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 space-y-5">
-                    <div className="bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl p-4 border-2 border-zinc-200">
-                        <div className="space-y-2">
-                            <div className="text-sm font-medium text-zinc-600">Product</div>
-                            <div className="text-lg font-bold text-zinc-900">{product.productName}</div>
-                            <Badge variant="outline" className="font-mono">{product.sku}</Badge>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-amber-50 rounded-lg p-3 border-2 border-amber-200">
-                            <div className="text-xs font-medium text-amber-600 mb-1">Available</div>
-                            <div className="text-2xl font-bold text-amber-700">{product.quantity}</div>
-                            <div className="text-xs text-amber-600 mt-0.5">units</div>
-                        </div>
-                        {existingStock && (
-                            <div className="bg-zinc-100 rounded-lg p-3 border-2 border-zinc-200">
-                                <div className="text-xs font-medium text-zinc-600 mb-1">Current Stock</div>
-                                <div className="text-2xl font-bold text-zinc-700">{existingStock.quantity}</div>
-                                <div className="text-xs text-zinc-600 mt-0.5">in inventory</div>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="quantity" className="text-sm font-semibold text-zinc-700">
-                            Quantity to Transfer
-                        </Label>
-                        <Input
-                            id="quantity"
-                            type="number"
-                            min="1"
-                            max={product.quantity}
-                            value={quantity}
-                            onChange={(e) => setQuantity(e.target.value)}
-                            placeholder={`Max: ${product.quantity}`}
-                            className="h-11 border-2 focus:border-amber-400"
-                        />
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <div className="p-6 border-t-2 bg-zinc-100">
-                    <div className="flex gap-3">
-                        <Button
-                            variant="outline"
-                            onClick={onClose}
-                            disabled={isSubmitting}
-                            className="flex-1 h-11 border-2"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={handleTransfer}
-                            disabled={isSubmitting}
-                            className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg font-semibold"
-                        >
-                            {isSubmitting ? "Transferring..." : "Transfer Stock"}
-                        </Button>
-                    </div>
-                </div>
-            </DialogContent>
-        </Dialog>
-    );
-}
-
-function BulkTransferModal({
-    isOpen,
-    onClose,
-    selectedProducts,
-    onSuccess,
-    targetUser
-}: {
-    isOpen: boolean;
-    onClose: () => void;
-    selectedProducts: any[];
-    onSuccess: () => void;
-    targetUser?: any;
-}) {
-    const { toast } = useToast();
-    const [quantities, setQuantities] = useState<Record<string, string>>({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // Initialize quantities with max available stock
-    useEffect(() => {
-        if (isOpen && selectedProducts.length > 0) {
-            const initialQuantities: Record<string, string> = {};
-            selectedProducts.forEach(p => {
-                initialQuantities[p.id] = p.quantity.toString();
-            });
-            setQuantities(initialQuantities);
-        }
-    }, [isOpen, selectedProducts]);
-
-    const handleQuantityChange = (id: string, value: string) => {
-        setQuantities(prev => ({ ...prev, [id]: value }));
-    };
-
-    const handleTransferAllClick = () => {
-        const resetQuantities: Record<string, string> = {};
-        selectedProducts.forEach(p => {
-            resetQuantities[p.id] = p.quantity.toString();
-        });
-        setQuantities(resetQuantities);
-    };
-
-    const handleTransfer = async () => {
-        const transfers: { id: string, quantity: number }[] = [];
-
-        // Validate inputs
-        for (const product of selectedProducts) {
-            const qtyStr = quantities[product.id];
-            const qty = parseInt(qtyStr);
-
-            if (!qtyStr || isNaN(qty) || qty <= 0 || qty > product.quantity) {
-                toast({
-                    variant: "destructive",
-                    title: "Invalid Quantity",
-                    description: `Please enter a valid quantity for ${product.productName} (1-${product.quantity}).`,
-                });
-                return;
-            }
-            transfers.push({ id: product.id, quantity: qty });
-        }
-
-        if (transfers.length === 0) return;
-
-        setIsSubmitting(true);
-        try {
-            // Using statically imported bulkTransferStock
-            const result = await bulkTransferStock(transfers, {
-                id: targetUser.id,
-                name: targetUser.name,
-                email: targetUser.email
-            });
-
-            if (result.success) {
-                toast({
-                    title: "Bulk Transfer Successful",
-                    description: `${transfers.length} products transferred to Main Inventory.`,
-                });
-
-                try {
-                    // Using statically imported sendMessage
-                    await sendMessage(targetUser.id, `✅ Bulk Transfer Successful: ${transfers.length} products transferred to your inventory.`);
-                } catch (err) {
-                    console.error("Failed to send confirmation msg", err);
-                }
-
-                onClose();
-                onSuccess();
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Transfer Failed",
-                    description: (result as any).error || "Failed to transfer products",
-                });
-            }
-        } catch (error) {
-            console.error("Bulk transfer error:", error);
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "An unexpected error occurred.",
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    if (selectedProducts.length === 0) return null;
-
-    return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-xl z-[160] p-0 overflow-hidden bg-white">
-                {/* Header */}
-                <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-amber-600 to-zinc-800" />
-                    <div className="relative p-6">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-bold text-white">Bulk Transfer Stock</DialogTitle>
-                            <DialogDescription className="text-amber-100">
-                                Specify transfer quantities for the selected products
-                            </DialogDescription>
-                        </DialogHeader>
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                    <div className="flex justify-between items-center mb-4">
-                        <span className="text-sm font-semibold text-zinc-700">{selectedProducts.length} Items Selected</span>
-                        <Button variant="outline" size="sm" onClick={handleTransferAllClick} className="text-xs">
-                            Set All to Max Max Stock
-                        </Button>
-                    </div>
-                    <ScrollArea className="h-[40vh] border rounded-md">
-                        <div className="p-4 space-y-4">
-                            {selectedProducts.map(product => {
-                                let imageUrl = "/placeholder-image.jpg";
-                                if (product.image) imageUrl = product.image;
-                                else if (product.images && Array.isArray(product.images) && product.images.length > 0) imageUrl = product.images[0];
-                                else if (product.images && typeof product.images === 'string') imageUrl = product.images;
-
-                                return (
-                                    <div key={product.id} className="flex gap-4 items-center p-3 bg-zinc-50 dark:bg-zinc-900 border rounded-lg">
-                                        <img src={imageUrl} alt={product.productName} className="w-12 h-12 rounded object-cover border bg-white" />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-medium text-sm truncate" title={product.productName}>{product.productName}</p>
-                                            <p className="text-xs text-muted-foreground mr-2">Avail: {product.quantity}</p>
-                                        </div>
-                                        <div className="w-24">
-                                            <Input
-                                                type="number"
-                                                min="1"
-                                                max={product.quantity}
-                                                value={quantities[product.id] || ""}
-                                                onChange={(e) => handleQuantityChange(String(product.id), e.target.value)}
-                                                className="h-8 text-sm"
-                                            />
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </ScrollArea>
-                </div>
-
-                {/* Footer */}
-                <div className="p-6 border-t-2 bg-zinc-100">
-                    <div className="flex gap-3">
-                        <Button
-                            variant="outline"
-                            onClick={onClose}
-                            disabled={isSubmitting}
-                            className="flex-1 h-11 border-2"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={handleTransfer}
-                            disabled={isSubmitting}
-                            className="flex-1 h-11 bg-gradient-to-r from-amber-600 to-zinc-800 hover:from-amber-700 hover:to-zinc-900 text-white shadow-lg font-semibold"
-                        >
-                            {isSubmitting ? "Transferring..." : "Confirm Transfer"}
-                        </Button>
-                    </div>
-                </div>
             </DialogContent>
         </Dialog>
     );

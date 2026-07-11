@@ -320,7 +320,7 @@ export function CreatePreOrderDialog({
             <Dialog open={isOpen} onOpenChange={handleClose}>
                 <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden">
                     {/* Gradient Header */}
-                    <div className="bg-gradient-to-r from-amber-500 to-zinc-800 px-6 py-4 flex items-center gap-3 text-white">
+                    <div className="px-6 py-4 flex items-center gap-3 text-white">
                         <ShoppingCart className="h-6 w-6" />
                         <div>
                             <DialogTitle className="text-white text-lg font-semibold">Create New Order</DialogTitle>

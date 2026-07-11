@@ -69,7 +69,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     return (
         <Card className="border-0 shadow-xl shadow-zinc-500/10 bg-white/80 backdrop-blur-sm overflow-hidden">
             {/* Decorative gradient bar */}
-            <div className="h-1.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600" />
+            <div className="h-1.5" />
 
             <CardHeader className="space-y-3 pb-6">
                 <div className="flex items-center gap-2">
@@ -122,14 +122,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 </div>
 
                 {/* Info Banner */}
-                <div className="bg-gradient-to-r from-amber-50 to-zinc-100 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                <div className="border-l-4 border-amber-400 p-4 rounded-r-lg">
                     <p className="text-sm text-zinc-700">
                         <span className="font-semibold">Privacy Note:</span> Your information is securely stored and never shared with third parties.
                     </p>
                 </div>
 
                 {/* Warning Banner */}
-                <div className="bg-gradient-to-r from-amber-50 to-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                <div className="border-l-4 border-amber-400 p-4 rounded-r-lg">
                     <div className="flex items-start gap-3">
                         <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5" />
                         <div>
@@ -149,7 +149,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <Button
-                            className="bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-900 hover:to-black text-white shadow-lg shadow-zinc-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-zinc-500/40 hover:scale-105"
+                            className="text-white shadow-lg shadow-zinc-500/30 h-11 px-8 font-semibold transition-all duration-200 hover:shadow-xl hover:shadow-zinc-500/40 hover:scale-105"
                             disabled={isLoading}
                         >
                             <Save className="w-4 h-4 mr-2" />

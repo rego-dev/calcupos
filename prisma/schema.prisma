@@ -33,35 +33,35 @@ model Customer {
 }
 
 model Order {
-  id             Int            @id @default(autoincrement())
-  customerName   String
-  contactNumber  String?
-  address        String?
-  orderDate      DateTime?
-  itemName       String
-  items          Json?
-  paymentProofFileName  String?
-  paymentProofMimeType  String?
-  paymentProofDataUrl   String?      @db.Text
-  quantity       Int
-  price          Float
-  shippingFee    Float
-  totalAmount    Float
-  paymentMethod  String?
-  paymentStatus  String?
-  shippingStatus String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @default(now()) @updatedAt
-  customerEmail  String?
-  courierName    String?
-  trackingNumber String?
-  remarks        String?
-  rushShip       Boolean        @default(false)
-  createdBy      Json?
-  customerId     Int
-  inventoryLogs  InventoryLog[]
-  customer       Customer       @relation(fields: [customerId], references: [id])
-  salesLogs      SalesLog[]
+  id                   Int            @id @default(autoincrement())
+  customerName         String
+  contactNumber        String?
+  address              String?
+  orderDate            DateTime?
+  itemName             String
+  items                Json?
+  paymentProofFileName String?
+  paymentProofMimeType String?
+  paymentProofDataUrl  String?
+  quantity             Int
+  price                Float
+  shippingFee          Float
+  totalAmount          Float
+  paymentMethod        String?
+  paymentStatus        String?
+  shippingStatus       String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @default(now()) @updatedAt
+  customerEmail        String?
+  courierName          String?
+  trackingNumber       String?
+  remarks              String?
+  rushShip             Boolean        @default(false)
+  createdBy            Json?
+  customerId           Int
+  inventoryLogs        InventoryLog[]
+  customer             Customer       @relation(fields: [customerId], references: [id])
+  salesLogs            SalesLog[]
 
   @@index([customerId])
   @@index([createdAt])
@@ -90,7 +90,7 @@ model ProductCategory {
   description       String?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @default(now()) @updatedAt
-  imageUrl          String?            @db.Text
+  imageUrl          String?
   products          Product[]
   warehouseProducts WarehouseProduct[]
 
@@ -115,9 +115,9 @@ model Product {
   warehouseId      Int?
   inventoryLogs    InventoryLog[]
   preOrders        PreOrder[]
+  branch           Branch?           @relation(fields: [branchId], references: [id])
   category         ProductCategory?  @relation(fields: [categoryId], references: [id])
   warehouseProduct WarehouseProduct? @relation(fields: [warehouseId], references: [id])
-  branch           Branch?           @relation(fields: [branchId], references: [id])
 
   @@index([warehouseId])
   @@index([categoryId])
@@ -153,7 +153,7 @@ model User {
 
 model Message {
   id         Int      @id @default(autoincrement())
-  content    String   @db.Text
+  content    String
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
   senderId   Int
@@ -172,8 +172,8 @@ model Branch {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @default(now()) @updatedAt
   inventoryLogs InventoryLog[]
-  users         User[]
   products      Product[]
+  users         User[]
 
   @@map("branches")
 }
@@ -213,13 +213,30 @@ model Station {
   @@map("stations")
 }
 
+// Backing table for the POS Setup lookup lists (Transaction Reference,
+// Payment Terms, POS Payment Type, Unit of Measure, Product Brand).
+// The `type` column discriminates which card an item belongs to.
+model PosSetupItem {
+  id          Int      @id @default(autoincrement())
+  type        String
+  name        String
+  code        String?
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@index([type])
+  @@map("pos_setup_items")
+}
+
 model WarehouseProduct {
   id               Int              @id @default(autoincrement())
   productName      String
   sku              String
   quantity         Int              @default(0)
   manufacture_date DateTime?
-  image            String?          @db.Text
+  image            String?
   location         String?
   cost             Float
   retailPrice      Float?
@@ -344,7 +361,7 @@ model CompanyProfile {
   phone       String?
   email       String?
   taxId       String?
-  logoUrl     String?  @db.Text
+  logoUrl     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 

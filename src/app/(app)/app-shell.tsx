@@ -56,7 +56,7 @@ export function AppShell({ children, user }: AppShellProps) {
                         <UserNav user={user} />
                     </div>
                 </header>
-                <main className="flex-1 overflow-auto p-4 md:p-8 print:p-0 print:overflow-visible bg-gradient-to-br from-background via-background to-primary/5">
+                <main className="flex-1 overflow-auto p-4 md:p-8 print:p-0 print:overflow-visible to-primary/5">
                     <div className="mx-auto max-w-7xl w-full">
                         {children}
                     </div>

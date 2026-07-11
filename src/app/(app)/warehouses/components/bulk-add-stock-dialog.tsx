@@ -148,7 +148,7 @@ export function BulkAddStockDialog({
         <Dialog open={isOpen} onOpenChange={handleClose}>
             <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden border-border/50 bg-background text-foreground">
                 {/* Full-bleed Header */}
-                <div className="bg-gradient-to-r from-zinc-800 to-amber-600 p-6 text-white flex items-start gap-4 flex-col justify-center relative">
+                <div className="p-6 text-white flex items-start gap-4 flex-col justify-center relative">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-white/20 rounded-md backdrop-blur-sm">
                             <Package className="h-6 w-6 text-white" />
@@ -216,7 +216,7 @@ export function BulkAddStockDialog({
                                                         <div className="shrink-0">
                                                             <div className={cn(
                                                                 "h-5 w-5 rounded-full border flex items-center justify-center transition-all",
-                                                                isSelected ? "bg-amber-500 border-amber-500 text-white" : "border-muted-foreground/30 text-transparent"
+                                                                isSelected ? "bg-amber-500 border-amber-500 text-white" : "border-muted-foreground/30 text-amber-500"
                                                             )}>
                                                                 <Check className="h-3 w-3" />
                                                             </div>
@@ -245,7 +245,7 @@ export function BulkAddStockDialog({
                     {/* RIGHT COLUMN: Selected Products & Quantities */}
                     <div className="flex flex-col bg-muted/20 relative">
                         {selectedProducts.length === 0 ? (
-                            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-background via-muted/30 to-muted/50 rounded-br-lg">
+                            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center to-muted/50 rounded-br-lg">
                                 <div className="h-24 w-24 rounded-full bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center mb-6 shadow-sm border border-amber-200 dark:border-amber-500/30">
                                     <Package className="h-10 w-10 text-amber-600 dark:text-amber-400" />
                                 </div>
@@ -310,7 +310,7 @@ export function BulkAddStockDialog({
                             <Button
                                 onClick={handleSubmit}
                                 disabled={isLoading || selectedProducts.length === 0}
-                                className="w-full bg-gradient-to-r from-zinc-800 to-amber-600 hover:from-zinc-900 hover:to-amber-700 text-white font-semibold h-12 rounded-xl shadow-md border-0 transition-all focus:ring-2 focus:ring-amber-500/50"
+                                className="w-full text-white font-semibold h-12 rounded-xl shadow-md border-0 transition-all focus:ring-2 focus:ring-amber-500/50"
                             >
                                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Add Stock to {selectedProducts.length} Item{selectedProducts.length !== 1 ? 's' : ''}

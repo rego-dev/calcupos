@@ -251,7 +251,7 @@ export function AddPreOrderProductDialog({ isOpen, onClose, onSuccess }: AddPreO
                             </div>
                         ) : (
                             <div className="flex items-center gap-4 p-3 border border-primary/20 bg-primary/5 rounded-lg shadow-sm animate-in fade-in zoom-in-95 relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />
+                                <div className="absolute inset-0 pointer-events-none" />
                                 <div className="h-12 w-12 rounded-md bg-background border shadow-sm overflow-hidden shrink-0 z-10">
                                     {selectedProduct?.images?.[0] ? (
                                         <img src={selectedProduct.images[0]} alt="" className="h-full w-full object-cover" />
